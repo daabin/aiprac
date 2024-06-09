@@ -10,6 +10,7 @@
     "check": "prettier --check \"**/*.{js,ts,tsx,mdx}\" --cache"
   },
   "dependencies": {
+    "@clerk/nextjs": "^5.1.4",
     "@douyinfe/semi-icons": "^2.60.0",
     "@douyinfe/semi-ui": "^2.31.0",
     "clsx": "^1.2.1",

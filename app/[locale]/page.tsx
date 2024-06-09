@@ -1,11 +1,12 @@
 import Image from 'next/image';
-
+import SiteHeader from '@/components/home/SiteHeader';
 import darkBg from '@/public/dark-bg.avif';
 import lightBg from '@/public/light-bg.avif';
 
 export default function Page() {
   return (
-    <div className="container">
+    <div>
+       <SiteHeader />
       <div className="pointer-events-none absolute inset-x-0 top-0 z-20 flex justify-center overflow-hidden">
         <div className="flex w-[108rem] flex-none justify-end">
           <Image

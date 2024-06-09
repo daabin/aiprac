@@ -19,7 +19,11 @@ export const languages: {
     unicode: '1f1e8-1f1f3',
     semi: zh_CN,
   },
-  'en-US': { name: 'English', flag: '🇺🇸', unicode: '1f1fa-1f1f8', semi: en_US },
+  'en-US': { 
+    name: 'English', 
+    flag: '🇺🇸', 
+    unicode: '1f1fa-1f1f8', 
+    semi: en_US },
 };
 
 export const locales = Object.keys(languages);

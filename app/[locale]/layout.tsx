@@ -1,11 +1,12 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
-import { getLocale, getTranslations } from 'next-intl/server';
+import { getTranslations } from 'next-intl/server';
 
 import LocaleProvider from '@/components/LocaleProvider';
-import SiteHeader from '@/components/SiteHeader';
+import { ClerkProvider } from '@clerk/nextjs'
 import '@/styles/globals.scss';
+import { Fragment } from 'react';
 
 export default async function RootLayout({
   children,
@@ -24,10 +25,11 @@ export default async function RootLayout({
   return (
     <html lang={locale} suppressHydrationWarning={true}>
       <body suppressHydrationWarning={true}>
-        <LocaleProvider locale={locale} messages={messages}>
-          <SiteHeader />
-          <main>{children}</main>
-        </LocaleProvider>
+        <ClerkProvider>
+          <LocaleProvider locale={locale} messages={messages}>
+            <Fragment>{children}</Fragment>
+          </LocaleProvider>
+        </ClerkProvider>
       </body>
     </html>
   );
@@ -35,7 +37,6 @@ export default async function RootLayout({
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('site');
-  const locale = getLocale();
   const title = t('title');
   const description = t('desc');
 

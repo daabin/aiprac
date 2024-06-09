@@ -26,7 +26,7 @@ export default function LocaleSwitcher() {
       }
     >
       <div className="btn">
-        <IconLanguage />
+        <IconLanguage size="large"/>
       </div>
     </Dropdown>
   );
