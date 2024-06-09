@@ -38,14 +38,14 @@ export default function SiteHeader() {
             className="cursor-pointer justify-start"
             href="/"
           >
-            <Image alt='' src={Logo} width={163} height={50}></Image>
+            <Image alt='' src={Logo} width={150} height={50}></Image>
           </Link>
         </div>
         <nav className="flex items-center space-x-6">
           <LocaleSwitcher />
           <SignedOut>
             <SignInButton>
-              <Button size='large' icon={<IconUser />}>{t('login')}</Button>
+              <Button size='large' theme='solid' type='warning' icon={<IconUser />}>{t('login')}</Button>
             </SignInButton >
           </SignedOut>
           <SignedIn>

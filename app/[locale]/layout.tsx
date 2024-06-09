@@ -23,15 +23,15 @@ export default async function RootLayout({
   }
 
   return (
-    <html lang={locale} suppressHydrationWarning={true}>
-      <body suppressHydrationWarning={true}>
-        <ClerkProvider>
+    <ClerkProvider>
+      <html lang={locale} suppressHydrationWarning={true}>
+        <body suppressHydrationWarning={true}>
           <LocaleProvider locale={locale} messages={messages}>
             <Fragment>{children}</Fragment>
           </LocaleProvider>
-        </ClerkProvider>
-      </body>
-    </html>
+        </body>
+      </html>
+    </ClerkProvider >
   );
 }
 
@@ -44,7 +44,9 @@ export async function generateMetadata(): Promise<Metadata> {
     title,
     description,
     icons: {
-      icon: '/favicon.ico',
+      icon: '/logo.webp',
+      shortcut: '/logo.webp',
+      apple: '/logo.webp',
     }
   };
 }

@@ -8,6 +8,9 @@ const nextConfig = {
   reactStrictMode: true, // Recommended for the `pages` directory, default in `app`.
   transpilePackages: ['@douyinfe/semi-ui', '@douyinfe/semi-icons'],
   swcMinify: true,
+  experimental: {
+    serverActions: true,
+  },
 };
 
 module.exports = withNextIntl(nextConfig);
