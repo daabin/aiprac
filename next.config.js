@@ -11,6 +11,9 @@ const nextConfig = {
   experimental: {
     serverActions: true,
   },
+  webpack(config, options) {
+    return config;
+  }
 };
 
 module.exports = withNextIntl(nextConfig);

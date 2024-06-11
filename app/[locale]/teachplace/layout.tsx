@@ -1,10 +1,8 @@
 'use client'
 import React from 'react';
-import Image from 'next/image';
 import { SignedIn, UserButton } from '@clerk/nextjs'
 import { Layout, Nav, Button } from '@douyinfe/semi-ui';
-import { IconBell, IconVerify, IconHome, IconStar, IconDisc, IconSetting, IconComment, IconQingyan } from '@douyinfe/semi-icons';
-import Logo from '@/public/logo.svg';
+import { IconQingyan, IconBell, IconVerify, IconHome, IconStar, IconFolderOpen, IconSetting, IconComment, IconSimilarity, IconUserGroup } from '@douyinfe/semi-icons';
 
 export default ({
   children,
@@ -23,13 +21,14 @@ export default ({
             style={{ maxWidth: 220, height: '100%' }}
             items={[
               { itemKey: 'Home', text: '首页', icon: <IconHome size="large" /> },
-              { itemKey: 'learn', text: '我的学习', icon: <IconStar size="large" /> },
-              { itemKey: 'achievement', text: '我的成就', icon: <IconVerify size="large" /> },
-              { itemKey: 'discovery', text: '发现', icon: <IconDisc size="large" /> },
+              { itemKey: 'course', text: '课程', icon: <IconStar size="large" /> },
+              { itemKey: 'practice', text: '练习', icon: <IconFolderOpen size="large" /> },
+              { itemKey: 'examination', text: '考试', icon: <IconVerify size="large" /> },
+              { itemKey: 'sutdents', text: '学生', icon: <IconUserGroup size="large" /> },
               { itemKey: 'Setting', text: '设置', icon: <IconSetting size="large" /> },
             ]}
             header={{
-              logo: <IconQingyan style={{ height: '36px', fontSize: 36, color: '#FD9248' }} />,
+              logo: <IconQingyan className='h-10' style={{ height: '36px', fontSize: 36, color: '#FD9248' }} />,
               text: 'Aiprac'
             }}
             footer={{

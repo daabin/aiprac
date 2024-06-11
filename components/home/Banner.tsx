@@ -23,7 +23,7 @@ export default function Banner() {
   ];
 
   return (
-    <Carousel className='w-full h-[400px] rounded-md drop-shadow-md' speed={1000} animation='fade' showArrow={false} indicatorType="columnar" theme='dark' indicatorPosition='right' autoPlay={true}>
+    <Carousel className='w-full h-[400px] rounded-md drop-shadow-md' speed={3000} animation='fade' showArrow={false} indicatorType="columnar" theme='dark' indicatorPosition='right' autoPlay={true}>
       {
         imgList.map((src, index) => {
           return (

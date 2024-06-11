@@ -23,7 +23,7 @@ export default async function Page() {
       if (userinfo?.role === 1) {
         redirect('/learnplace')
       } else if (userinfo?.role === 10) {
-        redirect('/workplace')
+        redirect('/teachplace')
       }
     }
   }

@@ -2,7 +2,7 @@ import createIntlMiddleware from 'next-intl/middleware';
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { defaultLocale, locales } from './i18n';
 
-const isProtectedRoute = createRouteMatcher(['/:locale/workplace(.*)', '/:locale/learnplace(.*)']);
+const isProtectedRoute = createRouteMatcher(['/:locale/teachplace(.*)', '/:locale/learnplace(.*)']);
 
 const intlMiddleware = createIntlMiddleware({
   locales,

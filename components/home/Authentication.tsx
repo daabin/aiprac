@@ -44,7 +44,7 @@ export default function Authentication({ uid }: { uid: string }) {
           </Radio>
         </RadioGroup>
       </div>
-      <Button className='mt-6 !h-12 !w-40'  theme='solid'  type='warning' size='large' onClick={handleSubmit}>立即进入</Button>
+      <Button className='mt-6 !h-12 !w-20'  theme='solid'  type='warning' size='large' onClick={handleSubmit}>立即进入</Button>
     </section >
   )
 }

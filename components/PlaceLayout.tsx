@@ -1,7 +1,9 @@
 'use client'
 import React from 'react';
-import { Layout, Nav, Button, Breadcrumb, Skeleton, Avatar } from '@douyinfe/semi-ui';
-import { IconBell, IconHelpCircle, IconBytedanceLogo, IconHome, IconHistogram, IconLive, IconSetting, IconSemiLogo } from '@douyinfe/semi-icons';
+import Image from 'next/image';
+import { Layout, Nav, Button, Avatar } from '@douyinfe/semi-ui';
+import { IconBell, IconHelpCircle, IconHome, IconHistogram, IconLive, IconSetting, IconSemiLogo } from '@douyinfe/semi-icons';
+import Logo from '@/public/logo.svg';
 
 export default ({
   children,
@@ -19,13 +21,12 @@ export default ({
           style={{ maxWidth: 220, height: '100%' }}
           items={[
             { itemKey: 'Home', text: '首页', icon: <IconHome size="large" /> },
-            { itemKey: 'Histogram', text: '基础数据', icon: <IconHistogram size="large" /> },
+            { itemKey: 'Histogram', text: '我的学习', icon: <IconHistogram size="large" /> },
             { itemKey: 'Live', text: '测试功能', icon: <IconLive size="large" /> },
             { itemKey: 'Setting', text: '设置', icon: <IconSetting size="large" /> },
           ]}
           header={{
-            logo: <IconSemiLogo style={{ fontSize: 36 }} />,
-            text: 'Semi Design',
+            logo:  <Image alt='' src={Logo} width={150} height={50}></Image>,
           }}
           footer={{
             collapseButton: true,
@@ -41,14 +42,6 @@ export default ({
                 <Button
                   theme="borderless"
                   icon={<IconBell size="large" />}
-                  style={{
-                    color: 'var(--semi-color-text-2)',
-                    marginRight: '12px',
-                  }}
-                />
-                <Button
-                  theme="borderless"
-                  icon={<IconHelpCircle size="large" />}
                   style={{
                     color: 'var(--semi-color-text-2)',
                     marginRight: '12px',
