@@ -10,6 +10,7 @@ import {
 } from '@clerk/nextjs'
 import { Button } from '@douyinfe/semi-ui';
 import { IconUser } from '@douyinfe/semi-icons';
+import { IconToken } from '@douyinfe/semi-icons-lab';
 
 import { useTranslations } from 'next-intl';
 
@@ -33,14 +34,13 @@ export default function SiteHeader() {
   return (
     <header className={!!scroll && scroll.top > 60 ? classNames2 : classNames1}>
       <div className='flex h-16 justify-between items-center  px-6'>
-        <div className="flex  justify-center space-x-4">
-          <Link
-            className="cursor-pointer justify-start"
-            href="/"
-          >
-            <Image alt='' src={Logo} width={150} height={50}></Image>
-          </Link>
-        </div>
+        <Link
+          className="flex  justify-center items-center space-x-4 cursor-pointer"
+          href="/"
+        >
+          <IconToken style={{ height: '36px', fontSize: 36 }}></IconToken>
+          <Image alt='' src={Logo} width={150} height={50}></Image>
+        </Link>
         <nav className="flex items-center space-x-6">
           <LocaleSwitcher />
           <SignedOut>

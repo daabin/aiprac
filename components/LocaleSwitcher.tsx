@@ -26,7 +26,9 @@ export default function LocaleSwitcher() {
       }
     >
       <div className="btn">
-        <IconLanguage size="large"/>
+        <IconLanguage size="large" style={{
+          color: 'var(--semi-color-text-2)',
+        }} />
       </div>
     </Dropdown>
   );

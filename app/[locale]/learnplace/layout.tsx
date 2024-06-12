@@ -1,10 +1,9 @@
 'use client'
 import React from 'react';
-import Image from 'next/image';
 import { SignedIn, UserButton } from '@clerk/nextjs'
 import { Layout, Nav, Button } from '@douyinfe/semi-ui';
 import { IconBell, IconVerify, IconHome, IconStar, IconDisc, IconSetting, IconComment, IconQingyan } from '@douyinfe/semi-icons';
-import Logo from '@/public/logo.svg';
+import { IconToken } from '@douyinfe/semi-icons-lab';
 
 export default ({
   children,
@@ -29,8 +28,8 @@ export default ({
               { itemKey: 'Setting', text: '设置', icon: <IconSetting size="large" /> },
             ]}
             header={{
-              logo: <IconQingyan style={{ height: '36px', fontSize: 36, color: '#FD9248' }} />,
-              text: 'Aiprac'
+              logo: <IconToken className='h-10' style={{ height: '36px', fontSize: 36 }} />,
+              text: <span className='text-2xl font-bold'>Aiprac</span>
             }}
             footer={{
               collapseButton: true,

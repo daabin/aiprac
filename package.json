@@ -12,6 +12,7 @@
   "dependencies": {
     "@clerk/nextjs": "^5.1.4",
     "@douyinfe/semi-icons": "^2.60.0",
+    "@douyinfe/semi-icons-lab": "^2.60.0",
     "@douyinfe/semi-ui": "^2.31.0",
     "@supabase/supabase-js": "^2.43.4",
     "clsx": "^1.2.1",
@@ -24,12 +25,12 @@
     "tailwind-merge": "^1.10.0"
   },
   "devDependencies": {
-    "@svgr/webpack": "^8.1.0",
     "@trivago/prettier-plugin-sort-imports": "^4.1.1",
     "@types/node": "18.13.0",
     "@types/react": "18.0.27",
     "animated-tailwindcss": "^4.0.0",
     "autoprefixer": "^10.4.14",
+    "bufferutil": "^4.0.8",
     "eslint": "7.32.0",
     "eslint-config-next": "13.1.6",
     "eslint-config-prettier": "^8.8.0",
@@ -37,8 +38,10 @@
     "eslint-plugin-tailwindcss": "^3.10.1",
     "postcss": "^8.4.21",
     "prettier": "^3.0.3",
+    "supports-color": "^9.4.0",
     "tailwindcss": "^3.2.7",
     "twin.semi": "^0.1.1",
-    "typescript": "4.9.5"
+    "typescript": "4.9.5",
+    "utf-8-validate": "^6.0.4"
   }
 }

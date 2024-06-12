@@ -2,10 +2,6 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 import { getTranslations } from 'next-intl/server';
-import {
-  SignedOut,
-  UserButton
-} from '@clerk/nextjs'
 import LocaleProvider from '@/components/LocaleProvider';
 import { ClerkProvider } from '@clerk/nextjs'
 import '@/styles/globals.scss';
@@ -47,7 +43,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title,
     description,
     icons: {
-      icon: '/favicon.png',
+      icon: '/favicon.svg',
     }
   };
 }
