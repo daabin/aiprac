@@ -36,7 +36,7 @@ export default function SiteHeader() {
           <IconToken style={{ height: '36px', fontSize: 36 }}></IconToken>
           <Image alt="" src={Logo} width={150} height={50}></Image>
         </Link>
-        <nav className="flex items-center space-x-6">
+        <div className="flex items-center space-x-6">
           <LocaleSwitcher />
           <SignedOut>
             <SignInButton>
@@ -53,7 +53,7 @@ export default function SiteHeader() {
           <SignedIn>
             <UserButton />
           </SignedIn>
-        </nav>
+        </div>
       </div>
     </header>
   );

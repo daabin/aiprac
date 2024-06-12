@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 
 import { Button, Radio, RadioGroup, Toast } from '@douyinfe/semi-ui';
 import { IconForward } from '@douyinfe/semi-icons';
+import { RadioChangeEvent } from '@douyinfe/semi-ui/lib/es/radio';
 
 export default function Authentication({ uid }: { uid: string }) {
   const router = useRouter();
@@ -32,7 +33,7 @@ export default function Authentication({ uid }: { uid: string }) {
     }
   };
 
-  const doSth = (evt: Event) => {
+  const doSth = (evt: RadioChangeEvent) => {
     setRole(evt?.target?.value);
   };
 
@@ -50,7 +51,7 @@ export default function Authentication({ uid }: { uid: string }) {
           <Radio value={1} extra="我正在学习中文">
             我是学生
           </Radio>
-          <Radio value={2} extra="我有丰富的中文教学经验">
+          <Radio value={10} extra="我有丰富的中文教学经验">
             我是教师
           </Radio>
         </RadioGroup>

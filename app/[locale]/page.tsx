@@ -19,10 +19,13 @@ export default async function Page() {
   const { userId } = auth();
   let userinfo = null;
 
+  console.log('userId:', userId)
   if (userId) {
     const { code, user } = await getUserInfo(userId);
+    console.log('getuserinfo res:', code, user)
     if (code === 0 && user?.length) {
       userinfo = user?.[0];
+      console.log('userinfo:', userinfo)
       if (userinfo?.role === 1) {
         redirect('/learnplace');
       } else if (userinfo?.role === 10) {
