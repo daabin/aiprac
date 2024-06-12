@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { Button, Radio, RadioGroup, Toast } from '@douyinfe/semi-ui';
+import { IconForward } from '@douyinfe/semi-icons';
 
 export default function Authentication({ uid }: { uid: string }) {
   const router = useRouter();
@@ -24,9 +25,9 @@ export default function Authentication({ uid }: { uid: string }) {
       Toast.error('提交失败，请稍后再试');
     } else {
       if (role === 1) {
-        router.push('/student');
+        router.push('/learnplace');
       } else {
-        router.push('/teacher');
+        router.push('/teachplace');
       }
     }
   };
@@ -55,10 +56,11 @@ export default function Authentication({ uid }: { uid: string }) {
         </RadioGroup>
       </div>
       <Button
-        className="mt-6 !h-12 !w-20"
+        className="mt-6 !h-12 !w-32"
         theme="solid"
         type="warning"
         size="large"
+        icon={<IconForward  size="large" />}
         onClick={handleSubmit}
       >
         立即进入

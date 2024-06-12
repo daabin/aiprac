@@ -13,7 +13,7 @@ export default function Authorization() {
       <SignedOut>
         <SignInButton>
           <Button
-            className="mt-6 !h-12 !w-40 !text-xl"
+            className="mt-6 !h-12 !w-32 !text-xl"
             theme="solid"
             type="warning"
             size="large"
