@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import { redirect } from 'next/navigation';
 
-import { auth } from '@clerk/nextjs/server';
+import { auth, currentUser } from '@clerk/nextjs/server';
 import { getTranslations } from 'next-intl/server';
 
 import Authentication from '@/components/home/Authentication';
@@ -17,9 +17,11 @@ export default async function Page() {
   const t = await getTranslations('site');
 
   const { userId } = auth();
+  const user = await currentUser();
+  const email = user?.emailAddresses[0]?.emailAddress
   let userinfo = null;
+  console.log('cur user info:', userId, email)
 
-  console.log('userId:', userId)
   if (userId) {
     const { code, user } = await getUserInfo(userId);
     console.log('getuserinfo res:', code, user)
@@ -66,7 +68,7 @@ export default async function Page() {
             dangerouslySetInnerHTML={{ __html: t.raw('desc') }}
           ></h1>
           {!userId && <Authorization />}
-          {userId && !userinfo?.role && <Authentication uid={userId} />}
+          {userId && !userinfo?.role && <Authentication uid={userId} email={email}/>}
         </div>
         <div className="w-1/2">
           <Banner></Banner>

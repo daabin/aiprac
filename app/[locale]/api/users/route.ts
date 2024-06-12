@@ -12,9 +12,11 @@ export async function POST(request: NextRequest) {
 
   const { data, error } = await supabase
     .from('users')
-    .update({ role: req.role })
-    .eq('user_id', req.uid)
-    .select();
+    .insert([
+      { user_id: req.uid, role: req.role, email: req.email},
+    ])
+    .select()
+
 
   console.log('update user role res------->', data, error);
 
