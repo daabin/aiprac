@@ -1,23 +1,18 @@
 'use client';
 
-import Link from 'next/link';
 import Image from 'next/image';
-import {
-  SignInButton,
-  SignedIn,
-  SignedOut,
-  UserButton
-} from '@clerk/nextjs'
-import { Button } from '@douyinfe/semi-ui';
+import Link from 'next/link';
+
+import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
 import { IconUser } from '@douyinfe/semi-icons';
 import { IconToken } from '@douyinfe/semi-icons-lab';
-
+import { Button } from '@douyinfe/semi-ui';
 import { useTranslations } from 'next-intl';
 
 import useScroll from '@/hooks/use-scroll';
+import Logo from '@/public/logo.svg';
 
 import LocaleSwitcher from '../LocaleSwitcher';
-import Logo from '@/public/logo.svg';
 
 export default function SiteHeader() {
   const t = useTranslations('login');
@@ -33,27 +28,33 @@ export default function SiteHeader() {
 
   return (
     <header className={!!scroll && scroll.top > 60 ? classNames2 : classNames1}>
-      <div className='flex h-16 justify-between items-center  px-6'>
+      <div className="flex h-16 justify-between items-center  px-6">
         <Link
           className="flex  justify-center items-center space-x-4 cursor-pointer"
           href="/"
         >
           <IconToken style={{ height: '36px', fontSize: 36 }}></IconToken>
-          <Image alt='' src={Logo} width={150} height={50}></Image>
+          <Image alt="" src={Logo} width={150} height={50}></Image>
         </Link>
         <nav className="flex items-center space-x-6">
           <LocaleSwitcher />
           <SignedOut>
             <SignInButton>
-              <Button size='large' theme='solid' type='warning' icon={<IconUser />}>{t('login')}</Button>
-            </SignInButton >
+              <Button
+                size="large"
+                theme="solid"
+                type="warning"
+                icon={<IconUser />}
+              >
+                {t('login')}
+              </Button>
+            </SignInButton>
           </SignedOut>
           <SignedIn>
             <UserButton />
           </SignedIn>
         </nav>
       </div>
-
     </header>
   );
 }

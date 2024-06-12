@@ -4,10 +4,7 @@ const { withAnimations } = require('animated-tailwindcss');
 /** @type {import('tailwindcss').Config} */
 module.exports = withAnimations({
   darkMode: ['class'],
-  content: [
-    './app/**/*.{js,ts,jsx,tsx}',
-    './components/**/*.{js,ts,jsx,tsx}',
-  ],
+  content: ['./app/**/*.{js,ts,jsx,tsx}', './components/**/*.{js,ts,jsx,tsx}'],
   theme: {
     container: {
       center: true,

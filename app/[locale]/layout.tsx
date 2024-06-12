@@ -1,11 +1,13 @@
+import { Fragment } from 'react';
+
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
+import { ClerkProvider } from '@clerk/nextjs';
 import { getTranslations } from 'next-intl/server';
+
 import LocaleProvider from '@/components/LocaleProvider';
-import { ClerkProvider } from '@clerk/nextjs'
 import '@/styles/globals.scss';
-import { Fragment } from 'react';
 
 export default async function RootLayout({
   children,
@@ -30,7 +32,7 @@ export default async function RootLayout({
           </LocaleProvider>
         </body>
       </html>
-    </ClerkProvider >
+    </ClerkProvider>
   );
 }
 
@@ -44,6 +46,6 @@ export async function generateMetadata(): Promise<Metadata> {
     description,
     icons: {
       icon: '/favicon.svg',
-    }
+    },
   };
 }

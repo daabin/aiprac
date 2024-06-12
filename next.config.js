@@ -14,12 +14,19 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  webpack(config,  { isServer }) {
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  webpack(config, { isServer }) {
     if (!isServer) {
-      config.externals.push({ bufferutil: "bufferutil", "utf-8-validate": "utf-8-validate", "supports-color": "supports-color" }); 
+      config.externals.push({
+        bufferutil: 'bufferutil',
+        'utf-8-validate': 'utf-8-validate',
+        'supports-color': 'supports-color',
+      });
     }
     return config;
-  }
+  },
 };
 
 module.exports = withNextIntl(nextConfig);

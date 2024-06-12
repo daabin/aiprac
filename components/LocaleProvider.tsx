@@ -16,7 +16,11 @@ export default function LocaleProvider({
   messages: AbstractIntlMessages;
 }>) {
   return (
-    <NextIntlClientProvider locale={locale} messages={messages} timeZone={'Asia/Shanghai'}>
+    <NextIntlClientProvider
+      locale={locale}
+      messages={messages}
+      timeZone={'Asia/Shanghai'}
+    >
       <SemiLocaleProvider locale={languages[locale ?? defaultLocale].semi}>
         {children}
       </SemiLocaleProvider>

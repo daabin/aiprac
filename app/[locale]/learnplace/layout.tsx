@@ -1,35 +1,71 @@
-'use client'
-import React from 'react';
-import { SignedIn, UserButton } from '@clerk/nextjs'
-import { Layout, Nav, Button } from '@douyinfe/semi-ui';
-import { IconBell, IconVerify, IconHome, IconStar, IconDisc, IconSetting, IconComment, IconQingyan } from '@douyinfe/semi-icons';
-import { IconToken } from '@douyinfe/semi-icons-lab';
+'use client';
 
-export default ({
+import React from 'react';
+
+import { SignedIn, UserButton } from '@clerk/nextjs';
+import {
+  IconBell,
+  IconComment,
+  IconDisc,
+  IconHome,
+  IconQingyan,
+  IconSetting,
+  IconStar,
+  IconVerify,
+} from '@douyinfe/semi-icons';
+import { IconToken } from '@douyinfe/semi-icons-lab';
+import { Button, Layout, Nav } from '@douyinfe/semi-ui';
+
+export default function LearnplaceLayout({
   children,
   params: { locale },
 }: {
   children: React.ReactNode;
   params: Record<string, any>;
-}) => {
+}) {
   const { Header, Sider, Content } = Layout;
   return (
     <div className="h-screen w-screen overflow-hidden p-2 bg-indigo-100">
-      <Layout className='border rounded-lg h-full overflow-hidden'>
+      <Layout className="border rounded-lg h-full overflow-hidden">
         <Sider style={{ backgroundColor: 'var(--semi-color-bg-1)' }}>
           <Nav
             defaultSelectedKeys={['Home']}
             style={{ maxWidth: 220, height: '100%' }}
             items={[
-              { itemKey: 'Home', text: '首页', icon: <IconHome size="large" /> },
-              { itemKey: 'learn', text: '我的学习', icon: <IconStar size="large" /> },
-              { itemKey: 'achievement', text: '我的成就', icon: <IconVerify size="large" /> },
-              { itemKey: 'discovery', text: '发现', icon: <IconDisc size="large" /> },
-              { itemKey: 'Setting', text: '设置', icon: <IconSetting size="large" /> },
+              {
+                itemKey: 'Home',
+                text: '首页',
+                icon: <IconHome size="large" />,
+              },
+              {
+                itemKey: 'learn',
+                text: '我的学习',
+                icon: <IconStar size="large" />,
+              },
+              {
+                itemKey: 'achievement',
+                text: '我的成就',
+                icon: <IconVerify size="large" />,
+              },
+              {
+                itemKey: 'discovery',
+                text: '发现',
+                icon: <IconDisc size="large" />,
+              },
+              {
+                itemKey: 'Setting',
+                text: '设置',
+                icon: <IconSetting size="large" />,
+              },
             ]}
             header={{
-              logo: <IconToken className='h-10' style={{ height: '36px', fontSize: 36 }} />,
-              text: <span className='text-2xl font-bold'>Aiprac</span>
+              logo: (
+                <IconToken
+                  className="h-10"
+                  style={{ height: '36px', fontSize: 36 }}
+                />
+              ),
+              text: <span className="text-2xl font-bold">Aiprac</span>,
             }}
             footer={{
               collapseButton: true,

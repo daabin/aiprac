@@ -1,14 +1,17 @@
 import Image from 'next/image';
-import { redirect } from 'next/navigation'
+import { redirect } from 'next/navigation';
+
+import { auth } from '@clerk/nextjs/server';
+import { getTranslations } from 'next-intl/server';
+
+import Authentication from '@/components/home/Authentication';
+import Authorization from '@/components/home/Authorization';
+import Banner from '@/components/home/Banner';
 import SiteHeader from '@/components/home/SiteHeader';
-import { auth } from "@clerk/nextjs/server";
-import { getUserInfo } from "./actions";
 import darkBg from '@/public/dark-bg.avif';
 import lightBg from '@/public/light-bg.avif';
-import Authorization from "@/components/home/Authorization";
-import Authentication from "@/components/home/Authentication";
-import Banner from "@/components/home/Banner";
-import { getTranslations } from 'next-intl/server';
+
+import { getUserInfo } from './actions';
 
 export default async function Page() {
   const t = await getTranslations('site');
@@ -21,9 +24,9 @@ export default async function Page() {
     if (code === 0 && user?.length) {
       userinfo = user?.[0];
       if (userinfo?.role === 1) {
-        redirect('/learnplace')
+        redirect('/learnplace');
       } else if (userinfo?.role === 10) {
-        redirect('/teachplace')
+        redirect('/teachplace');
       }
     }
   }
@@ -55,7 +58,10 @@ export default async function Page() {
       </div>
       <div className="flex w-10/12 mx-auto pt-20">
         <div className="w-1/2">
-          <h1 className='text-5xl leading-normal font-bold mb-12' dangerouslySetInnerHTML={{ __html: t.raw('desc') }}></h1>
+          <h1
+            className="text-5xl leading-normal font-bold mb-12"
+            dangerouslySetInnerHTML={{ __html: t.raw('desc') }}
+          ></h1>
           {!userId && <Authorization />}
           {userId && !userinfo?.role && <Authentication uid={userId} />}
         </div>
