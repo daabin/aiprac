@@ -16,5 +16,7 @@ export async function POST(request: NextRequest) {
     .eq('user_id', req.uid)
     .select();
 
+  console.log('update user role res------->', data, error);
+
   return NextResponse.json({ data, error });
 }
