@@ -11,12 +11,17 @@ export default function LocaleSwitcher() {
   const pathname = usePathname();
 
   return (
+    
     <Dropdown
       trigger="hover"
       render={
+        // @ts-ignore
         <Dropdown.Menu>
+          // @ts-ignore
           {Object.entries(languages).map(([lang, setting]) => (
+            // @ts-ignore
             <Dropdown.Item key={lang}>
+              // @ts-ignore
               <Link href={pathname ?? '/'} locale={lang}>
                 {setting.name}
               </Link>
