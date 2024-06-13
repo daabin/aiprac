@@ -1,21 +1,25 @@
 'use client';
 
 import React from 'react';
-
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { SignedIn, UserButton } from '@clerk/nextjs';
 import {
   IconBell,
   IconComment,
-  IconFolderOpen,
+  IconBolt,
   IconHome,
   IconSetting,
-  IconSimilarity,
   IconStar,
   IconUserGroup,
   IconVerify,
 } from '@douyinfe/semi-icons';
 import { IconToken } from '@douyinfe/semi-icons-lab';
 import { Button, Layout, Nav } from '@douyinfe/semi-ui';
+
+interface RouterMap {
+  [key: string]: string;
+}
 
 export default function TeachplaceLayout({
   children,
@@ -24,17 +28,41 @@ export default function TeachplaceLayout({
   children: React.ReactNode;
   params: Record<string, any>;
 }) {
+  const pathname = usePathname()
+  const pathSegments = pathname.split('/');
+  const lastSegment = pathSegments[pathSegments.length - 1];
+
   const { Header, Sider, Content } = Layout;
   return (
     <div className="h-screen w-screen overflow-hidden p-2 bg-indigo-100">
       <Layout className="border rounded-lg h-full overflow-hidden">
         <Sider style={{ backgroundColor: 'var(--semi-color-bg-1)' }}>
           <Nav
-            defaultSelectedKeys={['Home']}
+            defaultSelectedKeys={[lastSegment || 'home']}
             style={{ maxWidth: 220, height: '100%' }}
+            renderWrapper={({ itemElement, props }) => {
+              const routerMap: RouterMap = {
+                home: `/teachplace`,
+                practice: `/teachplace/practice`,
+                course: `/teachplace/course`,
+                examination: `/teachplace/examination`,
+                sutdents: `/teachplace/sutdents`,
+                setting: `/teachplace/setting`,
+              };
+              return (
+                <Link
+                  style={{ textDecoration: "none" }}
+                  href={`${routerMap[props.itemKey || 'home']}`}
+                  locale={locale}
+                  prefetch={true}
+                >
+                  {itemElement}
+                </Link>
+              );
+            }}
             items={[
               {
-                itemKey: 'Home',
+                itemKey: 'home',
                 text: '首页',
                 icon: <IconHome size="large" />,
               },
@@ -46,7 +74,7 @@ export default function TeachplaceLayout({
               {
                 itemKey: 'practice',
                 text: '练习',
-                icon: <IconFolderOpen size="large" />,
+                icon: <IconBolt size="large" />,
               },
               {
                 itemKey: 'examination',
@@ -59,7 +87,7 @@ export default function TeachplaceLayout({
                 icon: <IconUserGroup size="large" />,
               },
               {
-                itemKey: 'Setting',
+                itemKey: 'setting',
                 text: '设置',
                 icon: <IconSetting size="large" />,
               },
