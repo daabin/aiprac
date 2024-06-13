@@ -12,6 +12,7 @@ import darkBg from '@/public/dark-bg.avif';
 import lightBg from '@/public/light-bg.avif';
 
 import { getUserInfo } from './actions';
+import { RoleCode } from '@/utils/constants';
 
 export default async function Page() {
   const t = await getTranslations('site');
@@ -28,9 +29,9 @@ export default async function Page() {
     if (code === 0 && user?.length) {
       userinfo = user?.[0];
       console.log('userinfo:', userinfo)
-      if (userinfo?.role === 1) {
+      if (userinfo?.role === RoleCode.STUDENT) {
         redirect('/learnplace');
-      } else if (userinfo?.role === 10) {
+      } else if (userinfo?.role === RoleCode.TEACHER) {
         redirect('/teachplace');
       }
     }
