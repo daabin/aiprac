@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@clerk/localizations':
+    specifier: ^2.4.4
+    version: 2.4.4
   '@clerk/nextjs':
     specifier: ^5.1.4
     version: 5.1.4(next@13.5.6)(react-dom@18.3.1)(react@18.3.1)
@@ -274,6 +277,13 @@ packages:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
       tslib: 2.4.1
+    dev: false
+
+  /@clerk/localizations@2.4.4:
+    resolution: {integrity: sha512-Cy0m4Pt9C02Jx3iK76t5cquDJsM5PCc4fiViapGKAp5+gNs0ySG2BFqegVlVk/c6Qa9HzX3tNOiYMVabEHtAyw==}
+    engines: {node: '>=18.17.0'}
+    dependencies:
+      '@clerk/types': 4.6.0
     dev: false
 
   /@clerk/nextjs@5.1.4(next@13.5.6)(react-dom@18.3.1)(react@18.3.1):
@@ -3871,7 +3881,7 @@ packages:
     dev: true
 
   /wrap-ansi@7.0.0:
-    resolution: {integrity: sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==}
+    resolution: {integrity: sha1-Z+FFz/UQpqaYS98RUpEdadLrnkM=}
     engines: {node: '>=10'}
     dependencies:
       ansi-styles: 4.3.0

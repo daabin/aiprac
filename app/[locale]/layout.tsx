@@ -4,7 +4,10 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 import { ClerkProvider } from '@clerk/nextjs';
+import { zhCN } from "@clerk/localizations";
+import { enUS } from '@clerk/localizations';
 import { getTranslations } from 'next-intl/server';
+import { defaultLocale } from '@/i18n';
 
 import LocaleProvider from '@/components/LocaleProvider';
 import '@/styles/globals.scss';
@@ -24,7 +27,7 @@ export default async function RootLayout({
   }
 
   return (
-    <ClerkProvider>
+    <ClerkProvider localization={locale === defaultLocale ? zhCN : enUS}>
       <html lang={locale} suppressHydrationWarning={true}>
         <body suppressHydrationWarning={true}>
           <LocaleProvider locale={locale} messages={messages}>
