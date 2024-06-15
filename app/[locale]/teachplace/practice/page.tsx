@@ -1,6 +1,6 @@
 'use client'
-import { Button, Tabs, TabPane } from '@douyinfe/semi-ui';
-import { IconChecklistStroked, IconCheckChoiceStroked } from '@douyinfe/semi-icons';
+import { Tabs, TabPane } from '@douyinfe/semi-ui';
+import { IconSendMsgStroked, IconChecklistStroked } from '@douyinfe/semi-icons';
 import { Sparkles } from 'lucide-react';
 import Assign from './components/Assign';
 import Correct from './components/Correct';
@@ -17,22 +17,22 @@ export default function PracticePage() {
     >
       <TabPane tab={
         <span>
-          <IconChecklistStroked />
-          布置
+          <IconSendMsgStroked />
+          布置作业
         </span>
       } itemKey="1" >
         <Assign />
       </TabPane>
       <TabPane tab={
         <span>
-          <IconCheckChoiceStroked />
-          批改
+          <IconChecklistStroked />
+          批改作业
         </span>
       } itemKey="2" >
         <Correct />
       </TabPane>
       <TabPane className='h-full flex-1' tab={
-        <span className='flex'>
+        <span className='flex items-center'>
           <Sparkles size={16} color="orange" className="mr-1"/>
           AI 出题
         </span>}
