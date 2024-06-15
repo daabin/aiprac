@@ -30,7 +30,8 @@ export default function TeachplaceLayout({
 }) {
   const pathname = usePathname()
   const pathSegments = pathname.split('/');
-  const lastSegment = pathSegments[pathSegments.length - 1];
+  let lastSegment = pathSegments[pathSegments.length - 1];
+  lastSegment = lastSegment === 'teachplace' ? 'home' : lastSegment;
 
   const { Header, Sider, Content } = Layout;
   return (
@@ -38,7 +39,7 @@ export default function TeachplaceLayout({
       <Layout className="border rounded-lg h-full overflow-hidden">
         <Sider style={{ backgroundColor: 'var(--semi-color-bg-1)' }}>
           <Nav
-            defaultSelectedKeys={[lastSegment || 'home']}
+            defaultSelectedKeys={[lastSegment]}
             style={{ maxWidth: 220, height: '100%' }}
             renderWrapper={({ itemElement, props }) => {
               const routerMap: RouterMap = {
