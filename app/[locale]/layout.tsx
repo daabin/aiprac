@@ -7,7 +7,7 @@ import { ClerkProvider } from '@clerk/nextjs';
 import { getTranslations } from 'next-intl/server';
 
 import LocaleProvider from '@/components/LocaleProvider';
-import '@/styles/globals.scss';
+import '@/styles/globals.css';
 
 export default async function RootLayout({
   children,
