@@ -30,7 +30,7 @@ export default function TeachplaceLayout({
 }) {
   const pathname = usePathname()
   const pathSegments = pathname.split('/');
-  let lastSegment = pathSegments[pathSegments.length - 1];
+  let lastSegment = pathSegments[3];
   lastSegment = lastSegment === 'teachplace' ? 'home' : lastSegment;
 
   const { Header, Sider, Content } = Layout;

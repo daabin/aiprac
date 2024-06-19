@@ -4,52 +4,6 @@ export enum RoleCode {
   STUDENT = 'STUDENT'
 }
 
-export const KnowledgePointsTypes = [{
-  value: 1,
-  label: '字词句'
-}, {
-  value: 2,
-  label: '语法点'
-}]
-
-
-export const CapabilityTerms = [{
-  value: 1,
-  label: '词汇'
-}, {
-  value: 2,
-  label: '语法'
-}, {
-  value: 3,
-  label: '阅读'
-}, {
-  value: 4,
-  label: '听力'
-}, {
-  value: 5,
-  label: '口语'
-}, {
-  value: 6,
-  label: '写作'
-}, {
-  value: 7,
-  label: '练字'
-}]
-
-export const QuestionDifficulty = [{
-  value: 0,
-  label: '零基础'
-}, {
-  value: 1,
-  label: 'HSK1级'
-}, {
-  value: 2,
-  label: 'HSK2级'
-}, {
-  value: 3,
-  label: 'HSK3级'
-}]
-
-export const QuestionTypes = [{
-
-}]
+export const QuestionDifficulty = ['零基础', 'HSK1', 'HSK2', 'HSK3']
+export const AbilityEnabled = ['词汇', '听力', '口语']
+export const QuestionTypeEnabled = ['看图认字', '词汇匹配', '字词填空', '听力选择', '口语发音']
