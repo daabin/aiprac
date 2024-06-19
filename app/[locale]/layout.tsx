@@ -10,7 +10,7 @@ import { getTranslations } from 'next-intl/server';
 import { defaultLocale } from '@/i18n';
 
 import LocaleProvider from '@/components/LocaleProvider';
-import '@/styles/globals.scss';
+import '@/styles/globals.css';
 
 export default async function RootLayout({
   children,

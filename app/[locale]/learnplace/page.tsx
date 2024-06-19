@@ -1,3 +1,3 @@
 export default function StudentPage() {
-  return <h1>Student</h1>;
+  <h1 className="text-center text-slate-500">功能开发中 ...</h1>
 }

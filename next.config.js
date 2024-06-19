@@ -2,6 +2,9 @@ const withNextIntl = require('next-intl/plugin')(
   // This is the default (also the `src` folder is supported out of the box)
   './i18n.ts',
 );
+const semi = require('@douyinfe/semi-next').default({
+  /* the extension options */
+});
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -29,4 +32,4 @@ const nextConfig = {
   },
 };
 
-module.exports = withNextIntl(nextConfig);
+module.exports = withNextIntl(semi(nextConfig));
