@@ -40,7 +40,7 @@ export default function StepOne({ basicInfo, difficulty, next, last }: { basicIn
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ ...basicInfo, settings: questionInfo }),
+      body: JSON.stringify({ ...basicInfo, settings: questionInfo, gen_status: '成功' }),
     });
     setSaveLoading(false)
     const data = await res.json();
