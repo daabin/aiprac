@@ -1,7 +1,5 @@
 export default function SettingPage() {
   return (
-    <div>
-      <h1>Setting</h1>
-    </div>
+    <h1 className="text-center text-slate-500">功能开发中 ...</h1>
   );
 }

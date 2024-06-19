@@ -1,7 +1,5 @@
 export default function SutdentsPage() {
   return (
-    <div>
-      <h1>Sutdents</h1>
-    </div>
+    <h1 className="text-center text-slate-500">功能开发中 ...</h1>
   );
 }
