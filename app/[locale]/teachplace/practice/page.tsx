@@ -1,6 +1,6 @@
 'use client'
 
-import { Typography, Divider, Table, Button, Toast, Tag, SideSheet } from '@douyinfe/semi-ui';
+import { Typography, Row, Col, Card, Table, Button, Toast, Tag, SideSheet, Breadcrumb } from '@douyinfe/semi-ui';
 import { WandSparkles } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -42,35 +42,6 @@ export default function PracticePage() {
     setVisible(false);
   }
 
-  const tagProps = (status: string)  => {
-    switch (status) {
-      case '成功':
-        return {
-          color: 'green',
-          size: 'large',
-          shape: 'circle'
-        }
-      case '失败':
-        return {
-          color: 'red',
-          size: 'large',
-          shape: 'circle'
-        }
-      case '部分成功':
-        return {
-          color: 'light-blue',
-          size: 'large',
-          shape: 'circle'
-        }
-      default:
-        return {
-          color: 'light-blue',
-          size: 'large',
-          shape: 'circle'
-        }
-    }
-  }
-
   const Color = {
     '成功': 'green',
     '失败': 'red',
@@ -80,33 +51,65 @@ export default function PracticePage() {
   const PreviewStatus = ['成功', '部分成功']
 
   return (
-    <section>
+    <section className='h-full'>
       <div className='flex justify-between items-center mb-4'>
-        <Title heading={4}>已创建的练习</Title>
-        <Link href={'/teachplace/practice/create'}><Button theme='solid' size='default' icon={<WandSparkles />}>AI一键出题</Button></Link>
+        <Breadcrumb compact={false}>
+          <Breadcrumb.Item><Title heading={4}>练习</Title></Breadcrumb.Item>
+        </Breadcrumb>
+        <Link href={'/teachplace/practice/create'}><Button className='mb-[1rem]' theme='solid' size='default' icon={<WandSparkles />}>AI一键出题</Button></Link>
       </div>
-      <Divider />
-      <Table size='small' loading={loading} dataSource={practices} rowKey='id' sticky className='mt-6' pagination={{ pageSize: 5 }} bordered={true}>
-        <Column title='ID' width={60} dataIndex="id" />
-        <Column title='标题' width={150} dataIndex="title" />
-        <Column title='描述' width={200} dataIndex="description" />
-        <Column align='center' title='题目设置' width={80} dataIndex="settings" render={(value, record, index) => (
-          <Button theme='borderless' type='secondary' onClick={() => handleReview(record)}>查看</Button>
-        )} />
-        <Column align='center' title='AI出题状态' width={80} dataIndex="gen_status" render={(value, record, index) => (
-          <Tag
-            color={Color[record.gen_status]}
-            size='large'
-            shape='circle'
-            type='solid'
-          >
-            {record.gen_status}
-          </Tag>
-        )} />
-        <Column align='center' title='操作' width={120} render={(value, record, index) => {
-          return PreviewStatus.includes(record.gen_status) ? <Link href={`/teachplace/practice/preview?pid=${record.id}`}><Button theme='light' size='small' >预览</Button> </Link>: ''
-        }} />
-      </Table>
+      <div
+        style={{
+          backgroundColor: 'var(--semi-color-fill-0)',
+          padding: 20
+        }}
+      >
+        <Row gutter={[16, 16]}>
+          <Col span={8}>
+            <Card title='创建练习' bordered={false} >
+              <Title heading={2}> {practices.length}</Title>
+            </Card>
+          </Col>
+          <Col span={8}>
+            <Card title='累计出题' bordered={false} >
+              <Title heading={2}> {68}</Title>
+            </Card>
+          </Col>
+          <Col span={8}>
+            <Card title='消耗 Token' bordered={false} >
+              <Title heading={2}> {360}</Title>
+            </Card>
+          </Col>
+        </Row>
+        <Row gutter={[16, 16]}>
+          <Col span={24}>
+            <Card title='创建记录' bordered={false} >
+              <Table size='small' loading={loading} dataSource={practices} rowKey='id' sticky className='mt-6' pagination={{ pageSize: 5 }} bordered={true}>
+                <Column title='ID' width={60} dataIndex="id" />
+                <Column title='标题' width={150} dataIndex="title" />
+                <Column title='描述' width={200} dataIndex="description" />
+                <Column align='center' title='题目设置' width={80} dataIndex="settings" render={(value, record, index) => (
+                  <Button theme='borderless' type='secondary' onClick={() => handleReview(record)}>查看</Button>
+                )} />
+                <Column align='center' title='AI出题状态' width={80} dataIndex="gen_status" render={(value, record, index) => (
+                  <Tag
+                    color={Color[record.gen_status]}
+                    size='large'
+                    shape='circle'
+                    type='solid'
+                  >
+                    {record.gen_status}
+                  </Tag>
+                )} />
+                <Column align='center' title='操作' width={120} render={(value, record, index) => {
+                  return PreviewStatus.includes(record.gen_status) ? <Link href={`/teachplace/practice/preview?pid=${record.id}`}><Button theme='light' size='small' >预览</Button> </Link> : ''
+                }} />
+              </Table>
+            </Card>
+          </Col>
+        </Row>
+      </div>
+
       <SideSheet size='medium' title="题目设置" visible={visible} onCancel={handleCloseReview}>
         <Table dataSource={curSetting} size="small" rowKey='id' bordered={true}>
           <Column title='题号' width={80} dataIndex="question_id" />
