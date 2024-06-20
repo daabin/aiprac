@@ -4,12 +4,11 @@ import QuestionConf from '@/utils/questionConfData'
 import { WandSparkles } from 'lucide-react';
 import { AbilityEnabled, QuestionTypeEnabled } from '@/utils/constants'
 
-export default function StepOne({ basicInfo, difficulty, next, last }: { basicInfo: any, difficulty: any, next: any, last: any }) {
+export default function StepOne({ basicInfo, difficulty, questionInfo, setQuestionInfo, setPid, next, last }: { basicInfo: any, difficulty: any, questionInfo: any, setQuestionInfo: any, setPid: any, next: any, last: any }) {
   const { Column } = Table;
   const { Title, Paragraph } = Typography;
   const formRef = useRef<any>(null);
   const [questionTypeOptions, setQuestionTypeOptions] = useState<string[]>([])
-  const [questionInfo, setQuestionInfo] = useState<any>([])
   const [saveLoading, setSaveLoading] = useState(false);
 
   const curDifficultyQuestionConfCache = useMemo(() => {
@@ -34,6 +33,11 @@ export default function StepOne({ basicInfo, difficulty, next, last }: { basicIn
   }
 
   const handleGen = async () => {
+    if (questionInfo.length === 0) {
+      Toast.error('请添加考察项目');
+      return;
+    }
+
     setSaveLoading(true)
     const res = await fetch('/api/practice', {
       method: 'POST',
@@ -45,9 +49,13 @@ export default function StepOne({ basicInfo, difficulty, next, last }: { basicIn
     setSaveLoading(false)
     const data = await res.json();
 
+    console.log(data)
+
     if (data?.error) {
       Toast.error('提交失败，请稍后再试');
     } else {
+      const { pid } = data.data[0];
+      setPid(pid)
       next()
     }
   }

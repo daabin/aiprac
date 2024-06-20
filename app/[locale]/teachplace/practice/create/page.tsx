@@ -11,7 +11,9 @@ export default function PracticeCreatePage() {
   const [step, setStep] = useState<number>(0)
   const [basicInfo, setBasicInfo] = useState<any>({})
   const [difficulty, setDifficulty] = useState<string>('')
-  
+  const [questionInfo, setQuestionInfo] = useState<any>([])
+  const [pid, setPid] = useState<string>('')
+
   const next = () => {
     if (step < 3) {
       setStep(step + 1)
@@ -29,8 +31,8 @@ export default function PracticeCreatePage() {
       <Fragment>
         {step === 0 && <StepOne basicInfo={basicInfo} setBasicInfo={setBasicInfo} next={next}/>}
         {step === 1 && <StepTwo difficulty={difficulty} setDifficulty={setDifficulty} next={next} last={last}/>}
-        {step === 2 && <StepThree basicInfo={basicInfo} difficulty={difficulty} next={next} last={last}/>}
-        {step === 3 && <StepFour />}
+        {step === 2 && <StepThree basicInfo={basicInfo} difficulty={difficulty} questionInfo={questionInfo} setQuestionInfo={setQuestionInfo} setPid={setPid} next={next} last={last}/>}
+        {step === 3 && <StepFour questionInfo={questionInfo} pid={pid}/>}
       </Fragment>
     )
   }

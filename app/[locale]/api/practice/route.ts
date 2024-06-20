@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 
 import { supabase } from '@/utils/supabase';
 import { auth } from "@clerk/nextjs/server";
+import { generateUniqueID } from '@/utils/tools'
 
 export const runtime = 'nodejs';
 
@@ -16,6 +17,7 @@ export async function POST(request: NextRequest) {
     .from('practice')
     .insert([
       {
+        pid: generateUniqueID(),
         teacher_id: userId,
         class_id: 'class01',
         course_id: 'course01',

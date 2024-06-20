@@ -102,7 +102,7 @@ export default function PracticePage() {
                   </Tag>
                 )} />
                 <Column align='center' title='操作' width={120} render={(value, record, index) => {
-                  return PreviewStatus.includes(record.gen_status) ? <Link href={`/teachplace/practice/preview?pid=${record.id}`}><Button theme='light' size='small' >预览</Button> </Link> : ''
+                  return PreviewStatus.includes(record.gen_status) ? <Link href={`/teachplace/practice/preview?pid=${record.pid}`}><Button theme='light' size='small' >预览</Button> </Link> : ''
                 }} />
               </Table>
             </Card>
