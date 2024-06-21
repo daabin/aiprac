@@ -1,7 +1,7 @@
 'use client'
 
 import { Typography, Row, Col, Card, Table, Button, Toast, Tag, SideSheet, Breadcrumb } from '@douyinfe/semi-ui';
-import { WandSparkles } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
@@ -56,7 +56,7 @@ export default function PracticePage() {
         <Breadcrumb compact={false}>
           <Breadcrumb.Item><Title heading={4}>练习</Title></Breadcrumb.Item>
         </Breadcrumb>
-        <Link href={'/teachplace/practice/create'}><Button className='mb-[1rem]' theme='solid' size='default' icon={<WandSparkles />}>AI一键出题</Button></Link>
+        <Link href={'/teachplace/practice/create'}><Button className='mb-[1rem]' theme='solid' size='default' icon={<Sparkles />}>AI一键出题</Button></Link>
       </div>
       <div
         style={{
@@ -111,7 +111,7 @@ export default function PracticePage() {
       </div>
 
       <SideSheet size='medium' title="题目设置" visible={visible} onCancel={handleCloseReview}>
-        <Table dataSource={curSetting} size="small" rowKey='id' bordered={true}>
+        <Table dataSource={curSetting} size="small" rowKey='question_id' bordered={true}>
           <Column title='题号' width={80} dataIndex="question_id" />
           <Column title='难度' dataIndex="question_level" />
           <Column title='能力项' dataIndex="question_ability" />

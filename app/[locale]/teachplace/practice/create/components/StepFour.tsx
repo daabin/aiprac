@@ -3,17 +3,65 @@ import { Typography, Button } from '@douyinfe/semi-ui';
 import { Spin } from '@douyinfe/semi-ui';
 import Link from 'next/link';
 import { IconLoading } from '@douyinfe/semi-icons';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { PreviewStatus } from '@/utils/constants'
+import VocabularyConfData from '@/utils/vocabularyConfData';
+
+const timeout = 1000 * 5
 
 export default function StepOne({ questionInfo, pid }: { questionInfo: any, pid: string }) {
   const { Title } = Typography;
   const [completed, setCompleted] = useState<boolean>(false)
   const [genStatus, setGenStatus] = useState<string>('')
 
+  useEffect(() => {
+    if (pid && questionInfo?.length > 0) {
+      handleGen()
+    }
+  }, [questionInfo, pid])
 
-  const handleCancel = () => {
-    // todo
+  const handleGen = async () => {
+    console.log('questionInfo ----', questionInfo)
+    const requestArr: any = []
+    questionInfo.forEach((question: any) => {
+      switch (question.question_type) {
+        case '看图认字':
+          requestArr.push(recognizeWordsByPictures(question))
+          break;
+        case '词汇匹配':
+          requestArr.push(wordMatching(question))
+          break;
+        default:
+          break;
+      }
+    })
+
+    console.log('requestArr ----', requestArr)
+
+    Promise.allSettled(requestArr).then((results) =>
+      results.forEach((result) => console.log(result)),
+    );
+  }
+
+  const recognizeWordsByPictures = async (question: any) => {
+    return new Promise((resolve, reject) => {
+      const res = VocabularyConfData.find(item => item.vocabulary === question.language_point)
+      resolve(res)
+    })
+  }
+
+  const wordMatching = async (question: any) => {
+    const res = await fetch('/api/genWorldMatching', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(question),
+    });
+
+    const data = await res.json();
+
+    console.log('data ----', data)
   }
 
   return (

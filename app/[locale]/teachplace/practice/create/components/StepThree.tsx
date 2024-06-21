@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { Button, Form, Row, Table, Modal, Typography, Toast } from '@douyinfe/semi-ui';
 import questionConfData from '@/utils/questionConfData'
 import vocabularyConfData from '@/utils/vocabularyConfData';
-import { WandSparkles } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 import { AbilityEnabled, QuestionTypeEnabled } from '@/utils/constants'
 
 export default function StepOne({ basicInfo, difficulty, questionInfo, setQuestionInfo, setPid, next, last }: { basicInfo: any, difficulty: any, questionInfo: any, setQuestionInfo: any, setPid: any, next: any, last: any }) {
@@ -34,7 +34,7 @@ export default function StepOne({ basicInfo, difficulty, questionInfo, setQuesti
     last()
   }
 
-  const handleGen = async () => {
+  const handleSavePractice = async () => {
     if (questionInfo.length === 0) {
       Toast.error('请添加考察项目');
       return;
@@ -46,12 +46,10 @@ export default function StepOne({ basicInfo, difficulty, questionInfo, setQuesti
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ ...basicInfo, settings: questionInfo, gen_status: '成功' }),
+      body: JSON.stringify({ ...basicInfo, settings: questionInfo, gen_status: '' }),
     });
     setSaveLoading(false)
     const data = await res.json();
-
-    console.log(data)
 
     if (data?.error) {
       Toast.error('提交失败，请稍后再试');
@@ -170,7 +168,7 @@ export default function StepOne({ basicInfo, difficulty, questionInfo, setQuesti
       </Table>
       <div className="flex justify-end py-4">
         <Button size="large" theme="light" className="mr-2" onClick={handleLast}>上一步</Button>
-        <Button size="large" theme="solid" onClick={handleGen} icon={<WandSparkles />} loading={saveLoading}>一键出题</Button>
+        <Button size="large" theme="solid" onClick={handleSavePractice} icon={<Sparkles />} loading={saveLoading}>一键出题</Button>
       </div>
     </section >
   )
