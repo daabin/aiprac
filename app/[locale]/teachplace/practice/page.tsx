@@ -89,7 +89,7 @@ export default function PracticePage() {
                 <Column title='标题' width={150} dataIndex="title" />
                 <Column title='描述' width={200} dataIndex="description" />
                 <Column align='center' title='题目设置' width={80} dataIndex="settings" render={(value, record, index) => (
-                  <Button theme='borderless' type='secondary' onClick={() => handleReview(record)}>查看</Button>
+                  <Button theme='borderless' type='secondary' size='small' onClick={() => handleReview(record)}>查看</Button>
                 )} />
                 <Column align='center' title='AI出题状态' width={80} dataIndex="gen_status" render={(value, record, index) => (
                   <Tag

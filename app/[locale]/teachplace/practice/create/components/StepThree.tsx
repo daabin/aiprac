@@ -1,6 +1,8 @@
-import { useMemo, useRef, useState } from 'react';
+import { Fragment, useMemo, useRef, useState } from 'react';
+import Link from 'next/link';
 import { Button, Form, Row, Table, Modal, Typography, Toast } from '@douyinfe/semi-ui';
-import QuestionConf from '@/utils/questionConfData'
+import questionConfData from '@/utils/questionConfData'
+import vocabularyConfData from '@/utils/vocabularyConfData';
 import { WandSparkles } from 'lucide-react';
 import { AbilityEnabled, QuestionTypeEnabled } from '@/utils/constants'
 
@@ -12,7 +14,7 @@ export default function StepOne({ basicInfo, difficulty, questionInfo, setQuesti
   const [saveLoading, setSaveLoading] = useState(false);
 
   const curDifficultyQuestionConfCache = useMemo(() => {
-    return QuestionConf.filter(question => question.level === difficulty)
+    return questionConfData.filter(question => question.level === difficulty)
   }, [difficulty])
 
   const questionAbilityOptions = useMemo(() => {
@@ -111,50 +113,61 @@ export default function StepOne({ basicInfo, difficulty, questionInfo, setQuesti
 
   return (
     <section className='flex-1 flex flex-col justify-between'>
-      <div>
-
-        <Form ref={formRef} layout='horizontal' className='pt-3' onSubmit={handleAdd}>
-          <Form.Select field="question_ability" label='选择考察能力项' rules={[
-            { required: true, message: '请选择' },
-          ]} style={{ width: 150 }} onChange={handleAbilitySelect}>
+      <Form ref={formRef} layout='horizontal' className='pt-3' onSubmit={handleAdd}>
+        {({ formState }) => (
+          <Fragment>
+            <Form.Select field="question_ability" label='选择考察能力项' rules={[
+              { required: true, message: '请选择' },
+            ]} style={{ width: 150 }} onChange={handleAbilitySelect}>
+              {
+                questionAbilityOptions && questionAbilityOptions.map((ability: string) => {
+                  return <Form.Select.Option disabled={!AbilityEnabled.includes(ability)} key={ability} value={ability}>{ability}{!AbilityEnabled.includes(ability) && '（暂未支持）'}</Form.Select.Option>
+                })
+              }
+            </Form.Select>
+            <Form.Select field="question_type" label='选择题型' rules={[
+              { required: true, message: '请选择' },
+            ]} style={{ width: 150 }} onChange={handleTypeSelect}>
+              {
+                questionTypeOptions && questionTypeOptions.map((type: string) => {
+                  return <Form.Select.Option disabled={!QuestionTypeEnabled.includes(type)} key={type} value={type}>{type}{!QuestionTypeEnabled.includes(type) && '（暂未支持）'}</Form.Select.Option>
+                })
+              }
+            </Form.Select>
             {
-              questionAbilityOptions && questionAbilityOptions.map((ability: string) => {
-                return <Form.Select.Option disabled={!AbilityEnabled.includes(ability)} key={ability} value={ability}>{ability}{!AbilityEnabled.includes(ability) && '（暂未支持）'}</Form.Select.Option>
-              })
+              formState.values.question_type === '看图认字' ? <Form.Select filter field="language_point" label='选择语言点' rules={[
+                { required: true, message: '请选择' },
+              ]} style={{ width: 150 }}>
+                {
+                  vocabularyConfData.map((item) => {
+                    return <Form.Select.Option key={item.vocabulary} value={item.vocabulary}>{item.vocabulary}</Form.Select.Option>
+                  })
+                }
+              </Form.Select> : <Form.Input field="language_point" label='输入语言点' rules={[
+                { required: true, message: '请输入' },
+              ]} style={{ width: 300 }} />
             }
-          </Form.Select>
-          <Form.Select field="question_type" label='选择题型' rules={[
-            { required: true, message: '请选择' },
-          ]} style={{ width: 150 }} onChange={handleTypeSelect}>
-            {
-              questionTypeOptions && questionTypeOptions.map((type: string) => {
-                return <Form.Select.Option disabled={!QuestionTypeEnabled.includes(type)} key={type} value={type}>{type}{!QuestionTypeEnabled.includes(type) && '（暂未支持）'}</Form.Select.Option>
-              })
-            }
-          </Form.Select>
-          <Form.Input field="language_point" label='输入语言点' rules={[
-            { required: true, message: '请输入' },
-          ]} style={{ width: 300 }} />
-          <Row className='mt-6'>
-            <Button type="primary" theme='solid' htmlType="submit" className="mx-4">
-              新增
-            </Button>
-            <Button>帮助</Button>
-          </Row>
-        </Form>
-        <Table dataSource={questionInfo} rowKey='id' sticky className='mt-6' pagination={{ pageSize: 5 }} bordered={true}>
-          <Column title='题号' width={120} dataIndex="question_id" />
-          <Column title='能力项' width={150} dataIndex="question_ability" />
-          <Column title='题型' width={200} dataIndex="question_type" />
-          <Column title='题型解释' width={120} render={(value, record, index) => (
-            <Button theme='borderless' type='secondary' size='small' onClick={() => handleShowExample(record)}>查看示例</Button>
-          )} />
-          <Column title='考察语言点' dataIndex="language_point" />
-          <Column title='操作' width={120} render={(value, record, index) => (
-            <Button theme='light' type='danger' size='small' onClick={() => handleDel(index)}>删除该题型</Button>
-          )} />
-        </Table>
-      </div>
+            <Row className='mt-6'>
+              <Button type="primary" theme='solid' htmlType="submit" className="mx-4">
+                新增
+              </Button>
+              <Link  target='_blank' href={'https://qum9c5nv4n.feishu.cn/docx/OcAyd7sI9oWhQOxXDBUc7jmIncc'}><Button>帮助</Button></Link>
+            </Row>
+          </Fragment>
+        )}
+      </Form>
+      <Table dataSource={questionInfo} rowKey='id' sticky className='mt-6' pagination={{ pageSize: 5 }} bordered={true}>
+        <Column title='题号' width={120} dataIndex="question_id" />
+        <Column title='能力项' width={150} dataIndex="question_ability" />
+        <Column title='题型' width={200} dataIndex="question_type" />
+        <Column title='题型解释' width={120} render={(value, record, index) => (
+          <Button theme='borderless' type='secondary' size='small' onClick={() => handleShowExample(record)}>查看示例</Button>
+        )} />
+        <Column title='考察语言点' dataIndex="language_point" />
+        <Column title='操作' width={120} render={(value, record, index) => (
+          <Button theme='light' type='danger' size='small' onClick={() => handleDel(index)}>删除该题型</Button>
+        )} />
+      </Table>
       <div className="flex justify-end py-4">
         <Button size="large" theme="light" className="mr-2" onClick={handleLast}>上一步</Button>
         <Button size="large" theme="solid" onClick={handleGen} icon={<WandSparkles />} loading={saveLoading}>一键出题</Button>
