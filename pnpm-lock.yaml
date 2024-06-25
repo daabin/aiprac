@@ -20,6 +20,9 @@ dependencies:
   '@douyinfe/semi-ui':
     specifier: ^2.31.0
     version: 2.60.0(react-dom@18.2.0)(react@18.2.0)
+  '@likg/match-line':
+    specifier: ^1.0.13
+    version: 1.0.13
   '@semi-bot/semi-theme-tangerine':
     specifier: ^1.0.0
     version: 1.0.0
@@ -645,6 +648,10 @@ packages:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.4.15
     dev: true
+
+  /@likg/match-line@1.0.13:
+    resolution: {integrity: sha512-ISA+k7it4c6YHvwfIgSsmRTM8Qs2J72p0UMk+JImMmXvrgB6IGOuqmkcVnCLJwVChc424lLOKlvC5j9KWSlgGQ==}
+    dev: false
 
   /@next/env@13.5.6:
     resolution: {integrity: sha512-Yac/bV5sBGkkEXmAX5FWPS9Mmo2rthrOPRQQNfycJPkjUAUclomCPH7QFVCDQ4Mp2k2K1SSM6m0zrxYrOwtFQw==}

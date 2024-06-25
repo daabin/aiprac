@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useState } from "react"
 import { Button, Typography, Card, Radio, RadioGroup, Input } from '@douyinfe/semi-ui';
+import QuestionMatchLine from './QuestionMatchLine';
 
 export default function PreviewBlock({ questions }: { questions: any }) {
   const { Title, Paragraph } = Typography
@@ -12,7 +13,7 @@ export default function PreviewBlock({ questions }: { questions: any }) {
 
   const PictureWordRecognition = (content: any) => {
     return <div className="w-full">
-      <img src={content?.image_url} alt=""  className="my-4"/>
+      <img src={content?.image_url}  className="my-4 max-w-[100%]"/>
       <RadioGroup type='card'>
         {
           content?.options.map((option: any) => {
@@ -24,7 +25,18 @@ export default function PreviewBlock({ questions }: { questions: any }) {
   };
 
   const VocabularyMatching = (content: any) => {
-    return <div>字词匹配</div>
+    const dataSource: any[] = []
+    content?.left_items?.map((item: any, index: number) => {
+      dataSource.push({
+        leftOption: item,
+        rightOption: content.right_items[index]
+      })
+    })
+    const standardAnswers = {}
+    content?.correct_pairs?.map((pair: any) => {
+      standardAnswers[pair.left] = pair.right
+    })
+    return <QuestionMatchLine dataSource={dataSource} standardAnswers={standardAnswers} />
   };
 
   const FillInTheBlanks = (content: any) => {
