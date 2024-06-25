@@ -8,7 +8,7 @@ export async function POST(request: NextRequest) {
   console.log('req ----', req)
 
   try {
-    const res = await fetch('https://aiprac-api.vercel.app/v1/questions', {
+    const res = await fetch('http://mock.test.xiaopeng.local/mock/23/v1/questions', {
       method: 'POST',
       body: req,
       signal: AbortSignal.timeout(timeoutConf)
@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
    
     return NextResponse.json({ data })
   } catch (error: any) {
-    console.error('error ----', error?.message ,error)
-    return NextResponse.error()
+    console.error('api error ----', error?.message ,error)
+    return NextResponse.json({ error: error?.message}, {status: 500})
   }
 }

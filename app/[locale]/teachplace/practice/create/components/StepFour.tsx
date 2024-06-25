@@ -51,17 +51,11 @@ export default function StepOne({ questionInfo, pid }: { questionInfo: any, pid:
   }
 
   const wordMatching = async (question: any) => {
-    const res = await fetch('/api/genWorldMatching', {
+    return fetch('/api/genWorldMatching', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
       body: JSON.stringify(question),
-    });
-
-    const data = await res.json();
-
-    console.log('data ----', data)
+    })
+      .then((res) => res.json())
   }
 
   return (
