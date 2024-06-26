@@ -12,16 +12,19 @@ export default function PracticePage() {
   const [practices, setPractices] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
-  const [curSetting, setCurSetting] = useState<any>({});
+  const [curSetting, setCurSetting] = useState<any[]>([]);
+  const [questionsCount, setQuestionsCount] = useState(0);
 
   useEffect(() => {
     getPractice();
+    getQuestionsCount()
   }, []);
 
   const getPractice = async () => {
     setLoading(true);
     const res = await fetch('/api/practice', {
       method: 'GET',
+      cache: 'no-store'
     });
     const data = await res.json();
     setLoading(false);
@@ -30,6 +33,21 @@ export default function PracticePage() {
       Toast.error('查询失败，请刷新重试');
     } else {
       setPractices(data.data)
+    }
+  }
+
+  const getQuestionsCount = async () => {
+    const res = await fetch('/api/question-account', {
+      method: 'GET',
+      cache: 'no-store'
+    });
+    const data = await res.json();
+
+    if (data?.error) {
+      Toast.error('查询失败，请刷新重试');
+    } else {
+      setQuestionsCount(data.data);
+      console.log('getQuestionsCount------->', data.data);
     }
   }
 
@@ -54,7 +72,7 @@ export default function PracticePage() {
     <section className='h-full'>
       <div className='flex justify-between items-center mb-4'>
         <Breadcrumb compact={false}>
-          <Breadcrumb.Item><Title heading={4}>练习</Title></Breadcrumb.Item>
+          <Breadcrumb.Item><Title heading={4}>练习1</Title></Breadcrumb.Item>
         </Breadcrumb>
         <Link href={'/teachplace/practice/create'}><Button className='mb-[1rem]' theme='solid' size='default' icon={<Sparkles />}>AI一键出题</Button></Link>
       </div>
@@ -67,12 +85,12 @@ export default function PracticePage() {
         <Row gutter={[16, 16]}>
           <Col span={8}>
             <Card title='创建练习' bordered={false} >
-              <Title heading={2}> {practices.length}</Title>
+              <Title heading={2}> {practices.length || '-'}</Title>
             </Card>
           </Col>
           <Col span={8}>
             <Card title='累计出题' bordered={false} >
-              <Title heading={2}> {68}</Title>
+              <Title heading={2}> {questionsCount || '-'}</Title>
             </Card>
           </Col>
           <Col span={8}>
@@ -111,8 +129,7 @@ export default function PracticePage() {
       </div>
 
       <SideSheet size='medium' title="题目设置" visible={visible} onCancel={handleCloseReview}>
-        <Table dataSource={curSetting} size="small" rowKey='question_id' bordered={true}>
-          <Column title='题号' width={80} dataIndex="question_id" />
+        <Table dataSource={curSetting} rowKey='qid' size="small" bordered={true}>
           <Column title='难度' dataIndex="question_level" />
           <Column title='能力项' dataIndex="question_ability" />
           <Column title='题型' dataIndex="question_type" />

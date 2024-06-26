@@ -5,6 +5,7 @@ import questionConfData from '@/utils/questionConfData'
 import vocabularyConfData from '@/utils/vocabularyConfData';
 import { Sparkles } from 'lucide-react';
 import { AbilityEnabled, QuestionTypeEnabled } from '@/utils/constants'
+import { generateUniqueID } from '@/utils/tools';
 
 export default function StepOne({ basicInfo, difficulty, questionInfo, setQuestionInfo, setPid, next, last }: { basicInfo: any, difficulty: any, questionInfo: any, setQuestionInfo: any, setPid: any, next: any, last: any }) {
   const { Column } = Table;
@@ -46,7 +47,7 @@ export default function StepOne({ basicInfo, difficulty, questionInfo, setQuesti
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ ...basicInfo, settings: questionInfo, gen_status: '' }),
+      body: JSON.stringify({ ...basicInfo, settings: questionInfo }),
     });
     setSaveLoading(false)
     const data = await res.json();
@@ -85,7 +86,7 @@ export default function StepOne({ basicInfo, difficulty, questionInfo, setQuesti
         return;
       }
       const newQuestionInfo = formRef.current.formApi.getValues()
-      setQuestionInfo([...questionInfo, { ...newQuestionInfo, question_id: questionInfo.length + 1, question_level: difficulty }])
+      setQuestionInfo([...questionInfo, { ...newQuestionInfo, question_level: difficulty, qid: generateUniqueID()}])
     })
   }
 
@@ -155,7 +156,9 @@ export default function StepOne({ basicInfo, difficulty, questionInfo, setQuesti
         )}
       </Form>
       <Table dataSource={questionInfo} rowKey='id' sticky className='mt-6' pagination={{ pageSize: 5 }} bordered={true}>
-        <Column title='题号' width={120} dataIndex="question_id" />
+        <Column title='题号' width={120}  render={(value, record, index) => (
+          <span>{index + 1}</span>
+        )}/>
         <Column title='能力项' width={150} dataIndex="question_ability" />
         <Column title='题型' width={200} dataIndex="question_type" />
         <Column title='题型解释' width={120} render={(value, record, index) => (

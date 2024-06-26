@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import './QuestionMatchLine.css';
 import MatchLine from '@likg/match-line';
 
-const QuestionMatchLine = ({dataSource, standardAnswers} : {dataSource: any , standardAnswers: any}) => {
+const QuestionMatchLine = ({ dataSource, standardAnswers }: { dataSource: any, standardAnswers: any }) => {
   const [matchLine, setMatchLine] = useState<MatchLine | null>(null);
 
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -56,6 +56,7 @@ const QuestionMatchLine = ({dataSource, standardAnswers} : {dataSource: any , st
         <canvas ref={canvasRef}></canvas>
         <canvas ref={backCanvasRef}></canvas>
       </div>
+      <p className='my-2'>提示：点击左边文字后连接至对应右边文字</p>
     </div>
   );
 };

@@ -8,16 +8,17 @@ export default function PreviewBlock({ questions }: { questions: any }) {
   const [questionIdx, setQuestionIdx] = useState<number>(0)
 
   useEffect(() => {
+    console.log('questions------->', questions)
     setQuestionIdx(0)
   }, [questions])
 
   const PictureWordRecognition = (content: any) => {
     return <div className="w-full">
-      <img src={content?.image_url}  className="my-4 max-w-[100%]"/>
+      <img src={content?.img_url}  className="my-4 max-w-[100%]"/>
       <RadioGroup type='card'>
         {
           content?.options.map((option: any) => {
-            return <Radio key={option.text} value={option.text}>{option.text}</Radio>
+            return <Radio key={option.text} value={option.text}>{option.text}({option.pinyin})</Radio>
           })
         }
       </RadioGroup>
@@ -26,9 +27,9 @@ export default function PreviewBlock({ questions }: { questions: any }) {
 
   const VocabularyMatching = (content: any) => {
     const dataSource: any[] = []
-    content?.left_items?.map((item: any, index: number) => {
+    content?.left_items?.text?.map((item: any, index: number) => {
       dataSource.push({
-        leftOption: item,
+        leftOption: `${item}(${content?.left_items?.pingyin[index]})`,
         rightOption: content.right_items[index]
       })
     })
@@ -55,21 +56,22 @@ export default function PreviewBlock({ questions }: { questions: any }) {
 
   return <div className="h-full w-4/5 flex flex-col justify-center items-center">
     <Card style={{ height: '80%', width: '100%' }}>
-      <Title heading={5}>{questionIdx + 1}. {questions[questionIdx].content.question_text}</Title>
+      <Paragraph style={{marginLeft: 16}}>{questions[questionIdx].content?.question_text?.pinyin || questions[questionIdx].content?.question_text?.pingyin}</Paragraph>
+      <Title heading={5}>{questionIdx + 1}. {questions[questionIdx].content?.question_text?.text}</Title>
       {
-        questions[questionIdx].type === '看图认字' && PictureWordRecognition(questions[questionIdx].content)
+        questions[questionIdx].question_type === '看图认字' && PictureWordRecognition(questions[questionIdx].content)
       }
       {
-        questions[questionIdx].type === '词汇匹配' && VocabularyMatching(questions[questionIdx].content)
+        questions[questionIdx].question_type === '词汇匹配' && VocabularyMatching(questions[questionIdx].content)
       }
       {
-        questions[questionIdx].type === '字词填空' && FillInTheBlanks(questions[questionIdx].content)
+        questions[questionIdx].question_type === '字词填空' && FillInTheBlanks(questions[questionIdx].content)
       }
       {
-        questions[questionIdx].type === '听力选择' && ListeningComprehension(questions[questionIdx].content)
+        questions[questionIdx].question_type === '听力选择' && ListeningComprehension(questions[questionIdx].content)
       }
       {
-        questions[questionIdx].type === '口语发音' && OralPronunciation(questions[questionIdx].content)
+        questions[questionIdx].question_type === '口语发音' && OralPronunciation(questions[questionIdx].content)
       }
     </Card>
     <div className="flex mt-4">

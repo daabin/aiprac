@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
   const { userId } = auth();
   const req = await request.json();
 
-  console.log(req, userId);
+  console.log('add pratice req------->', userId, req);
 
   const { data, error } = await supabase
     .from('practice')
@@ -28,13 +28,12 @@ export async function POST(request: NextRequest) {
     ])
     .select()
 
-  console.log('add proatice ------->', data, error);
+  console.log('add pratice ------->', data, error);
 
   return NextResponse.json({ data, error });
 }
 
-
-export async function GET(request: NextRequest) {
+export async function GET() {
   const { userId } = auth();
   const { data, error } = await supabase
     .from('practice')
@@ -44,4 +43,18 @@ export async function GET(request: NextRequest) {
   console.log('get practice ------->', data, error);
 
   return NextResponse.json({ data, error });
+}
+
+export async function PUT(request: NextRequest) {
+  const req = await request.json();
+
+  console.log('update pratice gen_status ------->', req);
+  const { data, error } = await supabase
+    .from('practice')
+    .update({ gen_status: req.gen_status })
+    .eq('pid', req.pid)
+    .select()
+
+    console.log('update pratice gen_status------->', data, error);
+    return NextResponse.json({ data, error });
 }

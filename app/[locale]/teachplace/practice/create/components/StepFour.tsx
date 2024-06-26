@@ -1,18 +1,17 @@
 'use client'
-import { Typography, Button } from '@douyinfe/semi-ui';
+import { Typography, Button, Toast } from '@douyinfe/semi-ui';
 import { Spin } from '@douyinfe/semi-ui';
 import Link from 'next/link';
 import { IconLoading } from '@douyinfe/semi-icons';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { PreviewStatus } from '@/utils/constants'
 import VocabularyConfData from '@/utils/vocabularyConfData';
-
-const timeout = 1000 * 5
 
 export default function StepOne({ questionInfo, pid }: { questionInfo: any, pid: string }) {
   const { Title } = Typography;
   const [completed, setCompleted] = useState<boolean>(false)
   const [genStatus, setGenStatus] = useState<string>('')
+  const countRef = useRef<number>(0)
 
   useEffect(() => {
     if (pid && questionInfo?.length > 0) {
@@ -20,56 +19,102 @@ export default function StepOne({ questionInfo, pid }: { questionInfo: any, pid:
     }
   }, [questionInfo, pid])
 
-  const handleGen = async () => {
-    console.log('questionInfo ----', questionInfo)
-    const requestArr: any = []
-    questionInfo.forEach((question: any) => {
-      switch (question.question_type) {
-        case '看图认字':
-          requestArr.push(recognizeWordsByPictures(question))
-          break;
-        case '词汇匹配':
-          requestArr.push(wordMatching(question))
-          break;
-        default:
-          break;
-      }
-    })
 
-    console.log('requestArr ----', requestArr)
+  const genCount = useMemo(() => {
+    return countRef.current
+  }, [countRef.current])
 
-    Promise.allSettled(requestArr).then((results) =>
-      results.forEach((result) => console.log(result)),
-    );
-  }
-
-  const recognizeWordsByPictures = async (question: any) => {
-    return new Promise((resolve, reject) => {
-      const res = VocabularyConfData.find(item => item.vocabulary === question.language_point)
-      resolve(res)
-    })
-  }
-
-  const wordMatching = async (question: any) => {
-    return fetch('/api/genWorldMatching', {
+  const composeRequest = async (question: any) => {
+    return fetch('/api/gen', {
       method: 'POST',
       body: JSON.stringify(question),
+    }).then((res) => {
+      countRef.current += 1
+      return res.json()
     })
-      .then((res) => res.json())
   }
+
+  const handleGen = async () => {
+    console.log('questionInfo ----', questionInfo)
+
+    const questionInfoCopy = JSON.parse(JSON.stringify(questionInfo))
+    questionInfoCopy.forEach((question: any) => {
+      question.gen_status = 0
+      question.pid = pid
+    })
+
+    const requestArr: any = []
+    questionInfoCopy.forEach((question: any) => {
+      requestArr.push(composeRequest(question))
+    })
+
+    Promise.allSettled(requestArr).then(results => {
+      results.forEach((result, index) => {
+        if (result.status === 'fulfilled') {
+          const { value } = result
+          if (!value?.error) {
+            questionInfoCopy[index].content = value?.content || {}
+            questionInfoCopy[index].gen_status = 1
+
+            if (questionInfoCopy[index]?.question_type === '看图认字') {
+              const target = VocabularyConfData.find((item: any) => item.vocabulary === questionInfoCopy[index]?.language_point)
+              questionInfoCopy[index].content.img_url = target?.img_url || ''
+            }
+
+          }
+        }
+      })
+    }).then(() => {
+      handleSave(questionInfoCopy)
+    })
+  }
+
+
+  const handleSave = async (questionInfoCopy: any[]) => {
+    console.log('do save ----->')
+    const questionSave = await fetch('/api/questions', {
+      method: 'POST',
+      body: JSON.stringify(questionInfoCopy),
+    })
+
+    const questionSaveData = await questionSave.json()
+
+    if (questionSaveData.error) {
+      console.log('questionSaveData.error ---->', questionSaveData.error)
+    }
+
+    // 更新 practice 表的 gen_status
+    const successNum = questionInfoCopy.filter((item: any) => item.gen_status === 1).length
+    const genStatus = successNum === questionInfoCopy.length ? '成功' : successNum === 0 ? '失败' : '部分成功'
+    setGenStatus(genStatus)
+
+    const updatePracticeGenStatus = await fetch('/api/practice', {
+      method: 'PUT',
+      body: JSON.stringify({ pid, gen_status: genStatus }),
+    })
+
+    const updatePracticeGenStatusData = await updatePracticeGenStatus.json()
+
+    if (updatePracticeGenStatusData.error) {
+      Toast.warning('更新练习状态失败');
+    }
+
+    setCompleted(true)
+  }
+
 
   return (
     <div className="h-full flex flex-col items-center mt-10">
       {
         !completed && <div className='text-center'>
           <Spin indicator={<IconLoading size="extra-large" />} />
-          <Title heading={2} style={{ margin: "20px 0", color: '#ff7900' }}>正在为你生成第 {6} / 10 个题目......</Title>
+          <Title heading={2} style={{ margin: "20px 0", color: '#ff7900' }}>题目生成中......</Title>
           <Title heading={3} style={{ color: '#7f1d1d' }}>请勿离开当前页面！</Title>
         </div>
       }
       {
         completed && <div className='text-center'>
-          <Title heading={2} style={{ margin: "20px 0", color: '#ff7900' }}>生成成功！</Title>
+          <Title heading={2} style={{ margin: "20px 0", color: '#ff7900' }}>已完成</Title>
           <Title heading={3} style={{ color: '#7f1d1d' }}>生成的题目已经保存到题库中，你可以在练习主页查看</Title>
         </div>
       }
@@ -78,7 +123,7 @@ export default function StepOne({ questionInfo, pid }: { questionInfo: any, pid:
           completed && <Link href={'/teachplace/practice'}><Button size="large" theme="light">返回练习主页</Button></Link>
         }
         {
-          PreviewStatus.includes(genStatus) && <Link href={'/teachplace/practice/preview'}><Button size="large" theme="solid" className='ml-4'>预览题目</Button></Link>
+          PreviewStatus.includes(genStatus) && <Link href={`/teachplace/practice/preview?pid=${pid}`}><Button size="large" theme="solid" className='ml-4'>预览题目</Button></Link>
         }
       </div>
     </div >

@@ -1,34 +1,76 @@
 'use client'
 
-import { Breadcrumb, Card, Carousel } from '@douyinfe/semi-ui';
+import { Breadcrumb, Card, Toast } from '@douyinfe/semi-ui';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from "next/navigation";
-import { issuesQuestions } from './mock';
 import { cn } from '@/utils/tailwind';
 import PreviewBlock from './components/PreviewBlock';
 
 export default function PracticePreviewPage() {
   const searchParams = useSearchParams();
   const pid = searchParams.get('pid');
-  const [curIssueQuestion, setCurIssueQuestion] = useState<any>({});
+  const [curQuestionQuestion, setCurQuestionQuestion] = useState<any>([]);
+  const [curType, setCurType] = useState('');
+  const [questions, setQuestions] = useState<any[]>([]);
 
-  // 将 issuesQuestions 按 question_ability 字段分组 
-  const issuesGroupByAbility = useMemo(() => {
-    return issuesQuestions.reduce((acc, cur) => {
-      if (!acc[cur.question_ability]) {
-        acc[cur.question_ability] = [];
-      }
-      acc[cur.question_ability].push(cur);
-      return acc;
-    }, {})
-  }, [issuesQuestions]);
+  useEffect(() => {
+    // 获取题目列表
+    fetchQuestions();
+  }, [pid]);
 
-  const handleClickIssue = (issue: any) => {
-    if (issue.gen_status === 0) {
-      return;
+  const fetchQuestions = async () => {
+    const res = await fetch(`/api/questions?pid=${pid}`, {
+      method: 'GET',
+      cache: 'no-store',
+    });
+    const data = await res.json();
+
+    console.log('fetchQuestions------->', data);
+
+    if (data?.error) {
+      Toast.error('查询失败，请刷新重试');
+    } else {
+      setQuestions(data.data)
     }
-    setCurIssueQuestion(issue);
+  }
+
+  // 将 questionsQuestions 按 question_ability 字段分组 
+  // 再将分组后的 value 按 question_type 字段分组
+  const questionsGroupByAbility = useMemo(() => {
+    const result: any = {};
+    questions.forEach((question) => {
+      if (!result[question.question_ability]) {
+        result[question.question_ability] = [];
+      }
+      result[question.question_ability].push(question);
+    });
+
+    Object.keys(result).forEach((ability) => {
+      const questions = result[ability];
+      const groupByType: any = {};
+      questions.forEach((question: any) => {
+        if (!groupByType[question.question_type]) {
+          groupByType[question.question_type] = [];
+        }
+        groupByType[question.question_type].push(question);
+      });
+      result[ability] = Object.keys(groupByType).map((type) => {
+        return {
+          type,
+          questions: groupByType[type]
+        }
+      });
+    });
+
+    console.log('questionsGroupByAbility------->', result);
+    return result;
+  }, [questions]);
+
+  const handleClickQuestion = (question: any, type: string) => {
+    console.log('handleClickQuestion------->', question);
+    setCurQuestionQuestion(question);
+    setCurType(type);
   }
 
   return (
@@ -42,21 +84,18 @@ export default function PracticePreviewPage() {
       <Card className='flex-1 flex' bodyStyle={{ height: '100%', width: '100%', display: 'flex' }}>
         <div className='w-[300px] h-full border p-4'>
           {
-            issuesGroupByAbility && Object.keys(issuesGroupByAbility).map((ability) => {
+            questionsGroupByAbility && Object.keys(questionsGroupByAbility).map((ability) => {
               return (
                 <div key={ability} className='px-2'>
                   <div className='text-lg font-bold mb-4'>{ability}</div>
                   {
-                    issuesGroupByAbility[ability].map((issue: any) => {
+                    questionsGroupByAbility[ability].map((typeGroup: any) => {
                       return (
-                        <div key={issue.id} className={cn('flex items-center pl-4 mb-4', curIssueQuestion.id === issue.id ? 'text-[#ff7900] font-bold' : '', issue.gen_status === 1 ? 'hover:cursor-pointer hover:font-bold' : 'opacity-75 hover:cursor-not-allowed')} onClick={() => handleClickIssue(issue)}>
-                          <div>{issue.question_type}</div>
-                          {
-                            issue.gen_status === 1 && <div>（{issue.questions?.length}）</div>
-                          }
-                          {
-                            issue.gen_status !== 1 && <div className='text-red-200'>（生成失败）</div>
-                          }
+                        <div key={typeGroup.type}
+                          className={cn('flex items-center pl-4 mb-4 hover:cursor-pointer', curType === typeGroup.type ? 'text-[#ff7900] font-bold' : '')}
+                          onClick={() => handleClickQuestion(typeGroup.questions, typeGroup.type)}>
+                          <div>{typeGroup.type}</div>
+                          <div>（{typeGroup.questions?.length}）</div>
                         </div>
                       )
                     })
@@ -67,8 +106,7 @@ export default function PracticePreviewPage() {
           }
         </div>
         <div className='flex-1 h-full border border-l-0 bg-slate-50 flex justify-center items-center'>
-          {!curIssueQuestion?.questions && <div>请点击左侧题目类型查看</div>}
-          {curIssueQuestion?.questions?.length > 0 && <PreviewBlock questions={curIssueQuestion?.questions} />}
+          {curQuestionQuestion.length === 0 ? <div>请点击左侧题目类型查看</div> : <PreviewBlock questions={curQuestionQuestion} />}
         </div>
       </Card>
     </section>
