@@ -95,7 +95,7 @@ export default function PracticePage() {
           </Col>
           <Col span={8}>
             <Card title='消耗 Token' bordered={false} >
-              <Title heading={2}> {360}</Title>
+              <Title heading={2}> - </Title>
             </Card>
           </Col>
         </Row>
