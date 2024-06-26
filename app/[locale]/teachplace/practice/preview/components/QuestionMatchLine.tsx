@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import './QuestionMatchLine.css';
 import MatchLine from '@likg/match-line';
 
-const QuestionMatchLine = ({ dataSource, standardAnswers }: { dataSource: any, standardAnswers: any }) => {
+const QuestionMatchLine = ({ dataSource, standardAnswers, qid }: { dataSource: any, standardAnswers: any, qid: string }) => {
   const [matchLine, setMatchLine] = useState<MatchLine | null>(null);
 
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -10,6 +10,7 @@ const QuestionMatchLine = ({ dataSource, standardAnswers }: { dataSource: any, s
   const backCanvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
+    console.log('qid --->', qid);
     // -- 初始化连线库
     if (canvasRef.current && backCanvasRef.current && containerRef.current) {
       const items = containerRef.current.querySelectorAll('.option');
@@ -29,7 +30,14 @@ const QuestionMatchLine = ({ dataSource, standardAnswers }: { dataSource: any, s
         setMatchLine(matching);
       }
     }
-  }, []);
+
+    return () => {
+      matchLine?.reset();
+      canvasRef.current = null;
+      backCanvasRef.current = null;
+      containerRef.current = null;
+    }
+  }, [dataSource, qid, standardAnswers]);
 
   const renderItems = (ownership: 'L' | 'R') => {
     const k = ownership === 'L' ? 'leftOption' : 'rightOption';
@@ -45,7 +53,7 @@ const QuestionMatchLine = ({ dataSource, standardAnswers }: { dataSource: any, s
     ));
   };
   return (
-    <div className="match-line">
+    <div className="match-line" id={qid}>
       <div className="tools">
         <button onClick={() => matchLine?.reset()}>重置</button>
         <button onClick={() => matchLine?.undo()}>撤销</button>

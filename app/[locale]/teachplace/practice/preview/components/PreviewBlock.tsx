@@ -12,8 +12,8 @@ export default function PreviewBlock({ questions }: { questions: any }) {
     setQuestionIdx(0)
   }, [questions])
 
-  const PictureWordRecognition = (content: any) => {
-    return <div className="w-full">
+  const PictureWordRecognition = (content: any, qid: string) => {
+    return <div className="w-full" id={qid}>
       <img src={content?.img_url}  className="my-4 max-w-[100%]"/>
       <RadioGroup type='card'>
         {
@@ -25,7 +25,7 @@ export default function PreviewBlock({ questions }: { questions: any }) {
     </div>
   };
 
-  const VocabularyMatching = (content: any) => {
+  const VocabularyMatching = (content: any, qid: string) => {
     const dataSource: any[] = []
     content?.left_items?.text?.map((item: any, index: number) => {
       dataSource.push({
@@ -37,7 +37,7 @@ export default function PreviewBlock({ questions }: { questions: any }) {
     content?.correct_pairs?.map((pair: any) => {
       standardAnswers[pair.left] = pair.right
     })
-    return <QuestionMatchLine dataSource={dataSource} standardAnswers={standardAnswers} />
+    return <QuestionMatchLine qid={qid} dataSource={dataSource} standardAnswers={standardAnswers} />
   };
 
   const FillInTheBlanks = (content: any) => {
@@ -59,10 +59,10 @@ export default function PreviewBlock({ questions }: { questions: any }) {
       <Paragraph style={{marginLeft: 16}}>{questions[questionIdx].content?.question_text?.pinyin || questions[questionIdx].content?.question_text?.pingyin}</Paragraph>
       <Title heading={5}>{questionIdx + 1}. {questions[questionIdx].content?.question_text?.text}</Title>
       {
-        questions[questionIdx].question_type === '看图认字' && PictureWordRecognition(questions[questionIdx].content)
+        questions[questionIdx].question_type === '看图认字' && PictureWordRecognition(questions[questionIdx].content, questions[questionIdx].qid)
       }
       {
-        questions[questionIdx].question_type === '词汇匹配' && VocabularyMatching(questions[questionIdx].content)
+        questions[questionIdx].question_type === '词汇匹配' && VocabularyMatching(questions[questionIdx].content, questions[questionIdx].qid)
       }
       {
         questions[questionIdx].question_type === '字词填空' && FillInTheBlanks(questions[questionIdx].content)
