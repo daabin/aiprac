@@ -1,6 +1,7 @@
 'use client'
 
-import { Breadcrumb, Card, Toast } from '@douyinfe/semi-ui';
+import { Breadcrumb, Card, Toast, Spin } from '@douyinfe/semi-ui';
+import { IconLoading } from '@douyinfe/semi-icons';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from "next/navigation";
@@ -13,6 +14,7 @@ export default function PracticePreviewPage() {
   const [curQuestionQuestion, setCurQuestionQuestion] = useState<any>([]);
   const [curType, setCurType] = useState('');
   const [questions, setQuestions] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // 获取题目列表
@@ -27,6 +29,8 @@ export default function PracticePreviewPage() {
     const data = await res.json();
 
     console.log('fetchQuestions------->', data);
+
+    setLoading(false);
 
     if (data?.error) {
       Toast.error('查询失败，请刷新重试');
@@ -81,7 +85,10 @@ export default function PracticePreviewPage() {
           <Breadcrumb.Item>题目预览</Breadcrumb.Item>
         </Breadcrumb>
       </div>
-      <Card className='flex-1 flex' bodyStyle={{ height: '100%', width: '100%', display: 'flex' }}>
+      {loading && <div className='mt-40 flex justify-center items-center'>
+        <Spin spinning={loading} indicator={<IconLoading />} size='large' />
+      </div>}
+      {!loading && <Card className='flex-1 flex' bodyStyle={{ height: '100%', width: '100%', display: 'flex' }}>
         <div className='w-[300px] h-full border p-4'>
           {
             questionsGroupByAbility && Object.keys(questionsGroupByAbility).map((ability) => {
@@ -108,7 +115,7 @@ export default function PracticePreviewPage() {
         <div className='flex-1 h-full border border-l-0 bg-slate-50 flex justify-center items-center'>
           {curQuestionQuestion.length === 0 ? <div>请点击左侧题目类型查看</div> : <PreviewBlock questions={curQuestionQuestion} />}
         </div>
-      </Card>
+      </Card>}
     </section>
   );
 }
