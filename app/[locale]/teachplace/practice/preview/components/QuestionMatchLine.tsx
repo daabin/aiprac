@@ -20,6 +20,7 @@ const QuestionMatchLine = ({ dataSource, standardAnswers, qid }: { dataSource: a
           items: items as NodeListOf<HTMLElement>,
           canvas: canvasRef.current,
           backCanvas: backCanvasRef.current,
+          strokeStyle: '#ff7900',
           itemActiveCls: 'active',
           standardAnswers,
           debug: true,
@@ -32,7 +33,8 @@ const QuestionMatchLine = ({ dataSource, standardAnswers, qid }: { dataSource: a
     }
 
     return () => {
-      matchLine?.reset();
+      console.log('清除连线库');
+      matchLine?.reset()
       canvasRef.current = null;
       backCanvasRef.current = null;
       containerRef.current = null;
