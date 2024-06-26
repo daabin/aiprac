@@ -72,7 +72,7 @@ export default function PracticePage() {
     <section className='h-full'>
       <div className='flex justify-between items-center mb-4'>
         <Breadcrumb compact={false}>
-          <Breadcrumb.Item><Title heading={4}>练习1</Title></Breadcrumb.Item>
+          <Breadcrumb.Item><Title heading={4}>练习</Title></Breadcrumb.Item>
         </Breadcrumb>
         <Link href={'/teachplace/practice/create'}><Button className='mb-[1rem]' theme='solid' size='default' icon={<Sparkles />}>AI一键出题</Button></Link>
       </div>
