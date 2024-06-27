@@ -52,6 +52,7 @@ export default function StepOne({ questionInfo, pid }: { questionInfo: any, pid:
       results.forEach((result, index) => {
         if (result.status === 'fulfilled') {
           const { value } = result
+          console.log('value ---->', value)
           if (!value?.error && value?.content) {
             questionInfoCopy[index].content = value?.content || {}
             questionInfoCopy[index].token = value?.token || 0

@@ -13,6 +13,8 @@ export async function POST(request: NextRequest) {
       url: '/v1/questions',
       data: JSON.stringify({...req}),
     });
+
+    console.log('res ----', res)
   
     return NextResponse.json(res.data)
   } catch (error: any) {
