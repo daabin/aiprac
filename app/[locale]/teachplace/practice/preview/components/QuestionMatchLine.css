@@ -3,12 +3,7 @@
   height: auto;
   margin: 20px 0;
 }
-.match-line .tools {
-  margin-bottom: 16px;
-}
-.match-line .tools button {
-  margin-right: 8px;
-}
+
 .match-line .contents {
   border: 1px dashed #ccc;
   position: relative;

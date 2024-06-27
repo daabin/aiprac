@@ -1,7 +1,8 @@
 'use client'
 import { useEffect, useState } from "react"
 import { Button, Typography, Card, Radio, RadioGroup, Input } from '@douyinfe/semi-ui';
-import QuestionMatchLine from './QuestionMatchLine';
+import PictureWordRecognition from './PictureWordRecognition';
+import VocabularyMatching from './VocabularyMatching';
 
 export default function PreviewBlock({ questions }: { questions: any }) {
   const { Title, Paragraph } = Typography
@@ -11,34 +12,6 @@ export default function PreviewBlock({ questions }: { questions: any }) {
     console.log('questions------->', questions)
     setQuestionIdx(0)
   }, [questions])
-
-  const PictureWordRecognition = (content: any, qid: string) => {
-    return <div className="w-full" id={qid}>
-      <img src={content?.img_url}  className="my-4 max-w-[100%]"/>
-      <RadioGroup type='card'>
-        {
-          content?.options.map((option: any) => {
-            return <Radio key={option.text} value={option.text}>{option.text}({option.pinyin})</Radio>
-          })
-        }
-      </RadioGroup>
-    </div>
-  };
-
-  const VocabularyMatching = (content: any, qid: string) => {
-    const dataSource: any[] = []
-    content?.left_items?.text?.map((item: any, index: number) => {
-      dataSource.push({
-        leftOption: `${item}(${content?.left_items?.pingyin[index]})`,
-        rightOption: content.right_items[index]
-      })
-    })
-    const standardAnswers = {}
-    content?.correct_pairs?.map((pair: any) => {
-      standardAnswers[pair.left] = pair.right
-    })
-    return <QuestionMatchLine qid={qid} dataSource={dataSource} standardAnswers={standardAnswers} />
-  };
 
   const FillInTheBlanks = (content: any) => {
     return <div className="mt-20 w-2/3">
@@ -59,10 +32,10 @@ export default function PreviewBlock({ questions }: { questions: any }) {
       <Paragraph style={{marginLeft: 16}}>{questions[questionIdx].content?.question_text?.pinyin || questions[questionIdx].content?.question_text?.pingyin}</Paragraph>
       <Title heading={5}>{questionIdx + 1}. {questions[questionIdx].content?.question_text?.text}</Title>
       {
-        questions[questionIdx].question_type === '看图认字' && PictureWordRecognition(questions[questionIdx].content, questions[questionIdx].qid)
+        questions[questionIdx].question_type === '看图认字' && <PictureWordRecognition content={questions[questionIdx].content}/>
       }
       {
-        questions[questionIdx].question_type === '词汇匹配' && VocabularyMatching(questions[questionIdx].content, questions[questionIdx].qid)
+        questions[questionIdx].question_type === '词汇匹配' && <VocabularyMatching content={questions[questionIdx].content}/>
       }
       {
         questions[questionIdx].question_type === '字词填空' && FillInTheBlanks(questions[questionIdx].content)
