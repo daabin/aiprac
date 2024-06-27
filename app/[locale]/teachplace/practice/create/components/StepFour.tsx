@@ -52,7 +52,7 @@ export default function StepOne({ questionInfo, pid }: { questionInfo: any, pid:
       results.forEach((result, index) => {
         if (result.status === 'fulfilled') {
           const { value } = result
-          if (!value?.error) {
+          if (!value?.error && value?.content) {
             questionInfoCopy[index].content = value?.content || {}
             questionInfoCopy[index].gen_status = 1
 
@@ -60,7 +60,6 @@ export default function StepOne({ questionInfo, pid }: { questionInfo: any, pid:
               const target = VocabularyConfData.find((item: any) => item.vocabulary === questionInfoCopy[index]?.language_point)
               questionInfoCopy[index].content.img_url = target?.img_url || ''
             }
-
           }
         }
       })

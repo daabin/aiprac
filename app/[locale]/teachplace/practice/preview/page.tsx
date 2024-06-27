@@ -1,6 +1,6 @@
 'use client'
 
-import { Breadcrumb, Card, Toast, Spin } from '@douyinfe/semi-ui';
+import { Breadcrumb, Card, Toast, Spin, Tooltip } from '@douyinfe/semi-ui';
 import { IconLoading } from '@douyinfe/semi-icons';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
@@ -71,10 +71,19 @@ export default function PracticePreviewPage() {
     return result;
   }, [questions]);
 
-  const handleClickQuestion = (question: any, type: string) => {
-    console.log('handleClickQuestion------->', question);
-    setCurQuestionQuestion(question);
+  const handleClickQuestion = (questions: any, type: string) => {
+    console.log('handleClickQuestion------->', questions);
+    setCurQuestionQuestion(questions.filter((question: any) => question.gen_status === 1));
     setCurType(type);
+  }
+
+  const RenderQuestionCount = ({questions}: {questions: any}) => {
+    console.log('RenderQuestionCount------->', questions);
+    const genFailedCount = questions.filter((question: any) => question.gen_status !== 1).length;
+    if (genFailedCount > 0) {
+      return <Tooltip content={`失败:${genFailedCount}总数:${questions?.length}，失败题目不可预览`}><div>（<span className='text-red-500'>{genFailedCount}</span>/{questions?.length}）</div></Tooltip>
+    }
+    return <div>（{questions?.length}）</div>
   }
 
   return (
@@ -102,7 +111,7 @@ export default function PracticePreviewPage() {
                           className={cn('flex items-center pl-4 mb-4 hover:cursor-pointer', curType === typeGroup.type ? 'text-[#ff7900] font-bold' : '')}
                           onClick={() => handleClickQuestion(typeGroup.questions, typeGroup.type)}>
                           <div>{typeGroup.type}</div>
-                          <div>（{typeGroup.questions?.length}）</div>
+                          <RenderQuestionCount questions={typeGroup.questions}></RenderQuestionCount>
                         </div>
                       )
                     })
