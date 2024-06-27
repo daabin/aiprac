@@ -61,7 +61,7 @@ const QuestionMatchLine = ({ dataSource, standardAnswers }: { dataSource: any, s
     if (_.isEqual(formatAnswer, standardAnswers)) {
       Toast.success('回答正确')
     } else {
-      Toast.error(`回答错误, 正确答案是${JSON.stringify(standardAnswers)}`)
+      Toast.error(`回答错误, 正确答案是：${JSON.stringify(standardAnswers)}`)
     }
   }
 

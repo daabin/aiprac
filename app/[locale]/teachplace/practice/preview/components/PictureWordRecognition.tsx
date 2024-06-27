@@ -12,7 +12,7 @@ export default function PictureWordRecognition({ content }: { content: any }) {
     if (selectedValue === content?.correct_answer?.text) {
       Toast.success('回答正确')
     } else {
-      Toast.error(`回答错误，正确答案是${content?.correct_answer?.text}(${content?.correct_answer?.pinyin})`)
+      Toast.error(`回答错误，正确答案是：${content?.correct_answer?.text}(${content?.correct_answer?.pinyin})`)
     }
   }
 

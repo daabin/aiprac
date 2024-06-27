@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 import { Button, Typography, Card, Radio, RadioGroup, Input } from '@douyinfe/semi-ui';
 import PictureWordRecognition from './PictureWordRecognition';
 import VocabularyMatching from './VocabularyMatching';
+import FillInTheBlanks from './FillInTheBlanks';
 
 export default function PreviewBlock({ questions }: { questions: any }) {
   const { Title, Paragraph } = Typography
@@ -12,12 +13,6 @@ export default function PreviewBlock({ questions }: { questions: any }) {
     console.log('questions------->', questions)
     setQuestionIdx(0)
   }, [questions])
-
-  const FillInTheBlanks = (content: any) => {
-    return <div className="mt-20 w-2/3">
-      <Input placeholder="请输入答案" />
-    </div>
-  };
 
   const ListeningComprehension = (content: any) => {
     return <div>听力选择</div>
@@ -38,7 +33,7 @@ export default function PreviewBlock({ questions }: { questions: any }) {
         questions[questionIdx].question_type === '词汇匹配' && <VocabularyMatching content={questions[questionIdx].content}/>
       }
       {
-        questions[questionIdx].question_type === '字词填空' && FillInTheBlanks(questions[questionIdx].content)
+        questions[questionIdx].question_type === '字词填空' && <FillInTheBlanks content={questions[questionIdx].content}/>
       }
       {
         questions[questionIdx].question_type === '听力选择' && ListeningComprehension(questions[questionIdx].content)
