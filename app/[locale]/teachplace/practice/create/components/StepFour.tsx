@@ -54,6 +54,7 @@ export default function StepOne({ questionInfo, pid }: { questionInfo: any, pid:
           const { value } = result
           if (!value?.error && value?.content) {
             questionInfoCopy[index].content = value?.content || {}
+            questionInfoCopy[index].token = value?.token || 0
             questionInfoCopy[index].gen_status = 1
 
             if (questionInfoCopy[index]?.question_type === '看图认字') {
