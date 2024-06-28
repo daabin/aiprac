@@ -4,6 +4,7 @@ import { Button, Typography, Card, Radio, RadioGroup, Input } from '@douyinfe/se
 import PictureWordRecognition from './PictureWordRecognition';
 import VocabularyMatching from './VocabularyMatching';
 import FillInTheBlanks from './FillInTheBlanks';
+import RenderPinyin from "./RenderPinyin";
 
 export default function PreviewBlock({ questions }: { questions: any }) {
   const { Title, Paragraph } = Typography
@@ -24,8 +25,7 @@ export default function PreviewBlock({ questions }: { questions: any }) {
 
   return <div className="h-full w-4/5 flex flex-col justify-center items-center">
     <Card style={{ height: '80%', width: '100%' }}>
-      <Paragraph style={{marginLeft: 16}}>{questions[questionIdx].content?.question_text?.pinyin || questions[questionIdx].content?.question_text?.pingyin}</Paragraph>
-      <Title heading={5}>{questionIdx + 1}. {questions[questionIdx].content?.question_text?.text}</Title>
+      <Title heading={5}>{questionIdx + 1}. <RenderPinyin text={questions[questionIdx].content?.question_text?.text} pinyin={questions[questionIdx].content?.question_text?.pinyin || questions[questionIdx].content?.question_text?.pingyin}></RenderPinyin></Title>
       {
         questions[questionIdx].question_type === '看图认字' && <PictureWordRecognition content={questions[questionIdx].content}/>
       }
