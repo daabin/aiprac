@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { Button, Typography, Card, Radio, RadioGroup, Input } from '@douyinfe/semi-ui';
 import PictureWordRecognition from './PictureWordRecognition';
 import VocabularyMatching from './VocabularyMatching';
@@ -7,13 +7,16 @@ import FillInTheBlanks from './FillInTheBlanks';
 import RenderPinyin from "./RenderPinyin";
 
 export default function PreviewBlock({ questions }: { questions: any }) {
-  const { Title, Paragraph } = Typography
+  const { Title } = Typography
   const [questionIdx, setQuestionIdx] = useState<number>(0)
 
   useEffect(() => {
-    console.log('questions------->', questions)
     setQuestionIdx(0)
   }, [questions])
+
+  const curQuestion = useMemo(() => {
+    return questions[questionIdx]
+  }, [questionIdx, questions])
 
   const ListeningComprehension = (content: any) => {
     return <div>听力选择</div>
@@ -24,24 +27,24 @@ export default function PreviewBlock({ questions }: { questions: any }) {
   };
 
   return <div className="h-full w-4/5 flex flex-col justify-center items-center">
-    <Card style={{ height: '80%', width: '100%' }}>
-      <Title heading={5}>{questionIdx + 1}. <RenderPinyin text={questions[questionIdx].content?.question_text?.text} pinyin={questions[questionIdx].content?.question_text?.pinyin || questions[questionIdx].content?.question_text?.pingyin}></RenderPinyin></Title>
+    {curQuestion && <Card style={{ height: '80%', width: '100%' }}>
+      <Title heading={5}>{questionIdx + 1}. <RenderPinyin text={curQuestion?.content?.question_text?.text} pinyin={curQuestion?.content?.question_text?.pinyin || curQuestion?.content?.question_text?.pingyin}></RenderPinyin></Title>
       {
-        questions[questionIdx].question_type === '看图认字' && <PictureWordRecognition content={questions[questionIdx].content}/>
+        curQuestion?.question_type === '看图认字' && <PictureWordRecognition content={curQuestion?.content} />
       }
       {
-        questions[questionIdx].question_type === '词汇匹配' && <VocabularyMatching content={questions[questionIdx].content}/>
+        curQuestion?.question_type === '词汇匹配' && <VocabularyMatching content={curQuestion?.content} />
       }
       {
-        questions[questionIdx].question_type === '字词填空' && <FillInTheBlanks content={questions[questionIdx].content}/>
+        curQuestion?.question_type === '字词填空' && <FillInTheBlanks content={curQuestion?.content} />
       }
       {
-        questions[questionIdx].question_type === '听力选择' && ListeningComprehension(questions[questionIdx].content)
+        curQuestion?.question_type === '听力选择' && ListeningComprehension(curQuestion?.content)
       }
       {
-        questions[questionIdx].question_type === '口语发音' && OralPronunciation(questions[questionIdx].content)
+        curQuestion?.question_type === '口语发音' && OralPronunciation(curQuestion?.content)
       }
-    </Card>
+    </Card>}
     <div className="flex mt-4">
       {questions.length > 1 && questionIdx > 0 && <Button onClick={() => { setQuestionIdx(questionIdx - 1) }}>上一题</Button>}
       <Button type="primary" disabled className="mx-4">重新生成</Button>

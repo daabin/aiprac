@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import './QuestionMatchLine.css';
 import MatchLine from '@likg/match-line';
 import { Button, Toast } from '@douyinfe/semi-ui';
+import { IconHelpCircle } from '@douyinfe/semi-icons';
 import _ from 'lodash';
 
 const QuestionMatchLine = ({ dataSource, standardAnswers }: { dataSource: any, standardAnswers: any }) => {
@@ -51,7 +52,7 @@ const QuestionMatchLine = ({ dataSource, standardAnswers }: { dataSource: any, s
     Object.keys(answers).map(key => {
       formatAnswer[key.replace(/\(.*\)/, '')] = answers[key]
     })
-    
+
     // _.mapValues(answers, (value, key) => key.replace(/\(.*\)/, ''))
 
     // 将对象数组转化为对象
@@ -80,13 +81,13 @@ const QuestionMatchLine = ({ dataSource, standardAnswers }: { dataSource: any, s
   };
   return (
     <div className="match-line">
+      <div className='my-2 flex items-center'><IconHelpCircle className='mr-1'/><p> 使用提示：点击左边文字后连接至对应右边文字</p></div>
       <div className="contents" ref={containerRef}>
         <div className="leftOptions">{renderItems('L')}</div>
         <div className="rightOptions">{renderItems('R')}</div>
         <canvas ref={canvasRef}></canvas>
         <canvas ref={backCanvasRef}></canvas>
       </div>
-      <p className='my-2'>提示：点击左边文字后连接至对应右边文字</p>
       <div className="flex justify-center mt-4 gap-4">
         <Button onClick={() => matchLine?.reset()}>重置</Button>
         <Button onClick={() => matchLine?.undo()}>撤销</Button>
