@@ -1,5 +1,6 @@
 import { Button, Radio, RadioGroup, Toast } from '@douyinfe/semi-ui';
 import { useState } from 'react';
+import Image from 'next/image';
 
 export default function PictureWordRecognition({ content }: { content: any }) {
   const [selectedValue, setSelectedValue] = useState<string>('')
@@ -17,7 +18,7 @@ export default function PictureWordRecognition({ content }: { content: any }) {
   }
 
   return <div className="w-full">
-    <img src={content?.img_url} className="my-4 max-w-[100%]" />
+    <Image src={content?.img_url} alt="" width={200} height={200} className="my-4 max-w-80" />
     <RadioGroup type='card' onChange={handleChange}>
       {
         content?.options.map((option: any) => {

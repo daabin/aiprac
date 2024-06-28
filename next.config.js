@@ -20,6 +20,9 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  images: {
+    domains: ['i.postimg.cc'],
+  },
   webpack(config, { isServer }) {
     if (!isServer) {
       config.externals.push({

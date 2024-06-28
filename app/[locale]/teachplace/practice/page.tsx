@@ -1,6 +1,7 @@
 'use client'
 
 import { Typography, Row, Col, Card, Table, Button, Toast, Tag, SideSheet, Breadcrumb } from '@douyinfe/semi-ui';
+import { set } from 'lodash';
 import { Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -15,6 +16,7 @@ export default function PracticePage() {
   const [curSetting, setCurSetting] = useState<any[]>([]);
   const [questionsCount, setQuestionsCount] = useState(0);
   const [tokens, setTokens] = useState(0);
+  const [loadingQuestions, setLoadingQuestions] = useState(false);
 
   useEffect(() => {
     getPractice();
@@ -70,9 +72,23 @@ export default function PracticePage() {
     }
   }
 
-  const handleReview = (record: any) => {
+  const handleReview = async (record: any) => {
+    console.log('handleReview------->', record);
     setVisible(true);
-    setCurSetting(record.settings);
+    setLoadingQuestions(true);
+    const res = await fetch(`/api/questions?pid=${record?.pid}`, {
+      method: 'GET',
+      cache: 'no-store',
+    });
+    const data = await res.json();
+    setLoadingQuestions(false);
+    console.log('fetchQuestions------->', data);
+
+    if (data?.error) {
+      Toast.error('查询失败，请刷新重试');
+    } else {
+      setCurSetting(data.data);
+    }
   }
 
   const handleCloseReview = () => {
@@ -125,10 +141,10 @@ export default function PracticePage() {
                 <Column title='ID' width={60} dataIndex="id" />
                 <Column title='标题' width={150} dataIndex="title" />
                 <Column title='描述' width={200} dataIndex="description" />
-                <Column align='center' title='题目设置' width={80} dataIndex="settings" render={(value, record, index) => (
+                <Column align='center' title='题目' width={80} dataIndex="settings" render={(value, record, index) => (
                   <Button theme='borderless' type='secondary' size='small' onClick={() => handleReview(record)}>查看</Button>
                 )} />
-                <Column align='center' title='AI出题状态' width={80} dataIndex="gen_status" render={(value, record, index) => (
+                <Column align='center' title='AI出题' width={80} dataIndex="gen_status" render={(value, record, index) => (
                   <Tag
                     color={Color[record.gen_status]}
                     size='large'
@@ -147,12 +163,23 @@ export default function PracticePage() {
         </Row>
       </div>
 
-      <SideSheet size='medium' title="题目设置" visible={visible} onCancel={handleCloseReview}>
-        <Table dataSource={curSetting} rowKey='qid' size="small" bordered={true}>
-          <Column title='难度' dataIndex="question_level" />
-          <Column title='能力项' dataIndex="question_ability" />
-          <Column title='题型' dataIndex="question_type" />
+      <SideSheet size='large' title="题目" visible={visible} onCancel={handleCloseReview}>
+        <Table dataSource={curSetting} loading={loadingQuestions} rowKey='qid' size="small" bordered={true}>
+          <Column title='难度' width={100} dataIndex="question_level" />
+          <Column title='能力项' width={100} dataIndex="question_ability" />
+          <Column title='题型' width={150} dataIndex="question_type" />
           <Column title='考察语言点' width={200} dataIndex="language_point" />
+          <Column title='消耗 Token' width={150} dataIndex="token" />
+          <Column align='center' title='AI出题' width={80} dataIndex="gen_status" render={(value, record, index) => (
+            <Tag
+              color={record.gen_status === 1 ? 'green' : 'red'}
+              size='large'
+              shape='circle'
+              type='solid'
+            >
+              {record.gen_status === 1 ? '成功' : '失败'}
+            </Tag>
+          )} />
         </Table>
       </SideSheet>
     </section>
