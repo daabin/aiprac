@@ -140,7 +140,10 @@ export default function PracticePage() {
               <Table size='small' loading={loading} dataSource={practices} rowKey='id' sticky className='mt-6' pagination={{ pageSize: 5 }} bordered={true}>
                 <Column title='ID' width={60} dataIndex="id" />
                 <Column title='标题' width={150} dataIndex="title" />
-                <Column title='描述' width={200} dataIndex="description" />
+                <Column title='描述' dataIndex="description" />
+                <Column title='创建时间' width={160} dataIndex="created_at" render={(value, record, index) => (
+                  new Date(value).toLocaleString()
+                )} />
                 <Column align='center' title='题目' width={80} dataIndex="settings" render={(value, record, index) => (
                   <Button theme='borderless' type='secondary' size='small' onClick={() => handleReview(record)}>查看</Button>
                 )} />
