@@ -1,5 +1,6 @@
 import QuestionMatchLine from "./QuestionMatchLine"
 import { shuffleArray } from "@/utils/tools"
+import RenderPinyin from "./RenderPinyin";
 
 export default function VocabularyMatching({ content }: { content: any }) {
   const dataSource: any[] = []

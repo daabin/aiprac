@@ -18,7 +18,7 @@ export default function FillInTheBlanks({ content }: { content: any }) {
     }
   }
 
-  return <div className="mt-20 w-2/3">
+  return <div className="mt-6 w-1/2">
     <Input placeholder="请输入答案" onChange={handleInput} />
     <div className='flex justify-center mt-4'>
       <Button theme='solid' type='primary' onClick={handleCheck}>检查答案</Button>

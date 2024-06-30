@@ -1,10 +1,24 @@
 import { Button, Radio, RadioGroup, Toast } from '@douyinfe/semi-ui';
-import { useState } from 'react';
-import Image from 'next/image';
+import { useEffect, useState } from 'react';
 import RenderPinyin from "./RenderPinyin";
 
-export default function PictureWordRecognition({ content }: { content: any }) {
+export default function ListeningComprehension({ content }: { content: any }) {
   const [selectedValue, setSelectedValue] = useState<string>('')
+  const [audioUrl, setAudioUrl] = useState<string>('')
+
+  useEffect(() => {
+    getAudioUrl()
+  }, [content])
+
+  const getAudioUrl = async () => {
+    const res = await fetch(`/api/storage?path=${content?.supabase_path}`, {
+      method: 'GET',
+    })
+    const data = await res.json();
+
+    console.log('get audio url res------->', data)
+    setAudioUrl(data?.data?.signedUrl)
+  }
 
   const handleChange = (e: any) => {
     setSelectedValue(e.target.value)
@@ -19,10 +33,10 @@ export default function PictureWordRecognition({ content }: { content: any }) {
   }
 
   return <div className="w-full">
-    <Image src={content?.img_url} alt="" width={200} height={200} className="my-4 max-w-80" />
+    {audioUrl && <audio className='my-6' controls src={audioUrl}></audio>}
     <RadioGroup type='card' onChange={handleChange}>
       {
-        content?.options.map((option: any) => {
+        content?.options?.map((option: any) => {
           return <Radio key={option.text} value={option.text}><RenderPinyin text={option.text} pinyin={option.pinyin}></RenderPinyin></Radio>
         })
       }
@@ -31,4 +45,4 @@ export default function PictureWordRecognition({ content }: { content: any }) {
       <Button theme='solid' type='primary' onClick={handleCheck}>检查答案</Button>
     </div>
   </div>
-};
+}

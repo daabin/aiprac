@@ -5,6 +5,7 @@ import PictureWordRecognition from './PictureWordRecognition';
 import VocabularyMatching from './VocabularyMatching';
 import FillInTheBlanks from './FillInTheBlanks';
 import RenderPinyin from "./RenderPinyin";
+import ListeningComprehension from './ListeningComprehension';
 
 export default function PreviewBlock({ questions }: { questions: any }) {
   const { Title } = Typography
@@ -17,10 +18,6 @@ export default function PreviewBlock({ questions }: { questions: any }) {
   const curQuestion = useMemo(() => {
     return questions[questionIdx]
   }, [questionIdx, questions])
-
-  const ListeningComprehension = (content: any) => {
-    return <div>听力选择</div>
-  };
 
   const OralPronunciation = (content: any) => {
     return <div>口语发音</div>
@@ -39,7 +36,7 @@ export default function PreviewBlock({ questions }: { questions: any }) {
         curQuestion?.question_type === '字词填空' && <FillInTheBlanks content={curQuestion?.content} />
       }
       {
-        curQuestion?.question_type === '听力选择' && ListeningComprehension(curQuestion?.content)
+        curQuestion?.question_type === '听力选择' && <ListeningComprehension content={curQuestion?.content} />
       }
       {
         curQuestion?.question_type === '口语发音' && OralPronunciation(curQuestion?.content)

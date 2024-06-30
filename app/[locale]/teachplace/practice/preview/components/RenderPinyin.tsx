@@ -1,9 +1,9 @@
 export default function RenderPinyin({ text, pinyin }: { text: string, pinyin: string }) {
   const zh = text.replace(/\s/g, '').split('')
-  const py = pinyin.replace(/[_,.，。]/g, '').replace(/\s+/g, ' ').split(' ')
+  const py = pinyin.replace(/[_,.，。]/g, ' ').replace(/\s+/g, ' ').split(' ')
 
-  console.log('zh------->', zh, 'py------->', py)
-  
+  console.log('zh------->', zh, 'py------ >', py)
+
   let result = ''
   let j = 0
   for (let i = 0; i < zh.length; i++) {
