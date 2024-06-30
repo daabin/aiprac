@@ -48,26 +48,42 @@ export default function StepOne({ questionInfo, pid }: { questionInfo: any, pid:
       requestArr.push(composeRequest(question))
     })
 
-    Promise.allSettled(requestArr).then(results => {
-      results.forEach((result, index) => {
-        if (result.status === 'fulfilled') {
-          const { value } = result
-          console.log('value ---->', value)
-          if (!value?.error && value?.content) {
-            questionInfoCopy[index].content = value?.content || {}
-            questionInfoCopy[index].token = value?.token || 0
-            questionInfoCopy[index].gen_status = 1
+    const results = await Promise.allSettled(requestArr)
 
-            if (questionInfoCopy[index]?.question_type === '看图认字') {
-              const target = VocabularyConfData.find((item: any) => item.vocabulary === questionInfoCopy[index]?.language_point)
-              questionInfoCopy[index].content.img_url = target?.img_url || ''
+    for (let i = 0; i < results.length; i++) {
+      if (results[i].status === 'fulfilled') {
+        const { value } = results[i] as any
+
+        if (!value?.error && value?.content) {
+          questionInfoCopy[i].content = value?.content || {}
+          questionInfoCopy[i].token = value?.token || 0
+          questionInfoCopy[i].gen_status = 1
+
+          if (questionInfoCopy[i]?.question_type === '看图认字') {
+            const target = VocabularyConfData.find((item: any) => item.vocabulary === questionInfoCopy[i]?.language_point)
+            questionInfoCopy[i].content.img_url = target?.img_url || ''
+          } else if (questionInfoCopy[i]?.question_type === '听力选择') {
+            questionInfoCopy[i].content.audio_url = value?.audio_url || ''
+
+            const res = await fetch('/api/storage', {
+              method: 'POST',
+              body: JSON.stringify({ audio_url: value?.audio_url, qid: questionInfoCopy[i]?.qid }),
+            })
+            const resData = await res.json()
+    
+            console.log('upload audio res------->', resData?.data?.path);
+    
+            if (resData?.data?.path) {
+              questionInfoCopy[i].content.supabase_path = resData?.data?.path
+            } else {
+              questionInfoCopy[i].gen_status = 0
             }
           }
         }
-      })
-    }).then(() => {
-      handleSave(questionInfoCopy)
-    })
+      }
+    }
+
+    await handleSave(questionInfoCopy)
   }
 
 
