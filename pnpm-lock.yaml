@@ -29,6 +29,9 @@ dependencies:
   '@supabase/supabase-js':
     specifier: ^2.43.4
     version: 2.43.4(bufferutil@4.0.8)(utf-8-validate@6.0.4)
+  audio-react-recorder:
+    specifier: ^1.0.5
+    version: 1.0.5(react@18.2.0)
   axios:
     specifier: ^1.7.2
     version: 1.7.2
@@ -1363,6 +1366,16 @@ packages:
 
   /asynckit@0.4.0:
     resolution: {integrity: sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==}
+    dev: false
+
+  /audio-react-recorder@1.0.5(react@18.2.0):
+    resolution: {integrity: sha512-pvzb0rnSDmzd5IjZNSbl3TQ2X/ZQ9vnVHfdtUCYaafrFm4jcdIzSqqM64qqqt+LXbQGVr3nMale1GH6z/yCRww==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      react: ^16.0.0
+    dependencies:
+      prop-types: 15.8.1
+      react: 18.2.0
     dev: false
 
   /autoprefixer@10.4.19(postcss@8.4.38):

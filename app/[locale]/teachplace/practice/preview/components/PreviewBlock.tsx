@@ -6,6 +6,7 @@ import VocabularyMatching from './VocabularyMatching';
 import FillInTheBlanks from './FillInTheBlanks';
 import RenderPinyin from "./RenderPinyin";
 import ListeningComprehension from './ListeningComprehension';
+import OralPronunciation from './OralPronunciation';
 
 export default function PreviewBlock({ questions }: { questions: any }) {
   const { Title } = Typography
@@ -18,10 +19,6 @@ export default function PreviewBlock({ questions }: { questions: any }) {
   const curQuestion = useMemo(() => {
     return questions[questionIdx]
   }, [questionIdx, questions])
-
-  const OralPronunciation = (content: any) => {
-    return <div>口语发音</div>
-  };
 
   return <div className="h-full w-4/5 flex flex-col justify-center items-center">
     {curQuestion && <Card style={{ height: '80%', width: '100%' }}>
@@ -39,7 +36,7 @@ export default function PreviewBlock({ questions }: { questions: any }) {
         curQuestion?.question_type === '听力选择' && <ListeningComprehension content={curQuestion?.content} />
       }
       {
-        curQuestion?.question_type === '口语发音' && OralPronunciation(curQuestion?.content)
+        curQuestion?.question_type === '口语发音' && <OralPronunciation content={curQuestion?.content} />
       }
     </Card>}
     <div className="flex mt-4">
