@@ -39,6 +39,7 @@ export async function GET() {
     .from('practice')
     .select('*')
     .eq('teacher_id', userId)
+    .order('created_at', { ascending: false })
 
   console.log('get practice ------->', data, error);
 
