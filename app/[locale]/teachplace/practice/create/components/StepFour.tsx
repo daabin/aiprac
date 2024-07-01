@@ -34,6 +34,22 @@ export default function StepOne({ questionInfo, pid }: { questionInfo: any, pid:
     })
   }
 
+  const mockOralPronunciation = (question: any) => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve({
+          "content": {
+            "question_text": {
+              "pinyin": "qǐng yòng zhōng wén pīn dú xià liè jù zi",
+              "text": "请用中文拼读下列句子"
+            },
+            "question": question.language_point,
+          }
+        })
+      }, 1000)
+    })
+  }
+
   const handleGen = async () => {
     console.log('questionInfo ----', questionInfo)
 
@@ -45,7 +61,11 @@ export default function StepOne({ questionInfo, pid }: { questionInfo: any, pid:
 
     const requestArr: any = []
     questionInfoCopy.forEach((question: any) => {
-      requestArr.push(composeRequest(question))
+      if (question?.question_type === '口语发音') {
+        requestArr.push(mockOralPronunciation(question))
+      } else {
+        requestArr.push(composeRequest(question))
+      }
     })
 
     const results = await Promise.allSettled(requestArr)
@@ -70,9 +90,9 @@ export default function StepOne({ questionInfo, pid }: { questionInfo: any, pid:
               body: JSON.stringify({ audio_url: value?.audio_url, qid: questionInfoCopy[i]?.qid }),
             })
             const resData = await res.json()
-    
+
             console.log('upload audio res------->', resData?.data?.path);
-    
+
             if (resData?.data?.path) {
               questionInfoCopy[i].content.supabase_path = resData?.data?.path
             } else {
