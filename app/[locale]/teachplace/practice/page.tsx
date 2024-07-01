@@ -138,7 +138,9 @@ export default function PracticePage() {
           <Col span={24}>
             <Card title='创建记录' bordered={false} >
               <Table size='small' loading={loading} dataSource={practices} rowKey='id' sticky className='mt-6' pagination={{ pageSize: 10 }} bordered={true}>
-                <Column title='ID' width={60} dataIndex="id" />
+                <Column title='ID' width={60} render={(value, record, index) => (
+                  index + 1
+                )} />
                 <Column title='标题' width={250} dataIndex="title" />
                 <Column title='描述' dataIndex="description" />
                 <Column title='创建时间' width={180} dataIndex="created_at" render={(value, record, index) => (
