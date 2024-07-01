@@ -16,7 +16,10 @@ export default function ListeningComprehension({ content }: { content: any }) {
     })
     const data = await res.json();
 
-    console.log('get audio url res------->', data)
+    if(!data?.data?.signedUrl) {
+      Toast.error('获取音频文件失败')
+      return
+    }
     setAudioUrl(data?.data?.signedUrl)
   }
 
@@ -33,7 +36,7 @@ export default function ListeningComprehension({ content }: { content: any }) {
   }
 
   return <div className="w-full">
-    {audioUrl && <audio className='my-6' controls src={audioUrl}></audio>}
+    <audio className='my-6' controls src={audioUrl}></audio>
     <RadioGroup type='card' onChange={handleChange}>
       {
         content?.options?.map((option: any) => {
