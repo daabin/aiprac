@@ -86,7 +86,7 @@ export default function StepOne({ basicInfo, difficulty, questionInfo, setQuesti
         return;
       }
       const newQuestionInfo = formRef.current.formApi.getValues()
-      setQuestionInfo([...questionInfo, { ...newQuestionInfo, question_level: difficulty, qid: generateUniqueID()}])
+      setQuestionInfo([{ ...newQuestionInfo, question_level: difficulty, qid: generateUniqueID()}, ...questionInfo])
     })
   }
 
@@ -159,14 +159,14 @@ export default function StepOne({ basicInfo, difficulty, questionInfo, setQuesti
         <Column title='题号' width={120}  render={(value, record, index) => (
           <span>{index + 1}</span>
         )}/>
-        <Column title='能力项' width={150} dataIndex="question_ability" />
-        <Column title='题型' width={200} dataIndex="question_type" />
-        <Column title='题型解释' width={120} render={(value, record, index) => (
+        <Column title='能力项' width={120} dataIndex="question_ability" />
+        <Column title='题型' width={150} dataIndex="question_type" />
+        <Column title='题型解释' width={100} render={(value, record, index) => (
           <Button theme='borderless' type='secondary' size='small' onClick={() => handleShowExample(record)}>查看示例</Button>
         )} />
         <Column title='考察语言点' dataIndex="language_point" />
         <Column title='操作' width={120} render={(value, record, index) => (
-          <Button theme='light' type='danger' size='small' onClick={() => handleDel(index)}>删除该题型</Button>
+          <Button theme='light' type='danger' size='small' onClick={() => handleDel(index)}>移除</Button>
         )} />
       </Table>
       <div className="flex justify-end py-4">
