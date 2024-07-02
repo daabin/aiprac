@@ -5,7 +5,7 @@ import { Button, Toast } from '@douyinfe/semi-ui';
 import { IconHelpCircle } from '@douyinfe/semi-icons';
 import _ from 'lodash';
 
-const QuestionMatchLine = ({ dataSource, standardAnswers }: { dataSource: any, standardAnswers: any }) => {
+const QuestionMatchLine = ({qid, dataSource, standardAnswers }: {qid: any, dataSource: any, standardAnswers: any }) => {
   const [matchLine, setMatchLine] = useState<MatchLine | null>(null);
 
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -39,7 +39,7 @@ const QuestionMatchLine = ({ dataSource, standardAnswers }: { dataSource: any, s
       console.log('清除连线库');
       matchLine?.reset()
     }
-  }, [dataSource, standardAnswers]);
+  }, [dataSource, standardAnswers, qid]);
 
 
   const handleCheck = () => {

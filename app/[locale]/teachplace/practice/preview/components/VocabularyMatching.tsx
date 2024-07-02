@@ -14,5 +14,5 @@ export default function VocabularyMatching({ content }: { content: any }) {
   content?.correct_pairs?.map((pair: any) => {
     standardAnswers[pair.left] = pair.right
   })
-  return <QuestionMatchLine dataSource={dataSource} standardAnswers={standardAnswers} />
+  return <QuestionMatchLine qid={content.qid} dataSource={dataSource} standardAnswers={standardAnswers} />
 }
