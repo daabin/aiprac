@@ -16,6 +16,7 @@ const QuestionMatchLine = ({ dataSource, standardAnswers }: { dataSource: any, s
     // -- 初始化连线库
     if (canvasRef.current && backCanvasRef.current && containerRef.current) {
       const items = containerRef.current.querySelectorAll('.option');
+      console.log('初始化连线库', items);
       if (items.length > 0) {
         const matching = new MatchLine({
           container: containerRef.current,
@@ -37,9 +38,6 @@ const QuestionMatchLine = ({ dataSource, standardAnswers }: { dataSource: any, s
     return () => {
       console.log('清除连线库');
       matchLine?.reset()
-      canvasRef.current = null;
-      backCanvasRef.current = null;
-      containerRef.current = null;
     }
   }, [dataSource, standardAnswers]);
 
