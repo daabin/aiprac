@@ -90,8 +90,8 @@ export default function StepOne({ basicInfo, difficulty, questionInfo, setQuesti
     })
   }
 
-  const handleDel = (index: number) => {
-    const newQuestionInfo = questionInfo.filter((_: any, i: number) => i !== index)
+  const handleDel = (record: any) => {
+    const newQuestionInfo = questionInfo.filter((item: any) => item.qid !== record.qid)
     setQuestionInfo(newQuestionInfo)
   }
 
@@ -166,7 +166,7 @@ export default function StepOne({ basicInfo, difficulty, questionInfo, setQuesti
         )} />
         <Column title='考察语言点' dataIndex="language_point" />
         <Column title='操作' width={120} render={(value, record, index) => (
-          <Button theme='light' type='danger' size='small' onClick={() => handleDel(index)}>移除</Button>
+          <Button theme='light' type='danger' size='small' onClick={() => handleDel(record)}>移除</Button>
         )} />
       </Table>
       <div className="flex justify-end py-4">
