@@ -164,7 +164,7 @@ export default function StepOne({ basicInfo, difficulty, questionInfo, setQuesti
         <Column title='题型解释' width={100} render={(value, record, index) => (
           <Button theme='borderless' type='secondary' size='small' onClick={() => handleShowExample(record)}>查看示例</Button>
         )} />
-        <Column title='考察语言点' dataIndex="language_point" />
+        <Column title='考察语言点' width={150} dataIndex="language_point" />
         <Column title='操作' width={120} render={(value, record, index) => (
           <Button theme='light' type='danger' size='small' onClick={() => handleDel(record)}>移除</Button>
         )} />

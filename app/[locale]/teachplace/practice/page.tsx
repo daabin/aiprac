@@ -142,7 +142,7 @@ export default function PracticePage() {
                   index + 1
                 )} />
                 <Column title='标题' width={250} dataIndex="title" />
-                <Column title='描述' dataIndex="description" />
+                <Column title='描述' width={200} dataIndex="description" />
                 <Column title='创建时间' width={180} dataIndex="created_at" render={(value, record, index) => (
                   new Date(value).toLocaleString()
                 )} />
