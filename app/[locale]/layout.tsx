@@ -11,6 +11,7 @@ import { defaultLocale } from '@/i18n';
 
 import LocaleProvider from '@/components/LocaleProvider';
 import '@/styles/globals.css';
+import Script from 'next/script';
 
 export default async function RootLayout({
   children,
@@ -29,6 +30,17 @@ export default async function RootLayout({
   return (
     <ClerkProvider localization={locale === defaultLocale ? zhCN : enUS}>
       <html lang={locale} suppressHydrationWarning={true}>
+        <head>
+          <Script id="clarity-script" strategy="afterInteractive">
+            {`
+            (function(c,l,a,r,i,t,y){
+                c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+            })(window, document, "clarity", "script", "${process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID}");
+          `}
+          </Script>
+        </head>
         <body suppressHydrationWarning={true}>
           <LocaleProvider locale={locale} messages={messages}>
             <Fragment>{children}</Fragment>
