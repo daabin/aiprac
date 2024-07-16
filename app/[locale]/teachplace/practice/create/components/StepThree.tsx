@@ -37,7 +37,7 @@ export default function StepOne({ basicInfo, difficulty, questionInfo, setQuesti
 
   const handleSavePractice = async () => {
     if (questionInfo.length === 0) {
-      Toast.error('请添加考察项目');
+      Toast.error('请添加考查项目');
       return;
     }
 
@@ -86,7 +86,7 @@ export default function StepOne({ basicInfo, difficulty, questionInfo, setQuesti
         return;
       }
       const newQuestionInfo = formRef.current.formApi.getValues()
-      setQuestionInfo([{ ...newQuestionInfo, question_level: difficulty, qid: generateUniqueID()}, ...questionInfo])
+      setQuestionInfo([ ...questionInfo, { ...newQuestionInfo, question_level: difficulty, qid: generateUniqueID()}])
     })
   }
 
@@ -115,7 +115,7 @@ export default function StepOne({ basicInfo, difficulty, questionInfo, setQuesti
       <Form ref={formRef} layout='horizontal' className='pt-3' onSubmit={handleAdd}>
         {({ formState }) => (
           <Fragment>
-            <Form.Select field="question_ability" label='选择考察能力项' rules={[
+            <Form.Select field="question_ability" label='选择考查能力项' rules={[
               { required: true, message: '请选择' },
             ]} style={{ width: 150 }} onChange={handleAbilitySelect}>
               {
@@ -155,16 +155,16 @@ export default function StepOne({ basicInfo, difficulty, questionInfo, setQuesti
           </Fragment>
         )}
       </Form>
-      <Table dataSource={questionInfo} rowKey='id' sticky className='mt-6' pagination={{ pageSize: 5 }} bordered={true}>
+      <Table dataSource={questionInfo} rowKey='id' sticky className='mt-6' pagination={{ pageSize: 8 }} bordered={true}>
         <Column title='题号' width={120}  render={(value, record, index) => (
           <span>{index + 1}</span>
         )}/>
-        <Column title='能力项' width={120} dataIndex="question_ability" />
-        <Column title='题型' width={150} dataIndex="question_type" />
+        <Column title='考查能力' width={120} dataIndex="question_ability" />
+        <Column title='考查题型' width={150} dataIndex="question_type" />
         <Column title='题型解释' width={100} render={(value, record, index) => (
           <Button theme='borderless' type='secondary' size='small' onClick={() => handleShowExample(record)}>查看示例</Button>
         )} />
-        <Column title='考察语言点' width={150} dataIndex="language_point" />
+        <Column title='考查语言点' width={150} dataIndex="language_point" />
         <Column title='操作' width={120} render={(value, record, index) => (
           <Button theme='light' type='danger' size='small' onClick={() => handleDel(record)}>移除</Button>
         )} />

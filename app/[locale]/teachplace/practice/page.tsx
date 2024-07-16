@@ -168,14 +168,13 @@ export default function PracticePage() {
         </Row>
       </div>
 
-      <SideSheet size='large' title="题目" visible={visible} onCancel={handleCloseReview}>
+      <SideSheet size='large' title="练习" visible={visible} onCancel={handleCloseReview}>
         <Table dataSource={curSetting} loading={loadingQuestions} rowKey='qid' size="small" bordered={true}>
-          <Column title='难度' width={100} dataIndex="question_level" />
-          <Column title='能力项' width={100} dataIndex="question_ability" />
-          <Column title='题型' width={150} dataIndex="question_type" />
-          <Column title='考察语言点' width={200} dataIndex="language_point" />
-          <Column title='消耗 Token' width={150} dataIndex="token" />
-          <Column align='center' title='AI出题' width={80} dataIndex="gen_status" render={(value, record, index) => (
+          <Column title='练习难度' width={100} dataIndex="question_level" />
+          <Column title='考查能力' width={100} dataIndex="question_ability" />
+          <Column title='考查题型' width={150} dataIndex="question_type" />
+          <Column title='考查语言点' width={200} dataIndex="language_point" />
+          <Column align='center' title='出题结果' width={80} dataIndex="gen_status" render={(value, record, index) => (
             <Tag
               color={record.gen_status === 1 ? 'green' : 'red'}
               size='large'
