@@ -1,5 +1,5 @@
 export default function RenderPinyin({ text, pinyin }: { text: string, pinyin: string }) {
-  const zh = text.replace(/\s/g, '').split('')
+  const zh = text.replace(/[\s.。]/g, '').split('')
   const py = pinyin.replace(/[_,.，。]/g, ' ').replace(/\s+/g, ' ').split(' ')
 
   let result = ''

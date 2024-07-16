@@ -79,7 +79,7 @@ const QuestionMatchLine = ({qid, dataSource, standardAnswers }: {qid: any, dataS
   };
   return (
     <div className="match-line">
-      <div className='my-2 flex items-center'><IconHelpCircle className='mr-1'/><p> 使用提示：点击左边文字后连接至对应右边文字</p></div>
+      <div className='my-2 flex items-center'><IconHelpCircle className='mr-1'/><p> 使用提示：点击左边文字，按住鼠标拖动，连接至右边对应文字</p></div>
       <div className="contents" ref={containerRef}>
         <div className="leftOptions">{renderItems('L')}</div>
         <div className="rightOptions">{renderItems('R')}</div>

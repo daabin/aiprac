@@ -22,8 +22,8 @@ export default function PictureWordRecognition({ content }: { content: any }) {
     <Image src={content?.img_url} alt="" width={200} height={200} className="my-4 max-w-80" />
     <RadioGroup type='card' onChange={handleChange}>
       {
-        content?.options.map((option: any) => {
-          return <Radio key={option.text} value={option.text}><RenderPinyin text={option.text} pinyin={option.pinyin}></RenderPinyin></Radio>
+        content?.options.map((option: any, index: number) => {
+          return <Radio style={{alignItems: 'center'}} addonStyle={{alignItems: 'flex-end'}} key={option.text} value={option.text}><span>{String.fromCharCode(65 + index)}.&nbsp;</span><RenderPinyin text={option.text} pinyin={option.pinyin}></RenderPinyin></Radio>
         })
       }
     </RadioGroup>

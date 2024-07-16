@@ -86,7 +86,7 @@ export default function StepOne({ basicInfo, difficulty, questionInfo, setQuesti
         return;
       }
       const newQuestionInfo = formRef.current.formApi.getValues()
-      setQuestionInfo([ ...questionInfo, { ...newQuestionInfo, question_level: difficulty, qid: generateUniqueID()}])
+      setQuestionInfo([...questionInfo, { ...newQuestionInfo, question_level: difficulty, qid: generateUniqueID() }])
     })
   }
 
@@ -126,7 +126,7 @@ export default function StepOne({ basicInfo, difficulty, questionInfo, setQuesti
             </Form.Select>
             <Form.Select field="question_type" label='选择题型' rules={[
               { required: true, message: '请选择' },
-            ]} style={{ width: 150 }} onChange={handleTypeSelect}>
+            ]} style={{ width: 200 }} onChange={handleTypeSelect}>
               {
                 questionTypeOptions && questionTypeOptions.map((type: string) => {
                   return <Form.Select.Option disabled={!QuestionTypeEnabled.includes(type)} key={type} value={type}>{type}{!QuestionTypeEnabled.includes(type) && '（暂未支持）'}</Form.Select.Option>
@@ -148,20 +148,20 @@ export default function StepOne({ basicInfo, difficulty, questionInfo, setQuesti
             }
             <Row className='mt-6'>
               <Button type="primary" theme='solid' htmlType="submit" className="mx-4">
-                新增
+                新增题目
               </Button>
-              <Link  target='_blank' href={'https://qum9c5nv4n.feishu.cn/docx/OcAyd7sI9oWhQOxXDBUc7jmIncc'}><Button>帮助</Button></Link>
+              <Link target='_blank' href={'https://qum9c5nv4n.feishu.cn/docx/OcAyd7sI9oWhQOxXDBUc7jmIncc'}><Button>操作手册</Button></Link>
             </Row>
           </Fragment>
         )}
       </Form>
       <Table dataSource={questionInfo} rowKey='id' sticky className='mt-6' pagination={{ pageSize: 8 }} bordered={true}>
-        <Column title='题号' width={120}  render={(value, record, index) => (
+        <Column title='题号' width={120} render={(value, record, index) => (
           <span>{index + 1}</span>
-        )}/>
+        )} />
         <Column title='考查能力' width={120} dataIndex="question_ability" />
         <Column title='考查题型' width={150} dataIndex="question_type" />
-        <Column title='题型解释' width={100} render={(value, record, index) => (
+        <Column title='效果示例' width={100} render={(value, record, index) => (
           <Button theme='borderless' type='secondary' size='small' onClick={() => handleShowExample(record)}>查看示例</Button>
         )} />
         <Column title='考查语言点' width={150} dataIndex="language_point" />

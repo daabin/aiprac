@@ -22,7 +22,7 @@ export default function PreviewBlock({ questions }: { questions: any }) {
 
   return <div className="h-full w-4/5 flex flex-col justify-center items-center">
     {curQuestion && <Card style={{ height: '80%', width: '100%' }}>
-      <Title heading={5}>{questionIdx + 1}. <RenderPinyin text={curQuestion?.content?.question_text?.text} pinyin={curQuestion?.content?.question_text?.pinyin || curQuestion?.content?.question_text?.pingyin}></RenderPinyin></Title>
+      <Title heading={5}>{questionIdx + 1}. <RenderPinyin text={curQuestion?.content?.question_text?.text} pinyin={curQuestion?.content?.question_text?.pinyin || curQuestion?.content?.question_text?.pingyin}></RenderPinyin>。</Title>
       {
         curQuestion?.question_type === '看图认字' && <PictureWordRecognition content={curQuestion?.content} />
       }

@@ -29,28 +29,28 @@ export default [
   },
   {
     "ability": "词汇",
-    "question_type": "词汇匹配",
+    "question_type": "词汇匹配（中-英）",
     "question_type_desc": "给出汉字，让学生从四个英语/阿拉伯语解释选项中挑选正确的答案",
     "question_type_example": "题目：你好",
     "level": "零基础"
   },
   {
     "ability": "词汇",
-    "question_type": "词汇匹配",
+    "question_type": "词汇匹配（中-英）",
     "question_type_desc": "给出汉字，让学生从四个英语/阿拉伯语解释选项中挑选正确的答案",
     "question_type_example": "题目：你好",
     "level": "HSK1"
   },
   {
     "ability": "词汇",
-    "question_type": "词汇匹配",
+    "question_type": "词汇匹配（中-英）",
     "question_type_desc": "给出汉字，让学生从四个英语/阿拉伯语解释选项中挑选正确的答案",
     "question_type_example": "题目：你好",
     "level": "HSK2"
   },
   {
     "ability": "词汇",
-    "question_type": "词汇匹配",
+    "question_type": "词汇匹配（中-英）",
     "question_type_desc": "给出汉字，让学生从四个英语/阿拉伯语解释选项中挑选正确的答案",
     "question_type_example": "题目：你好",
     "level": "HSK3"

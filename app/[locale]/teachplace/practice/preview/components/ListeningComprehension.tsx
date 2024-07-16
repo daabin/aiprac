@@ -39,8 +39,8 @@ export default function ListeningComprehension({ content }: { content: any }) {
     <audio className='my-6' controls src={audioUrl}></audio>
     <RadioGroup type='card' onChange={handleChange}>
       {
-        content?.options?.map((option: any) => {
-          return <Radio key={option.text} value={option.text}><RenderPinyin text={option.text} pinyin={option.pinyin}></RenderPinyin></Radio>
+        content?.options?.map((option: any, index: number) => {
+          return <Radio style={{alignItems: 'center'}} addonStyle={{alignItems: 'flex-end'}} key={option.text} value={option.text}><span>{String.fromCharCode(65 + index)}.&nbsp;</span><RenderPinyin text={option.text} pinyin={option.pinyin}></RenderPinyin></Radio>
         })
       }
     </RadioGroup>
