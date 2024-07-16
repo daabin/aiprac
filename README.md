@@ -11,3 +11,5 @@ Here is a boilerplate
 - Dark mode with [next-themes](https://github.com/pacocoursey/next-themes)
 - Icons from [Lucide](https://lucide.dev)
 - Globalization with [next-intl](https://github.com/amannn/next-intl)
+
+### 0.2.0 切换域名
