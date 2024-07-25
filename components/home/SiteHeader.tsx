@@ -5,7 +5,6 @@ import Link from 'next/link';
 
 import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
 import { IconUser } from '@douyinfe/semi-icons';
-import { IconToken } from '@douyinfe/semi-icons-lab';
 import { Button } from '@douyinfe/semi-ui';
 import { useTranslations } from 'next-intl';
 
@@ -33,8 +32,8 @@ export default function SiteHeader() {
           className="flex  justify-center items-center space-x-4 cursor-pointer"
           href="/"
         >
-          <IconToken style={{ height: '36px', fontSize: 36 }}></IconToken>
-          <Image alt="" src={Logo} width={150} height={50}></Image>
+          <Image alt="" src={Logo} width={40} height={40}></Image>
+          <span className='text-[28px] font-extrabold !ml-0'>Aiprac</span>
         </Link>
         <div className="flex items-center space-x-6">
           <LocaleSwitcher />

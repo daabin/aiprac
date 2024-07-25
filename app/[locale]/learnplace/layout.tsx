@@ -13,7 +13,8 @@ import {
   IconStar,
   IconVerify,
 } from '@douyinfe/semi-icons';
-import { IconToken } from '@douyinfe/semi-icons-lab';
+import Logo from '@/public/logo.svg';
+import Image from 'next/image';
 import { Button, Layout, Nav } from '@douyinfe/semi-ui';
 
 export default function LearnplaceLayout({
@@ -60,12 +61,9 @@ export default function LearnplaceLayout({
             ]}
             header={{
               logo: (
-                <IconToken
-                  className="h-10"
-                  style={{ height: '36px', fontSize: 36 }}
-                />
+                <Image alt="" src={Logo} width={40} height={40}></Image>
               ),
-              text: <span className="text-2xl font-bold">Aiprac</span>,
+              text:  <span className='text-[28px] font-extrabold !ml-0'>Aiprac</span>,
             }}
             footer={{
               collapseButton: true,
