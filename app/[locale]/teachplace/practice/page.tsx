@@ -15,13 +15,12 @@ export default function PracticePage() {
   const [visible, setVisible] = useState(false);
   const [curSetting, setCurSetting] = useState<any[]>([]);
   const [questionsCount, setQuestionsCount] = useState(0);
-  const [tokens, setTokens] = useState(0);
   const [loadingQuestions, setLoadingQuestions] = useState(false);
+
 
   useEffect(() => {
     getPractice();
     getQuestionsCount()
-    getTokens();
   }, []);
 
   const getPractice = async () => {
@@ -41,7 +40,7 @@ export default function PracticePage() {
   }
 
   const getQuestionsCount = async () => {
-    const res = await fetch('/api/question-account', {
+    const res = await fetch(`/api/question-account?genStatus=1`, {
       method: 'GET',
       cache: 'no-store'
     });
@@ -52,23 +51,6 @@ export default function PracticePage() {
     } else {
       setQuestionsCount(data.data);
       console.log('getQuestionsCount------->', data.data);
-    }
-  }
-
-  const getTokens = async () => {
-    const res = await fetch('/api/token', {
-      method: 'GET',
-      cache: 'no-store'
-    });
-    const data = await res.json();
-
-    if (data?.error) {
-      Toast.error('查询 token，请刷新重试');
-    } else {
-      // 从 data.data 中获取 token 字段，累加后存入 tokens 变量
-      const tokens = data.data.reduce((acc: number, cur: any) => acc + cur.token, 0);
-      setTokens(tokens);
-      console.log('getTokens------->', data.data);
     }
   }
 
@@ -118,19 +100,24 @@ export default function PracticePage() {
         }}
       >
         <Row gutter={[16, 16]}>
-          <Col span={8}>
+          <Col span={6}>
             <Card title='创建练习' bordered={false} >
-              <Title heading={2}> {practices.length || '-'}</Title>
+              <Title heading={1}> {practices.length || '-'}</Title>
             </Card>
           </Col>
-          <Col span={8}>
-            <Card title='累计出题' bordered={false} >
-              <Title heading={2}> {questionsCount || '-'}</Title>
+          <Col span={6}>
+            <Card title='待批改练习' bordered={false} >
+              <Title heading={1}>-</Title>
             </Card>
           </Col>
-          <Col span={8}>
-            <Card title='消耗 Token' bordered={false} >
-              <Title heading={2}> {tokens || '-'} </Title>
+          <Col span={6}>
+            <Card title='免费出题数量' bordered={false} >
+              <Title heading={1}>200</Title>
+            </Card>
+          </Col>
+          <Col span={6}>
+            <Card title='可用出题数量' bordered={false} >
+              <Title heading={1}> {200 - questionsCount || '-'} </Title>
             </Card>
           </Col>
         </Row>

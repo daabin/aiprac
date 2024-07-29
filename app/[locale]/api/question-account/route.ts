@@ -6,7 +6,10 @@ import { auth } from "@clerk/nextjs/server";
 
 export const runtime = 'nodejs';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const { searchParams } = new URL(request.url)
+  const genStatus = searchParams.get('genStatus')
+
   const { userId } = auth();
   const { data, error } = await supabase
     .from('practice')
@@ -21,13 +24,20 @@ export async function GET() {
 
   console.log('get question account pids------->', pids);
 
-  const { error: getQuestionCountError, count } = await supabase
+  let status = [0, 1]
+  if (genStatus === '1') {
+    status = [1]
+  } else if (genStatus === '0') {
+    status = [0]
+  }
+
+  const { error: getQuestionCountError, data: qData } = await supabase
     .from('questions')
-    .select('*', { count: 'exact', head: true })
-    .in('pid', pids)
+    .select('*')
+    .in('gen_status', status)
+  .in('pid', pids)
 
+  console.log('get question account------->', qData?.length, getQuestionCountError);
 
-  console.log('get question account------->', count, getQuestionCountError);
-
-  return NextResponse.json({ data: count, error: getQuestionCountError });
+  return NextResponse.json({ data: qData?.length, error: getQuestionCountError });
 }
