@@ -74,10 +74,6 @@ export default function PracticePage() {
     }
   }
 
-  const handleCloseReview = () => {
-    setVisible(false);
-  }
-
   const Color = {
     '成功': 'green',
     '失败': 'red',
@@ -235,7 +231,7 @@ export default function PracticePage() {
         </Row>
       </div>
 
-      <SideSheet maskClosable={false} onCancel={handleClean} size='large' title="练习" visible={visible} onCancel={handleCloseReview}>
+      <SideSheet maskClosable={false} onCancel={handleClean} size='large' title="练习" visible={visible}>
         <Table dataSource={curSetting} loading={loadingQuestions || loadingReGen} rowKey='qid' size="small" bordered={true}>
           <Column title='练习难度' width={100} dataIndex="question_level" />
           <Column title='考查能力' width={100} dataIndex="question_ability" />
