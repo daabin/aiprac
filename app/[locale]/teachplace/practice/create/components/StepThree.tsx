@@ -1,15 +1,22 @@
 import { Fragment, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
-import { Button, Form, Row, Table, Modal, Typography, Toast } from '@douyinfe/semi-ui';
+import Image from 'next/image';
+import { StaticImageData } from 'next/image';
+import { Button, ButtonGroup, Form, Row, Table, Modal, Toast } from '@douyinfe/semi-ui';
 import questionConfData from '@/utils/questionConfData'
 import vocabularyConfData from '@/utils/vocabularyConfData';
 import { Sparkles } from 'lucide-react';
 import { AbilityEnabled, QuestionTypeEnabled } from '@/utils/constants'
 import { generateUniqueID } from '@/utils/tools';
+import { IconDelete, IconArrowDown, IconArrowUp } from '@douyinfe/semi-icons';
+import Exp1 from '@/public/exp-1.png';
+import Exp2 from '@/public/exp-2.png';
+import Exp3 from '@/public/exp-3.png';
+import Exp4 from '@/public/exp-4.png';
+import Exp5 from '@/public/exp-5.png';
 
 export default function StepThree({ basicInfo, difficulty, questionInfo, setQuestionInfo, setPid, next, last }: { basicInfo: any, difficulty: any, questionInfo: any, setQuestionInfo: any, setPid: any, next: any, last: any }) {
   const { Column } = Table;
-  const { Title, Paragraph } = Typography;
   const formRef = useRef<any>(null);
   const [questionTypeOptions, setQuestionTypeOptions] = useState<string[]>([])
   const [saveLoading, setSaveLoading] = useState(false);
@@ -95,16 +102,49 @@ export default function StepThree({ basicInfo, difficulty, questionInfo, setQues
     setQuestionInfo(newQuestionInfo)
   }
 
-  const handleShowExample = (record: any) => {
-    const { question_ability, question_type } = record;
-    const example = curDifficultyQuestionConfCache.find(question => question.ability === question_ability && question.question_type === question_type);
+  const handleUp = (index: number) => {
+    const newQuestionInfo = [...questionInfo]
+    const temp = newQuestionInfo[index]
+    newQuestionInfo[index] = newQuestionInfo[index - 1]
+    newQuestionInfo[index - 1] = temp
+    setQuestionInfo(newQuestionInfo)
+  }
 
+  const handleDown = (index: number) => {
+    const newQuestionInfo = [...questionInfo]
+    const temp = newQuestionInfo[index]
+    newQuestionInfo[index] = newQuestionInfo[index + 1]
+    newQuestionInfo[index + 1] = temp
+    setQuestionInfo(newQuestionInfo)
+  }
+
+  const handleShowExample = (record: any) => {
+    const { question_type } = record;
+    let imgSrc: StaticImageData = Exp1;
+    switch (question_type) {
+      case '看图认字':
+        imgSrc = Exp5;
+        break;
+      case '词汇匹配（中-英）':
+        imgSrc = Exp1;
+        break;
+      case '字词填空':
+        imgSrc = Exp4;
+        break;
+      case '听力选择':
+        imgSrc = Exp2;
+        break;
+      case '口语发音':
+        imgSrc = Exp3;
+        break;
+      default:
+        break;
+    }
     Modal.info({
-      title: '示例', content: <div className='mb-6'>
-        <Title heading={6}>题型解释</Title>
-        <Paragraph spacing='extended'>{example?.question_type_desc}</Paragraph>
-        <Title heading={6} style={{ marginTop: 16 }}>举例</Title>
-        <Paragraph spacing='extended'>{example?.question_type_example}</Paragraph>
+      title: '示例', 
+      bodyStyle: { margin: 0 },
+      content: <div>
+        <Image src={imgSrc} alt='示例'/>
       </div>
       , hasCancel: false, footer: null
     });
@@ -156,17 +196,21 @@ export default function StepThree({ basicInfo, difficulty, questionInfo, setQues
         )}
       </Form>
       <Table dataSource={questionInfo} rowKey='id' sticky className='mt-6' pagination={{ pageSize: 8 }} bordered={true}>
-        <Column title='题号' width={120} render={(value, record, index) => (
+        <Column title='题号' width={100} render={(value, record, index) => (
           <span>{index + 1}</span>
         )} />
-        <Column title='考查能力' width={120} dataIndex="question_ability" />
+        <Column title='考查能力' width={100} dataIndex="question_ability" />
         <Column title='考查题型' width={150} dataIndex="question_type" />
         <Column title='效果示例' width={100} render={(value, record, index) => (
-          <Button theme='borderless' type='secondary' size='small' onClick={() => handleShowExample(record)}>查看示例</Button>
+          <Button theme='borderless' type='secondary' size='small' onClick={() => handleShowExample(record)}>查看</Button>
         )} />
-        <Column title='考查语言点' width={150} dataIndex="language_point" />
-        <Column title='操作' width={120} render={(value, record, index) => (
-          <Button theme='light' type='danger' size='small' onClick={() => handleDel(record)}>移除</Button>
+        <Column title='考查语言点' dataIndex="language_point" />
+        <Column title='操作' width={160} render={(value, record, index) => (
+          <ButtonGroup size='small'>
+            <Button theme='light' type='danger' icon={<IconDelete />} size='small' onClick={() => handleDel(record)}></Button>
+            <Button disabled={index === 0} theme='light' icon={<IconArrowUp />} size='small' onClick={() => handleUp(index)}></Button>
+            <Button disabled={index === questionInfo.length - 1 } theme='light' icon={<IconArrowDown />} size='small' onClick={() => handleDown(index)}></Button>
+          </ButtonGroup>
         )} />
       </Table>
       <div className="flex justify-end py-4">
