@@ -27,7 +27,7 @@ export default function PreviewBlock({ questions }: { questions: any }) {
         curQuestion?.question_type === '看图认字' && <PictureWordRecognition content={curQuestion?.content} />
       }
       {
-        curQuestion?.question_type === '词汇匹配（中-英）' && <VocabularyMatching content={curQuestion?.content} />
+        curQuestion?.question_type.includes('词汇匹配') && <VocabularyMatching content={curQuestion?.content} />
       }
       {
         curQuestion?.question_type === '字词填空' && <FillInTheBlanks content={curQuestion?.content} />
