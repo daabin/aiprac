@@ -5,6 +5,7 @@ import { set } from 'lodash';
 import { Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import VocabularyConfData from '@/utils/vocabularyConfData';
 
 const { Column } = Table;
 
@@ -16,7 +17,7 @@ export default function PracticePage() {
   const [curSetting, setCurSetting] = useState<any[]>([]);
   const [questionsCount, setQuestionsCount] = useState(0);
   const [loadingQuestions, setLoadingQuestions] = useState(false);
-
+  const [loadingReGen, setLoadingReGen] = useState(false);
 
   useEffect(() => {
     getPractice();
@@ -85,6 +86,95 @@ export default function PracticePage() {
 
   const PreviewStatus = ['成功', '部分成功']
 
+
+  const handleReGen = async (record: any) => {
+    console.log('handleReGen------->', record);
+
+    setLoadingReGen(true);
+    const req = {
+      question_type: record.question_type,
+      question_ability: record.question_ability,
+      language_point: record.language_point,
+      question_level: record.question_level,
+    }
+    const res = await fetch('/api/gen', {
+      method: 'POST',
+      body: JSON.stringify(req),
+    })
+
+    const result = await res.json();
+
+    console.log('reGen result------->', result);
+
+    if (!result?.error && result?.content) {
+      const newRecord: any = {}
+      newRecord.content = result?.content || {}
+      newRecord.token = result?.token || 0
+      newRecord.gen_status = 1
+
+      if (record?.question_type === '看图认字') {
+        const target = VocabularyConfData.find((item: any) => item.vocabulary === record?.language_point)
+        newRecord.content.img_url = target?.img_url || ''
+      } else if (record?.question_type === '听力选择') {
+        newRecord.content.audio_url = result?.audio_url || ''
+
+        const res = await fetch('/api/storage', {
+          method: 'POST',
+          body: JSON.stringify({ audio_url: result?.audio_url, qid: record?.qid }),
+        })
+        const resData = await res.json()
+
+        console.log('upload audio res------->', resData?.data?.path);
+
+        if (resData?.data?.path) {
+          newRecord.content.supabase_path = resData?.data?.path
+        } else {
+          newRecord.gen_status = 0
+        }
+      } else if (newRecord?.question_type === '口语发音') {
+        newRecord.content = {
+          question: result?.content || {},
+          question_text: {
+            "pinyin": "qǐng yòng zhōng wén pīn dú xià liè jù zi",
+            "text": "请用中文拼读下列句子"
+          }
+        }
+      }
+
+      await handleUpdate(record?.qid, newRecord)
+
+      setLoadingReGen(false);
+      getPractice();
+      getQuestionsCount();
+      handleReview(record);
+    } else {
+      setLoadingReGen(false);
+      Toast.error('重新出题失败，请稍后重试');
+    }
+  }
+
+  const handleUpdate = async (qid: string, record: any) => {
+    console.log('do save ----->', qid, record)
+
+    const updateQuestion = await fetch('/api/questions', {
+      method: 'PUT',
+      body: JSON.stringify({ qid, record }),
+    })
+
+    const updateQuestionRes = await updateQuestion.json()
+
+    if (updateQuestionRes.error) {
+      Toast.error('重新出题失败2，请稍后重试');
+    }
+  }
+
+  const handleClean= () => {
+    setVisible(false);
+    setCurSetting([]);
+    setLoadingReGen(false);
+    setLoadingQuestions(false);
+  }
+
   return (
     <section className='h-full'>
       <div className='flex justify-between items-center mb-4'>
@@ -125,7 +215,7 @@ export default function PracticePage() {
           <Col span={24}>
             <Card title='创建记录' bordered={false} >
               <Table size='small' loading={loading} dataSource={practices} rowKey='id' sticky className='mt-6' pagination={{ pageSize: 10 }} bordered={true}>
-                <Column title='编号' width={60} render={(value, record, index) => (
+                <Column title='编号' width={100} render={(value, record, index) => (
                   index + 1
                 )} />
                 <Column title='练习名称' width={250} dataIndex="title" />
@@ -133,18 +223,8 @@ export default function PracticePage() {
                 <Column title='创建时间' width={180} dataIndex="created_at" render={(value, record, index) => (
                   new Date(value).toLocaleString()
                 )} />
-                <Column align='center' title='题目设置' width={100} dataIndex="settings" render={(value, record, index) => (
+                <Column align='center' title='题目设置及出题结果' width={160} dataIndex="settings" render={(value, record, index) => (
                   <Button theme='borderless' type='secondary' size='small' onClick={() => handleReview(record)}>查看</Button>
-                )} />
-                <Column align='center' title='出题结果' width={100} dataIndex="gen_status" render={(value, record, index) => (
-                  <Tag
-                    color={Color[record.gen_status]}
-                    size='large'
-                    shape='circle'
-                    type='solid'
-                  >
-                    {record.gen_status}
-                  </Tag>
                 )} />
                 <Column align='center' title='操作' width={120} render={(value, record, index) => {
                   return PreviewStatus.includes(record.gen_status) ? <Link href={`/teachplace/practice/preview?pid=${record.pid}`}><Button theme='light' size='small' >预览</Button> </Link> : ''
@@ -155,8 +235,8 @@ export default function PracticePage() {
         </Row>
       </div>
 
-      <SideSheet size='large' title="练习" visible={visible} onCancel={handleCloseReview}>
-        <Table dataSource={curSetting} loading={loadingQuestions} rowKey='qid' size="small" bordered={true}>
+      <SideSheet maskClosable={false} onCancel={handleClean} size='large' title="练习" visible={visible} onCancel={handleCloseReview}>
+        <Table dataSource={curSetting} loading={loadingQuestions || loadingReGen} rowKey='qid' size="small" bordered={true}>
           <Column title='练习难度' width={100} dataIndex="question_level" />
           <Column title='考查能力' width={100} dataIndex="question_ability" />
           <Column title='考查题型' width={150} dataIndex="question_type" />
@@ -170,6 +250,9 @@ export default function PracticePage() {
             >
               {record.gen_status === 1 ? '成功' : '失败'}
             </Tag>
+          )} />
+          <Column align='center' title='操作' width={80} dataIndex="option" render={(value, record, index) => (
+             <Button disabled={record.gen_status === 1} loading={loadingReGen} theme='light' size='small' onClick={() => handleReGen(record)}>重新出题</Button>
           )} />
         </Table>
       </SideSheet>

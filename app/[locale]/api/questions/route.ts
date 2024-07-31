@@ -36,3 +36,22 @@ export async function GET(request: NextRequest) {
 
   return NextResponse.json({ data, error });
 }
+
+
+export async function PUT(request: NextRequest) {
+  const req = await request.json();
+
+  console.log('update question ------->', req);
+  const { data, error } = await supabase
+    .from('questions')
+    .update({ 
+      gen_status: req.record.gen_status,
+      content: req.record.content,
+      token: req.record.token
+     })
+    .eq('qid', req.qid)
+    .select()
+
+    console.log('update pratice gen_status------->', data, error);
+    return NextResponse.json({ data, error });
+}
