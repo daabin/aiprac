@@ -7,7 +7,7 @@ import { Sparkles } from 'lucide-react';
 import { AbilityEnabled, QuestionTypeEnabled } from '@/utils/constants'
 import { generateUniqueID } from '@/utils/tools';
 
-export default function StepOne({ basicInfo, difficulty, questionInfo, setQuestionInfo, setPid, next, last }: { basicInfo: any, difficulty: any, questionInfo: any, setQuestionInfo: any, setPid: any, next: any, last: any }) {
+export default function StepThree({ basicInfo, difficulty, questionInfo, setQuestionInfo, setPid, next, last }: { basicInfo: any, difficulty: any, questionInfo: any, setQuestionInfo: any, setPid: any, next: any, last: any }) {
   const { Column } = Table;
   const { Title, Paragraph } = Typography;
   const formRef = useRef<any>(null);

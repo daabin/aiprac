@@ -7,7 +7,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { PreviewStatus } from '@/utils/constants'
 import VocabularyConfData from '@/utils/vocabularyConfData';
 
-export default function StepOne({ questionInfo, pid }: { questionInfo: any, pid: string }) {
+export default function StepFour({ questionInfo, pid }: { questionInfo: any, pid: string }) {
   const { Title } = Typography;
   const [completed, setCompleted] = useState<boolean>(false)
   const [genStatus, setGenStatus] = useState<string>('')
