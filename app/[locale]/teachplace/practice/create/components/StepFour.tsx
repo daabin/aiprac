@@ -3,7 +3,7 @@ import { Typography, Button, Toast } from '@douyinfe/semi-ui';
 import { Spin } from '@douyinfe/semi-ui';
 import Link from 'next/link';
 import { IconLoading } from '@douyinfe/semi-icons';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { PreviewStatus } from '@/utils/constants'
 import VocabularyConfData from '@/utils/vocabularyConfData';
 
@@ -19,11 +19,6 @@ export default function StepFour({ questionInfo, pid }: { questionInfo: any, pid
     }
   }, [questionInfo, pid])
 
-
-  const genCount = useMemo(() => {
-    return countRef.current
-  }, [countRef.current])
-
   const composeRequest = async (question: any) => {
     return fetch('/api/gen', {
       method: 'POST',
@@ -31,22 +26,6 @@ export default function StepFour({ questionInfo, pid }: { questionInfo: any, pid
     }).then((res) => {
       countRef.current += 1
       return res.json()
-    })
-  }
-
-  const mockOralPronunciation = (question: any) => {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve({
-          "content": {
-            "question_text": {
-              "pinyin": "qǐng yòng zhōng wén pīn dú xià liè jù zi",
-              "text": "请用中文拼读下列句子"
-            },
-            "question": question.language_point,
-          }
-        })
-      }, 1000)
     })
   }
 
@@ -61,11 +40,7 @@ export default function StepFour({ questionInfo, pid }: { questionInfo: any, pid
 
     const requestArr: any = []
     questionInfoCopy.forEach((question: any) => {
-      if (question?.question_type === '口语发音') {
-        requestArr.push(mockOralPronunciation(question))
-      } else {
-        requestArr.push(composeRequest(question))
-      }
+      requestArr.push(composeRequest(question))
     })
 
     const results = await Promise.allSettled(requestArr)
@@ -97,6 +72,14 @@ export default function StepFour({ questionInfo, pid }: { questionInfo: any, pid
               questionInfoCopy[i].content.supabase_path = resData?.data?.path
             } else {
               questionInfoCopy[i].gen_status = 0
+            }
+          } else if (questionInfoCopy[i]?.question_type === '口语发音') {
+            questionInfoCopy[i].content = {
+              question: value?.content || {},
+              question_text: {
+                "pinyin": "qǐng yòng zhōng wén pīn dú xià liè jù zi",
+                "text": "请用中文拼读下列句子"
+              }
             }
           }
         }
