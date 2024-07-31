@@ -29,7 +29,7 @@ export default function OralPronunciation({ content }: { content: any }) {
   return <div className="flex flex-col items-center pt-4">
     <div className="self-start my-2 p-2 text-xl font-bold text-[#ff9100]"><IconVolume1 />
       {
-        typeof content?.question === 'string' ? <span>{content?.question}</span> : <RenderPinyin text={content?.question?.text} pinyin={content?.question?.pinyin}></RenderPinyin>
+        typeof content?.question === 'string' ? <span>{content?.question}</span> : <RenderPinyin text={content?.question?.question_text?.text} pinyin={content?.question?.question_text?.pinyin}></RenderPinyin>
       }
     </div>
     <AudioReactRecorder state={recordState} canvasWidth={500} backgroundColor="#f1f3f5" foregroundColor="#ff7900" canvasHeight={150} onStop={onStop} />
