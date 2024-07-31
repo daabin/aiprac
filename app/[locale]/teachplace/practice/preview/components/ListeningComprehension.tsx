@@ -44,8 +44,8 @@ export default function ListeningComprehension({ content }: { content: any }) {
         })
       }
     </RadioGroup>
-    <div className='flex justify-center mt-4'>
-      <Button theme='solid' type='primary' onClick={handleCheck}>检查答案</Button>
+    <div className='w-1/2 p-4 mt-4 border-4 border-orange-400 border-double'>
+      ✅ 正确答案是：{content?.correct_answer?.text}
     </div>
   </div>
 }

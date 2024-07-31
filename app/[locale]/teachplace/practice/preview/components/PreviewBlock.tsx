@@ -20,7 +20,7 @@ export default function PreviewBlock({ questions }: { questions: any }) {
     return questions[questionIdx]
   }, [questionIdx, questions])
 
-  return <div className="h-full w-4/5 flex flex-col justify-center items-center">
+  return <div className="w-4/5 flex flex-col justify-center items-center">
     {curQuestion && <Card style={{ height: '80%', width: '100%' }}>
       <Title heading={5}>{questionIdx + 1}. <RenderPinyin text={curQuestion?.content?.question_text?.text} pinyin={curQuestion?.content?.question_text?.pinyin || curQuestion?.content?.question_text?.pingyin}></RenderPinyin>。</Title>
       {
@@ -41,8 +41,7 @@ export default function PreviewBlock({ questions }: { questions: any }) {
     </Card>}
     <div className="flex mt-4">
       {questions.length > 1 && questionIdx > 0 && <Button onClick={() => { setQuestionIdx(questionIdx - 1) }}>上一题</Button>}
-      <Button type="primary" disabled className="mx-4">重新生成</Button>
-      {questions.length > 1 && questionIdx < questions.length - 1 && <Button onClick={() => { setQuestionIdx(questionIdx + 1) }}>下一题</Button>}
+      {questions.length > 1 && questionIdx < questions.length - 1 && <Button className="ml-2" onClick={() => { setQuestionIdx(questionIdx + 1) }}>下一题</Button>}
     </div>
   </div>
 }

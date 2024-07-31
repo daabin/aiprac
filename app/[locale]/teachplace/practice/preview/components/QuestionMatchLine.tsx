@@ -5,7 +5,7 @@ import { Button, Toast } from '@douyinfe/semi-ui';
 import { IconHelpCircle } from '@douyinfe/semi-icons';
 import _ from 'lodash';
 
-const QuestionMatchLine = ({qid, dataSource, standardAnswers }: {qid: any, dataSource: any, standardAnswers: any }) => {
+const QuestionMatchLine = ({ qid, dataSource, standardAnswers }: { qid: any, dataSource: any, standardAnswers: any }) => {
   const [matchLine, setMatchLine] = useState<MatchLine | null>(null);
 
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -13,6 +13,7 @@ const QuestionMatchLine = ({qid, dataSource, standardAnswers }: {qid: any, dataS
   const backCanvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
+    console.log('standardAnswers', standardAnswers);
     // -- 初始化连线库
     if (canvasRef.current && backCanvasRef.current && containerRef.current) {
       const items = containerRef.current.querySelectorAll('.option');
@@ -79,7 +80,7 @@ const QuestionMatchLine = ({qid, dataSource, standardAnswers }: {qid: any, dataS
   };
   return (
     <div className="match-line">
-      <div className='my-2 flex items-center'><IconHelpCircle className='mr-1'/><p> 使用提示：点击左边文字，按住鼠标拖动，连接至右边对应文字</p></div>
+      <div className='my-2 flex items-center'><IconHelpCircle className='mr-1' /><p> 使用提示：点击左边文字，按住鼠标拖动，连接至右边对应文字</p></div>
       <div className="contents" ref={containerRef}>
         <div className="leftOptions">{renderItems('L')}</div>
         <div className="rightOptions">{renderItems('R')}</div>
@@ -89,7 +90,16 @@ const QuestionMatchLine = ({qid, dataSource, standardAnswers }: {qid: any, dataS
       <div className="flex justify-center mt-4 gap-4">
         <Button onClick={() => matchLine?.reset()}>重置</Button>
         <Button onClick={() => matchLine?.undo()}>撤销</Button>
-        <Button theme='solid' type='primary' onClick={handleCheck}>检查答案</Button>
+      </div>
+      <div className='mt-4 p-4 border-4 border-orange-400 border-double'>
+        ✅ 正确答案是：
+        <ol>
+          {
+            Object.keys(standardAnswers).map((key, index) => (
+              <li key={index}>{key} - {standardAnswers[key]} &nbsp;</li>
+            ))
+          }
+        </ol>
       </div>
     </div>
   );

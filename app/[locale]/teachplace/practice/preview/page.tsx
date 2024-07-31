@@ -121,7 +121,7 @@ export default function PracticePreviewPage() {
             })
           }
         </div>
-        <div className='flex-1 h-full border border-l-0 bg-slate-50 flex justify-center items-center'>
+        <div className='flex-1 h-full p-4 border border-l-0 bg-slate-50 flex justify-center items-center'>
           {curQuestionQuestion.length === 0 ? <div>请点击左侧题目类型查看</div> : <PreviewBlock questions={curQuestionQuestion} />}
         </div>
       </Card>}
