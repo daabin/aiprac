@@ -92,9 +92,9 @@ export default function PracticePage() {
         method: 'POST',
         body: JSON.stringify(req),
       })
-  
+
       const result = await res.json();
-  
+
       console.log('reGen result------->', result);
 
       if (!result?.error && result?.content) {
@@ -102,21 +102,21 @@ export default function PracticePage() {
         newRecord.content = result?.content || {}
         newRecord.token = result?.token || 0
         newRecord.gen_status = 1
-  
+
         if (record?.question_type === '看图认字') {
           const target = VocabularyConfData.find((item: any) => item.vocabulary === record?.language_point)
           newRecord.content.img_url = target?.img_url || ''
         } else if (record?.question_type === '听力选择') {
           newRecord.content.audio_url = result?.audio_url || ''
-  
+
           const res = await fetch('/api/storage', {
             method: 'POST',
             body: JSON.stringify({ audio_url: result?.audio_url, qid: record?.qid }),
           })
           const resData = await res.json()
-  
+
           console.log('upload audio res------->', resData?.data?.path);
-  
+
           if (resData?.data?.path) {
             newRecord.content.supabase_path = resData?.data?.path
           } else {
@@ -131,9 +131,9 @@ export default function PracticePage() {
             }
           }
         }
-  
+
         await handleUpdate(record?.qid, newRecord)
-  
+
         setLoadingReGen(false);
         getPractice();
         getQuestionsCount();
@@ -168,6 +168,12 @@ export default function PracticePage() {
     setCurSetting([]);
     setLoadingReGen(false);
     setLoadingQuestions(false);
+  }
+
+  const formatTime = (time: any) => {
+    const date = new Date(time);
+    date.setHours(date.getHours() + 8);
+    return date.toLocaleString();
   }
 
   return (
@@ -220,7 +226,7 @@ export default function PracticePage() {
                 <Column title='练习名称' width={250} dataIndex="title" />
                 <Column title='练习描述' width={200} dataIndex="description" />
                 <Column title='创建时间' width={180} dataIndex="created_at" render={(value, record, index) => (
-                  new Date(value).toLocaleString()
+                  formatTime(value)
                 )} />
                 <Column align='center' title='题目设置及出题结果' width={160} dataIndex="settings" render={(value, record, index) => (
                   <Button theme='borderless' type='secondary' size='small' onClick={() => handleReview(record)}>查看</Button>
