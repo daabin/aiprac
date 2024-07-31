@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './QuestionMatchLine.css';
-import MatchLine from '@likg/match-line';
+import MatchLine from './match-line';
 import { Button, Toast } from '@douyinfe/semi-ui';
 import { IconHelpCircle } from '@douyinfe/semi-icons';
 import _ from 'lodash';
