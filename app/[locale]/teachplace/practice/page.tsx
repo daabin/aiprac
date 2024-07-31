@@ -1,6 +1,6 @@
 'use client'
 
-import { Typography, Row, Col, Card, Table, Button, Toast, Tag, SideSheet, Breadcrumb, Skeleton } from '@douyinfe/semi-ui';
+import { Typography, Row, Col, Card, Table, Button, Toast, Tag, SideSheet, Breadcrumb, Skeleton, Spin } from '@douyinfe/semi-ui';
 import { Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -182,7 +182,7 @@ export default function PracticePage() {
         <Row gutter={[16, 16]}>
           <Col span={6}>
             <Card title='创建练习' bordered={false}>
-              <Skeleton loading={loading} placeholder={<Skeleton.Title style={{height: '44px'}}/>}>
+              <Skeleton loading={loading} placeholder={<Skeleton.Title style={{ height: '44px' }} />}>
                 <Title heading={1}> {practices.length || '-'}</Title>
               </Skeleton>
             </Card>
@@ -199,7 +199,7 @@ export default function PracticePage() {
           </Col>
           <Col span={6}>
             <Card title='可用出题数量' bordered={false}>
-              <Skeleton loading={loadingCount} placeholder={<Skeleton.Title style={{height: '44px'}}/>}>
+              <Skeleton loading={loadingCount} placeholder={<Skeleton.Title style={{ height: '44px' }} />}>
                 <Title heading={1}> {200 - questionsCount || '-'} </Title>
               </Skeleton>
             </Card>
@@ -230,25 +230,27 @@ export default function PracticePage() {
       </div>
 
       <SideSheet maskClosable={false} onCancel={handleClean} size='large' title="练习" visible={visible}>
-        <Table dataSource={curSetting} loading={loadingQuestions || loadingReGen} rowKey='qid' size="small" bordered={true}>
-          <Column title='练习难度' width={100} dataIndex="question_level" />
-          <Column title='考查能力' width={100} dataIndex="question_ability" />
-          <Column title='考查题型' width={150} dataIndex="question_type" />
-          <Column title='考查语言点' width={200} dataIndex="language_point" />
-          <Column align='center' title='出题结果' width={80} dataIndex="gen_status" render={(value, record, index) => (
-            <Tag
-              color={record.gen_status === 1 ? 'green' : 'red'}
-              size='large'
-              shape='circle'
-              type='solid'
-            >
-              {record.gen_status === 1 ? '成功' : '失败'}
-            </Tag>
-          )} />
-          <Column align='center' title='操作' width={80} dataIndex="option" render={(value, record, index) => (
-            <Button disabled={record.gen_status === 1} loading={loadingReGen} theme='light' size='small' onClick={() => handleReGen(record)}>重新出题</Button>
-          )} />
-        </Table>
+        <Spin tip="AI出题中..." spinning={loadingReGen}>
+          <Table dataSource={curSetting} loading={loadingQuestions} rowKey='qid' size="small" bordered={true}>
+            <Column title='练习难度' width={100} dataIndex="question_level" />
+            <Column title='考查能力' width={100} dataIndex="question_ability" />
+            <Column title='考查题型' width={150} dataIndex="question_type" />
+            <Column title='考查语言点' width={200} dataIndex="language_point" />
+            <Column align='center' title='出题结果' width={80} dataIndex="gen_status" render={(value, record, index) => (
+              <Tag
+                color={record.gen_status === 1 ? 'green' : 'red'}
+                size='large'
+                shape='circle'
+                type='solid'
+              >
+                {record.gen_status === 1 ? '成功' : '失败'}
+              </Tag>
+            )} />
+            <Column align='center' title='操作' width={80} dataIndex="option" render={(value, record, index) => (
+              <Button disabled={record.gen_status === 1 || loadingReGen} theme='light' size='small' onClick={() => handleReGen(record)}>重新出题</Button>
+            )} />
+          </Table>
+        </Spin>
       </SideSheet>
     </section>
   )
