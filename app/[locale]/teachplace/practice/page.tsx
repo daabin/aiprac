@@ -87,57 +87,62 @@ export default function PracticePage() {
       language_point: record.language_point,
       question_level: record.question_level,
     }
-    const res = await fetch('/api/gen', {
-      method: 'POST',
-      body: JSON.stringify(req),
-    })
+    try {
+      const res = await fetch('/api/gen', {
+        method: 'POST',
+        body: JSON.stringify(req),
+      })
+  
+      const result = await res.json();
+  
+      console.log('reGen result------->', result);
 
-    const result = await res.json();
-
-    console.log('reGen result------->', result);
-
-    if (!result?.error && result?.content) {
-      const newRecord: any = {}
-      newRecord.content = result?.content || {}
-      newRecord.token = result?.token || 0
-      newRecord.gen_status = 1
-
-      if (record?.question_type === '看图认字') {
-        const target = VocabularyConfData.find((item: any) => item.vocabulary === record?.language_point)
-        newRecord.content.img_url = target?.img_url || ''
-      } else if (record?.question_type === '听力选择') {
-        newRecord.content.audio_url = result?.audio_url || ''
-
-        const res = await fetch('/api/storage', {
-          method: 'POST',
-          body: JSON.stringify({ audio_url: result?.audio_url, qid: record?.qid }),
-        })
-        const resData = await res.json()
-
-        console.log('upload audio res------->', resData?.data?.path);
-
-        if (resData?.data?.path) {
-          newRecord.content.supabase_path = resData?.data?.path
-        } else {
-          newRecord.gen_status = 0
-        }
-      } else if (newRecord?.question_type === '口语发音') {
-        newRecord.content = {
-          question: result?.content || {},
-          question_text: {
-            "pinyin": "qǐng yòng zhōng wén pīn dú xià liè jù zi",
-            "text": "请用中文拼读下列句子"
+      if (!result?.error && result?.content) {
+        const newRecord: any = {}
+        newRecord.content = result?.content || {}
+        newRecord.token = result?.token || 0
+        newRecord.gen_status = 1
+  
+        if (record?.question_type === '看图认字') {
+          const target = VocabularyConfData.find((item: any) => item.vocabulary === record?.language_point)
+          newRecord.content.img_url = target?.img_url || ''
+        } else if (record?.question_type === '听力选择') {
+          newRecord.content.audio_url = result?.audio_url || ''
+  
+          const res = await fetch('/api/storage', {
+            method: 'POST',
+            body: JSON.stringify({ audio_url: result?.audio_url, qid: record?.qid }),
+          })
+          const resData = await res.json()
+  
+          console.log('upload audio res------->', resData?.data?.path);
+  
+          if (resData?.data?.path) {
+            newRecord.content.supabase_path = resData?.data?.path
+          } else {
+            newRecord.gen_status = 0
+          }
+        } else if (newRecord?.question_type === '口语发音') {
+          newRecord.content = {
+            question: result?.content || {},
+            question_text: {
+              "pinyin": "qǐng yòng zhōng wén pīn dú xià liè jù zi",
+              "text": "请用中文拼读下列句子"
+            }
           }
         }
+  
+        await handleUpdate(record?.qid, newRecord)
+  
+        setLoadingReGen(false);
+        getPractice();
+        getQuestionsCount();
+        handleReview(record);
+      } else {
+        setLoadingReGen(false);
+        Toast.error('重新出题失败，请稍后重试');
       }
-
-      await handleUpdate(record?.qid, newRecord)
-
-      setLoadingReGen(false);
-      getPractice();
-      getQuestionsCount();
-      handleReview(record);
-    } else {
+    } catch (error: any) {
       setLoadingReGen(false);
       Toast.error('重新出题失败，请稍后重试');
     }
