@@ -1,7 +1,6 @@
 'use client'
 
-import { Typography, Row, Col, Card, Table, Button, Toast, Tag, SideSheet, Breadcrumb } from '@douyinfe/semi-ui';
-import { set } from 'lodash';
+import { Typography, Row, Col, Card, Table, Button, Toast, Tag, SideSheet, Breadcrumb, Skeleton } from '@douyinfe/semi-ui';
 import { Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -12,7 +11,8 @@ const { Column } = Table;
 export default function PracticePage() {
   const { Title } = Typography;
   const [practices, setPractices] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [loadingCount, setLoadingCount] = useState(true);
   const [visible, setVisible] = useState(false);
   const [curSetting, setCurSetting] = useState<any[]>([]);
   const [questionsCount, setQuestionsCount] = useState(0);
@@ -25,7 +25,6 @@ export default function PracticePage() {
   }, []);
 
   const getPractice = async () => {
-    setLoading(true);
     const res = await fetch('/api/practice', {
       method: 'GET',
       cache: 'no-store'
@@ -47,6 +46,7 @@ export default function PracticePage() {
     });
     const data = await res.json();
 
+    setLoadingCount(false);
     if (data?.error) {
       Toast.error('查询失败，请刷新重试');
     } else {
@@ -72,12 +72,6 @@ export default function PracticePage() {
     } else {
       setCurSetting(data.data);
     }
-  }
-
-  const Color = {
-    '成功': 'green',
-    '失败': 'red',
-    '部分成功': 'light-blue',
   }
 
   const PreviewStatus = ['成功', '部分成功']
@@ -164,7 +158,7 @@ export default function PracticePage() {
     }
   }
 
-  const handleClean= () => {
+  const handleClean = () => {
     setVisible(false);
     setCurSetting([]);
     setLoadingReGen(false);
@@ -187,8 +181,10 @@ export default function PracticePage() {
       >
         <Row gutter={[16, 16]}>
           <Col span={6}>
-            <Card title='创建练习' bordered={false} >
-              <Title heading={1}> {practices.length || '-'}</Title>
+            <Card title='创建练习' bordered={false}>
+              <Skeleton loading={loading} placeholder={<Skeleton.Title style={{height: '44px'}}/>}>
+                <Title heading={1}> {practices.length || '-'}</Title>
+              </Skeleton>
             </Card>
           </Col>
           <Col span={6}>
@@ -202,8 +198,10 @@ export default function PracticePage() {
             </Card>
           </Col>
           <Col span={6}>
-            <Card title='可用出题数量' bordered={false} >
-              <Title heading={1}> {200 - questionsCount || '-'} </Title>
+            <Card title='可用出题数量' bordered={false}>
+              <Skeleton loading={loadingCount} placeholder={<Skeleton.Title style={{height: '44px'}}/>}>
+                <Title heading={1}> {200 - questionsCount || '-'} </Title>
+              </Skeleton>
             </Card>
           </Col>
         </Row>
@@ -222,9 +220,9 @@ export default function PracticePage() {
                 <Column align='center' title='题目设置及出题结果' width={160} dataIndex="settings" render={(value, record, index) => (
                   <Button theme='borderless' type='secondary' size='small' onClick={() => handleReview(record)}>查看</Button>
                 )} />
-                <Column align='center' title='操作' width={120} render={(value, record, index) => {
-                  return PreviewStatus.includes(record.gen_status) ? <Link href={`/teachplace/practice/preview?pid=${record.pid}`}><Button theme='light' size='small' >预览</Button> </Link> : ''
-                }} />
+                <Column align='center' title='操作' width={120} render={(value, record, index) => (
+                  <Link href={`/teachplace/practice/preview?pid=${record.pid}`}><Button theme='light' size='small' >预览</Button> </Link>
+                )} />
               </Table>
             </Card>
           </Col>
@@ -248,7 +246,7 @@ export default function PracticePage() {
             </Tag>
           )} />
           <Column align='center' title='操作' width={80} dataIndex="option" render={(value, record, index) => (
-             <Button disabled={record.gen_status === 1} loading={loadingReGen} theme='light' size='small' onClick={() => handleReGen(record)}>重新出题</Button>
+            <Button disabled={record.gen_status === 1} loading={loadingReGen} theme='light' size='small' onClick={() => handleReGen(record)}>重新出题</Button>
           )} />
         </Table>
       </SideSheet>
