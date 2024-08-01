@@ -122,7 +122,7 @@ export default function PracticePage() {
           } else {
             newRecord.gen_status = 0
           }
-        } else if (newRecord?.question_type === '口语发音') {
+        } else if (record?.question_type === '口语发音') {
           newRecord.content = {
             question: result?.content || {},
             question_text: {
