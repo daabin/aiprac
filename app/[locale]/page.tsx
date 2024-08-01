@@ -3,13 +3,11 @@ import { redirect } from 'next/navigation';
 
 import { auth, currentUser } from '@clerk/nextjs/server';
 import { getTranslations } from 'next-intl/server';
+import styles from '@/styles/styles.module.css';
 
 import Authentication from '@/components/home/Authentication';
-import Authorization from '@/components/home/Authorization';
-import Banner from '@/components/home/Banner';
 import SiteHeader from '@/components/home/SiteHeader';
-import darkBg from '@/public/dark-bg.avif';
-import lightBg from '@/public/light-bg.avif';
+import aiprac from '@/public/aiprac.png';
 
 import { getUserInfo } from './actions';
 import { RoleCode } from '@/utils/constants';
@@ -38,43 +36,21 @@ export default async function Page() {
   }
 
   return (
-    <div>
+    <div className={`h-screen overflow-hidden ${styles.pagebg}`}>
       <SiteHeader />
-      <div className="pointer-events-none absolute inset-x-0 top-0 z-20 flex justify-center overflow-hidden">
-        <div className="flex w-[108rem] flex-none justify-end">
-          <Image
-            src={lightBg}
-            alt=""
-            className="max-w-none flex-none dark:hidden"
-            decoding="async"
-            width={1148}
-            height={334}
-            priority
-          />
-          <Image
-            src={darkBg}
-            alt=""
-            className="hidden max-w-none flex-none dark:block"
-            decoding="async"
-            width={1440}
-            height={616}
-            priority
-          />
+      <div className="flex flex-col" >
+        <h1
+          className="text-6xl text-center leading-normal font-bold my-16"
+        >
+          <span className='relative z-10'>{t.raw('desc')}
+            <svg className='absolute top-[-6px] w-[31%] h-[70px] left-[54%] z-1 origin-bottom -rotate-2' xmlns="http://www.w3.org/2000/svg" width="298" height="84" viewBox="0 0 326 70" fill="none"><g><path opacity="0.3" d="M0 12L320 11L320 72L0 71L0 12Z" fill="#FF46C0"></path></g></svg>
+          </span>
+        </h1>
+        <div className='w-9/12 mx-auto'>
+          <Image src={aiprac} alt="aiprac"></Image>
         </div>
       </div>
-      <div className="flex w-10/12 mx-auto pt-20">
-        <div className="w-1/2">
-          <h1
-            className="text-5xl leading-normal font-bold mb-12"
-            dangerouslySetInnerHTML={{ __html: t.raw('desc') }}
-          ></h1>
-          {!userId && <Authorization />}
-          {userId && !userinfo?.role && <Authentication uid={userId} email={email}/>}
-        </div>
-        <div className="w-1/2">
-          <Banner></Banner>
-        </div>
-      </div>
+      {userId && !userinfo?.role && <Authentication uid={userId} email={email} />}
     </div>
   );
 }

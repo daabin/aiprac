@@ -1,7 +1,7 @@
 {
   "site": {
     "title": "Aiprac",
-		"desc": "AI 驱动的<br/>个性化中文练习平台"
+		"desc": "AI 驱动的个性化中文练习平台"
   },
 	"login": {
 		"login": "登录"

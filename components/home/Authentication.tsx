@@ -1,16 +1,20 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button, Radio, RadioGroup, Toast } from '@douyinfe/semi-ui';
-import { IconForward } from '@douyinfe/semi-icons';
+import { Button, Radio, RadioGroup, Toast, Modal } from '@douyinfe/semi-ui';
 import { RadioChangeEvent } from '@douyinfe/semi-ui/lib/es/radio';
 import { RoleCode } from '@/utils/constants';
 
-export default function Authentication({ uid, email }: { uid: string, email?: string}) {
+export default function Authentication({ uid, email }: { uid: string, email?: string }) {
   const router = useRouter();
   const [saveLoading, setSaveLoading] = useState(false);
   const [role, setRole] = useState<string>(RoleCode.STUDENT);
+  const [showModal, setShowModal] = useState(false);
+
+  useEffect(() => {
+    setShowModal(true);
+  }, []);
 
   const handleSubmit = async () => {
     setSaveLoading(true)
@@ -25,11 +29,11 @@ export default function Authentication({ uid, email }: { uid: string, email?: st
     setSaveLoading(false)
 
     if (data.error) {
-      Toast.error('提交失败，请稍后再试');
+      Toast.error('请求失败，请稍后再试');
     } else {
       if (role === RoleCode.STUDENT) {
         router.push('/learnplace');
-      } else if(role === RoleCode.TEACHER) {
+      } else if (role === RoleCode.TEACHER) {
         router.push('/teachplace');
       }
     }
@@ -39,36 +43,43 @@ export default function Authentication({ uid, email }: { uid: string, email?: st
     setRole(evt?.target?.value);
   };
 
-  return (
-    <section className="">
-      <div>
-        <RadioGroup
-          type="pureCard"
-          defaultValue={RoleCode.STUDENT}
-          value={role}
-          aria-label="角色认证"
-          name="role-verify"
-          onChange={(e) => doSth(e)}
-        >
-          <Radio value={RoleCode.STUDENT} extra="我正在学习中文">
-            我是学生
-          </Radio>
-          <Radio value={RoleCode.TEACHER} extra="我有丰富的中文教学经验">
-            我是教师
-          </Radio>
-        </RadioGroup>
-      </div>
+  const footer = (
+    <div className='flex justify-center'>
       <Button
-        className="mt-6 !h-12 !w-32"
         theme="solid"
         type="warning"
         size="large"
-        icon={<IconForward  size="large" />}
         onClick={handleSubmit}
         loading={saveLoading}
       >
         立即进入
       </Button>
-    </section>
+    </div>
+  )
+
+  return (
+    <div>
+      <Modal visible={showModal} centered hasCancel={false} header={null} closable={false} footer={footer}>
+        <h2 className='text-3xl font-extrabold my-8 text-center text-[#ff9700]'>请选择您的角色</h2>
+        <div className='flex justify-center items-center my-16'>
+          <RadioGroup
+            type="pureCard"
+            direction="horizontal"
+            defaultValue={RoleCode.STUDENT}
+            value={role}
+            name="role-verify"
+            onChange={(e) => doSth(e)}
+            className="flex-nowrap"
+          >
+            <Radio className='w-[190px] bg-slate-100' value={RoleCode.STUDENT} extra="我正在学中文">
+              <h3 className='text-2xl'>我是学生</h3>
+            </Radio>
+            <Radio className='w-[190px]  bg-slate-100' value={RoleCode.TEACHER} extra="我正在教中文">
+              <h3 className='text-2xl'>我是教师</h3>
+            </Radio>
+          </RadioGroup>
+        </div>
+      </Modal>
+    </div>
   );
 }

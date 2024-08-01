@@ -21,9 +21,9 @@ export default function SiteHeader() {
   );
 
   const classNames1 =
-    'bg-white/60 sticky top-0 z-[1031] w-full flex-none backdrop-blur transition-colors duration-500 dark:border-slate-50/[0.06] dark:bg-transparent lg:border-b lg:border-slate-900/10';
+    'bg-white/60 sticky top-0 z-[100] w-full flex-none backdrop-blur transition-colors duration-500 dark:border-slate-50/[0.06] dark:bg-transparent lg:border-b lg:border-slate-900/10';
   const classNames2 =
-    'bg-white/95 sticky top-0 z-[1031] w-full flex-none backdrop-blur transition-colors duration-500 dark:border-slate-50/[0.06] dark:bg-slate-900/75 lg:border-b lg:border-slate-900/10';
+    'bg-white/95 sticky top-0 z-[100] w-full flex-none backdrop-blur transition-colors duration-500 dark:border-slate-50/[0.06] dark:bg-slate-900/75 lg:border-b lg:border-slate-900/10';
 
   return (
     <header className={!!scroll && scroll.top > 60 ? classNames2 : classNames1}>
