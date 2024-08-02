@@ -1,0 +1,7 @@
+.aiprac-spin .semi-spin-children{
+  opacity: 0.1;
+}
+
+.semi-spin-hidden>.semi-spin-children {
+  opacity: 1!important;
+}

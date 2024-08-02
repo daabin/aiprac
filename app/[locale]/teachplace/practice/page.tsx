@@ -2,10 +2,11 @@
 
 import { Typography, Row, Col, Card, Table, Button, Toast, Tag, SideSheet, Breadcrumb, Skeleton, Spin } from '@douyinfe/semi-ui';
 import { Sparkles } from 'lucide-react';
+import { IconLoading } from '@douyinfe/semi-icons';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import VocabularyConfData from '@/utils/vocabularyConfData';
-
+import './styles.css';
 const { Column } = Table;
 
 export default function PracticePage() {
@@ -78,6 +79,7 @@ export default function PracticePage() {
     console.log('handleReGen------->', record);
 
     setLoadingReGen(true);
+
     const req = {
       question_type: record.question_type,
       question_ability: record.question_ability,
@@ -238,7 +240,7 @@ export default function PracticePage() {
       </div>
 
       <SideSheet maskClosable={false} onCancel={handleClean} size='large' title="练习" visible={visible}>
-        <Spin tip="AI出题中..." spinning={loadingReGen}>
+        <Spin indicator={<IconLoading />} wrapperClassName='aiprac-spin' size="large" tip="AI 出题中..." spinning={loadingReGen}>
           <Table dataSource={curSetting} loading={loadingQuestions} rowKey='qid' size="small" bordered={true}>
             <Column title='练习难度' width={100} dataIndex="question_level" />
             <Column title='考查能力' width={100} dataIndex="question_ability" />
