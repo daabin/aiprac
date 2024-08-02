@@ -217,8 +217,8 @@ export default function PracticePage() {
         </Row>
         <Row gutter={[16, 16]}>
           <Col span={24}>
-            <Card title='创建记录' bordered={false} >
-              <Table size='small' loading={loading} dataSource={practices} rowKey='id' sticky className='mt-6' pagination={{ pageSize: 10 }} bordered={true}>
+            <Card title='已创建练习' bordered={false} >
+              <Table className="aiprac-table mt-6" size='small' loading={loading} dataSource={practices} rowKey='id' sticky pagination={{ pageSize: 10 }} bordered={true}>
                 <Column title='编号' width={100} render={(value, record, index) => (
                   index + 1
                 )} />

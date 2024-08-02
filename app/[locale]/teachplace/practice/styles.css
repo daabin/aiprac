@@ -5,3 +5,7 @@
 .semi-spin-hidden>.semi-spin-children {
   opacity: 1!important;
 }
+
+.aiprac-table .semi-table-thead>.semi-table-row>.semi-table-row-head{
+  text-align: center;
+}
