@@ -7,6 +7,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from "next/navigation";
 import { cn } from '@/utils/tailwind';
 import PreviewBlock from './components/PreviewBlock';
+import { AbilityOrder } from '@/utils/constants';
 
 export default function PracticePreviewPage() {
   const searchParams = useSearchParams();
@@ -71,13 +72,20 @@ export default function PracticePreviewPage() {
     return result;
   }, [questions]);
 
+  const abilityWithOrder = useMemo(() => {
+    const curAbilities = Object.keys(questionsGroupByAbility);
+    const abilities = AbilityOrder.filter((ability) => curAbilities.includes(ability));
+    console.log('abilityWithOrder------->', abilities);
+    return abilities;
+  }, [questionsGroupByAbility]);
+
   const handleClickQuestion = (questions: any, type: string) => {
     console.log('handleClickQuestion------->', questions);
     setCurQuestionQuestion(questions.filter((question: any) => question.gen_status === 1));
     setCurType(type);
   }
 
-  const RenderQuestionCount = ({questions}: {questions: any}) => {
+  const RenderQuestionCount = ({ questions }: { questions: any }) => {
     console.log('RenderQuestionCount------->', questions);
     const genFailedCount = questions.filter((question: any) => question.gen_status !== 1).length;
     if (genFailedCount > 0) {
@@ -100,7 +108,7 @@ export default function PracticePreviewPage() {
       {!loading && <Card className='flex-1 flex' bodyStyle={{ height: '100%', width: '100%', display: 'flex' }}>
         <div className='w-[300px] h-full border p-4'>
           {
-            questionsGroupByAbility && Object.keys(questionsGroupByAbility).map((ability) => {
+            abilityWithOrder?.map((ability) => {
               return (
                 <div key={ability} className='px-2'>
                   <div className='text-lg font-bold mb-4'>{ability}</div>
