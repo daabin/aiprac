@@ -74,9 +74,6 @@ export default function PracticePage() {
     }
   }
 
-  const PreviewStatus = ['成功', '部分成功']
-
-
   const handleReGen = async (record: any) => {
     console.log('handleReGen------->', record);
 
@@ -192,14 +189,14 @@ export default function PracticePage() {
       >
         <Row gutter={[16, 16]}>
           <Col span={6}>
-            <Card title='创建练习' bordered={false}>
+            <Card title='已创建练习' bordered={false}>
               <Skeleton loading={loading} placeholder={<Skeleton.Title style={{ height: '44px' }} />}>
                 <Title heading={1}> {practices.length || '-'}</Title>
               </Skeleton>
             </Card>
           </Col>
           <Col span={6}>
-            <Card title='待批改练习' bordered={false} >
+            <Card title='待批改作业' bordered={false} >
               <Title heading={1}>-</Title>
             </Card>
           </Col>
