@@ -12,6 +12,7 @@ import { defaultLocale } from '@/i18n';
 import LocaleProvider from '@/components/LocaleProvider';
 import '@/styles/globals.css';
 import Script from 'next/script';
+import { GoogleAnalytics } from '@next/third-parties/google'
 
 export default async function RootLayout({
   children,
@@ -45,6 +46,7 @@ export default async function RootLayout({
           <LocaleProvider locale={locale} messages={messages}>
             <Fragment>{children}</Fragment>
           </LocaleProvider>
+          <GoogleAnalytics gaId="G-4JNJB0KWXF" />
         </body>
       </html>
     </ClerkProvider>
