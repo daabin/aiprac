@@ -9,7 +9,7 @@ const semi = require('@douyinfe/semi-next').default({
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true, // Recommended for the `pages` directory, default in `app`.
-  transpilePackages: ['@douyinfe/semi-ui', '@douyinfe/semi-icons'],
+  transpilePackages: ['@douyinfe/semi-ui', '@douyinfe/semi-icons', '@douyinfe/semi-illustrations'],
   swcMinify: true,
   experimental: {
     serverActions: true,

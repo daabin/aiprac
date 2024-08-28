@@ -47,10 +47,7 @@ export default function TeachplaceLayout({
               const routerMap: RouterMap = {
                 home: `/teachplace`,
                 practice: `/teachplace/practice`,
-                course: `/teachplace/course`,
-                examination: `/teachplace/examination`,
                 sutdents: `/teachplace/sutdents`,
-                setting: `/teachplace/setting`,
               };
               return (
                 <Link
@@ -70,29 +67,14 @@ export default function TeachplaceLayout({
                 icon: <IconHome size="large" />,
               },
               {
-                itemKey: 'course',
-                text: '课程',
-                icon: <IconStar size="large" />,
-              },
-              {
                 itemKey: 'practice',
                 text: '练习',
                 icon: <IconBolt size="large" />,
               },
               {
-                itemKey: 'examination',
-                text: '考试',
-                icon: <IconVerify size="large" />,
-              },
-              {
                 itemKey: 'sutdents',
                 text: '学生',
                 icon: <IconUserGroup size="large" />,
-              },
-              {
-                itemKey: 'setting',
-                text: '设置',
-                icon: <IconSetting size="large" />,
               },
             ]}
             header={{
@@ -112,22 +94,6 @@ export default function TeachplaceLayout({
               mode="horizontal"
               footer={
                 <>
-                  <Button
-                    theme="borderless"
-                    icon={<IconComment size="large" />}
-                    style={{
-                      color: 'var(--semi-color-text-2)',
-                      marginRight: '12px',
-                    }}
-                  />
-                  <Button
-                    theme="borderless"
-                    icon={<IconBell size="large" />}
-                    style={{
-                      color: 'var(--semi-color-text-2)',
-                      marginRight: '12px',
-                    }}
-                  />
                   <SignedIn>
                     <UserButton />
                   </SignedIn>
