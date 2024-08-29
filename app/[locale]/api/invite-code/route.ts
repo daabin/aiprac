@@ -8,15 +8,23 @@ export const runtime = 'nodejs';
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
   const class_id = searchParams.get('class_id')
+  const code = searchParams.get('code')
 
-  const { data, error } = await supabase
-    .from('class_invitecode')
+  console.log('get class_invitecode ------->','class_id:', class_id, 'code: ',code);
+
+  let query = supabase.from('class_invitecode')
     .select(`*,
     classes(
       class_name
     )`)
-    .eq('class_id', class_id)
 
+  if (class_id && class_id.length === 36) { 
+    query = query.eq('class_id', class_id) 
+  } else if (code && code.length === 21) { 
+    query = query.eq('code', code)
+  }
+
+  const { data, error } = await query
   console.log('get class_invitecode ------->', data, error);
 
   return NextResponse.json({ data, error });

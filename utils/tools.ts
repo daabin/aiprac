@@ -11,3 +11,12 @@ export function shuffleArray(array: any[]) {
   }
   return array;
 }
+
+// 按创建时间判断班级邀请码是否过期
+// 创建时间为UTC时间需加8小时
+// 超过48小时则过期
+export function isClassInviteCodeExpired(createdAt: string) {
+  const now = new Date().getTime();
+  const created = new Date(createdAt).getTime();
+  return now - created > 48 * 60 * 60 * 1000;
+}

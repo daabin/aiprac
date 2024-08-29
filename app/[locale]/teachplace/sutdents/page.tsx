@@ -61,7 +61,7 @@ export default function SutdentsPage() {
     }
 
     console.log('查询邀请码成功', data?.data);
-    if(data?.data?.length > 0) {
+    if (data?.data?.length > 0) {
       setCurInviteClass({
         code: data.data[0].code,
         class_name: data.data[0].classes.class_name
@@ -238,9 +238,14 @@ export default function SutdentsPage() {
       >
         <Title heading={6}>请将下方邀请链接分享给您的学生,学生同意加入后将自动关联至该班级</Title>
         <div className='flex my-4'>
-          <Input value={`${origin}/${params.locale}/invite?token=${curInviteClass?.code}`}/>
-          <CopyToClipboard text={`${origin}/${params.locale}/invite?token=${curInviteClass?.code}`}>
+          <Input value={`${origin}/${params.locale}/invite?code=${curInviteClass?.code}`} />
+          <CopyToClipboard text={`${origin}/${params.locale}/invite?code=${curInviteClass?.code}`}
+            onCopy={(_: any, result: any) => result && Toast.success('复制成功')}>
             <Button className='ml-2'>复制链接</Button>
+          </CopyToClipboard>
+          <CopyToClipboard text={`${curInviteClass?.code}`}
+            onCopy={(_: any, result: any) => result && Toast.success('复制成功')}>
+            <Button className='ml-2'>复制班级码</Button>
           </CopyToClipboard>
         </div>
         <div className='my-8'>
