@@ -2,7 +2,7 @@
 'use client'
 
 import styles from '@/styles/styles.module.css';
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState } from 'react';
 import { isClassInviteCodeExpired } from '@/utils/tools';
 import { Toast, Spin, Empty, Button } from '@douyinfe/semi-ui';
@@ -10,6 +10,7 @@ import { IllustrationSuccess, IllustrationNoAccess } from '@douyinfe/semi-illust
 import { useUser } from '@clerk/nextjs'
 
 export default function InvitePage() {
+  const router = useRouter()
   const searchParams = useSearchParams();
   const inviteCode = searchParams.get("code");
   const [loading, setLoading] = useState<boolean>(true);
@@ -47,6 +48,43 @@ export default function InvitePage() {
 
   const handleAccept = async () => {
     console.log('curUser:', curUser)
+    // 当前已登录，判断用户角色，学生则加入班级，老师提示异常
+    if(curUser?.isSignedIn && curUser?.user?.id) {
+      const res = await fetch(`/api/users`, {
+        method: 'GET',
+        cache: 'no-store'
+      });
+      const data = await res.json();
+      if (data?.error) {
+        Toast.error('查询账号信息失败，请稍后重试');
+      }
+      const userInfo = data?.data[0];
+      if(userInfo.role === "TEACHER") {
+        Toast.error('当前账号角色为老师，无法加入班级');
+        return;
+      }
+
+      if(userInfo.role === "STUDENT") {
+        const req = {
+          class_id: classInfo?.class_id
+        }
+        const res = await fetch(`/api/student-class`, {
+          method: 'POST',
+          body: JSON.stringify(req),
+        });
+        const data = await res.json();
+        if (data?.error) {
+          Toast.error('加入班级失败，请稍后重试');
+        }
+        if (data?.data) {
+          Toast.success('加入班级成功');
+        }
+      }
+    } else {
+      // 未登录，将 code 存入 localStorage，跳转登录页
+      localStorage.setItem('__aiprac_invite_code', inviteCode as string);
+      router.push('/sign-in');
+    }
   }
 
   return (
