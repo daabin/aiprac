@@ -5,18 +5,13 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { SignedIn, UserButton } from '@clerk/nextjs';
 import {
-  IconBell,
-  IconComment,
   IconBolt,
-  IconHome,
-  IconSetting,
-  IconStar,
   IconUserGroup,
-  IconVerify,
 } from '@douyinfe/semi-icons';
 import Logo from '@/public/logo.svg';
 import Image from 'next/image';
-import { Button, Layout, Nav } from '@douyinfe/semi-ui';
+import { Layout, Nav } from '@douyinfe/semi-ui';
+import AddUsername from '@/components/AddUsername';
 
 interface RouterMap {
   [key: string]: string;
@@ -32,7 +27,7 @@ export default function TeachplaceLayout({
   const pathname = usePathname()
   const pathSegments = pathname.split('/');
   let lastSegment = pathSegments[3];
-  lastSegment = lastSegment === 'teachplace' || !lastSegment ? 'home' : lastSegment;
+  lastSegment = lastSegment === 'teachplace' || !lastSegment ? 'practice' : lastSegment;
   console.log('lastSegment', lastSegment);
 
   const { Header, Sider, Content } = Layout;
@@ -45,14 +40,13 @@ export default function TeachplaceLayout({
             style={{ maxWidth: 220, height: '100%' }}
             renderWrapper={({ itemElement, props }) => {
               const routerMap: RouterMap = {
-                home: `/teachplace`,
                 practice: `/teachplace/practice`,
                 sutdents: `/teachplace/sutdents`,
               };
               return (
                 <Link
                   style={{ textDecoration: "none" }}
-                  href={`${routerMap[props.itemKey || 'home']}`}
+                  href={`${routerMap[props.itemKey || 'practice']}`}
                   locale={locale}
                   prefetch={true}
                 >
@@ -62,18 +56,13 @@ export default function TeachplaceLayout({
             }}
             items={[
               {
-                itemKey: 'home',
-                text: '首页',
-                icon: <IconHome size="large" />,
-              },
-              {
                 itemKey: 'practice',
                 text: '练习',
                 icon: <IconBolt size="large" />,
               },
               {
                 itemKey: 'sutdents',
-                text: '学生',
+                text: '班级&学生',
                 icon: <IconUserGroup size="large" />,
               },
             ]}
@@ -111,6 +100,7 @@ export default function TeachplaceLayout({
           </Content>
         </Layout>
       </Layout>
+      <AddUsername />
     </div>
   );
 };

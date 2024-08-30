@@ -6,6 +6,25 @@ import { auth } from "@clerk/nextjs/server";
 
 export const runtime = 'nodejs';
 
+export async function GET() {
+  const { userId } = auth();
+  const { data, error } = await supabase
+    .from('student_class')
+    .select(`class_id,
+    classes(
+      *, users(
+        *
+      )
+    )`)
+    .eq('student_id', userId)
+    .order('created_at', { ascending: false })
+
+  console.log('get classes ------->', data, error);
+
+  return NextResponse.json({ data, error });
+}
+
+
 export async function POST(request: NextRequest) {
   const { userId } = auth();
   const req = await request.json();

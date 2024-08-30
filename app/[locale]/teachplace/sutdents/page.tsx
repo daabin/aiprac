@@ -172,7 +172,7 @@ export default function SutdentsPage() {
           padding: 20
         }}
       >
-        <Skeleton placeholder={placeholder} loading={initialLoading}>
+        <Skeleton active={true} placeholder={placeholder} loading={initialLoading}>
           {classList.map((item) => (
             <div key={item.id} className='flex justify-between items-center p-4 bg-white rounded-lg mb-4 shadow-sm hover:cursor-pointer hover:shadow-md'>
               <div className='flex items-center'>

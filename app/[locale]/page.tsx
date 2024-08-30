@@ -28,9 +28,9 @@ export default async function Page() {
       userinfo = user?.[0];
       console.log('userinfo:', userinfo)
       if (userinfo?.role === RoleCode.STUDENT) {
-        redirect('/learnplace');
+        redirect('/learnplace/homework');
       } else if (userinfo?.role === RoleCode.TEACHER) {
-        redirect('/teachplace');
+        redirect('/teachplace/practice');
       }
     }
   }

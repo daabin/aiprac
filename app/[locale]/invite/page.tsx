@@ -75,8 +75,7 @@ export default function InvitePage() {
         const data = await res.json();
         if (data?.error) {
           Toast.error('加入班级失败，请稍后重试');
-        }
-        if (data?.data) {
+        } else {
           Toast.success('加入班级成功');
         }
       }

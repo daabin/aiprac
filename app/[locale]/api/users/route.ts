@@ -34,3 +34,20 @@ export async function POST(request: NextRequest) {
 
   return NextResponse.json({ data, error });
 }
+
+export async function PUT(request: NextRequest) {
+  const { userId } = auth();
+  const req = await request.json();
+
+  console.log('update user ------->', req);
+  const { data, error } = await supabase
+    .from('users')
+    .update({ 
+      user_name: req.user_name,
+      scientific_name: req.scientific_name, })
+    .eq('user_id', userId)
+    .select()
+
+    console.log('update user ------->', data, error);
+    return NextResponse.json({ data, error });
+}
