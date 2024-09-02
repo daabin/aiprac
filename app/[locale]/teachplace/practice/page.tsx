@@ -2,10 +2,11 @@
 
 import { Typography, Row, Col, Card, Table, Button, Toast, Tag, SideSheet, Breadcrumb, Skeleton, Spin } from '@douyinfe/semi-ui';
 import { Sparkles } from 'lucide-react';
-import { IconLoading } from '@douyinfe/semi-icons';
+import { IconLoading, } from '@douyinfe/semi-icons';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import VocabularyConfData from '@/utils/vocabularyConfData';
+import AssignHomework from '@/components/AssignHomework';
 import './styles.css';
 const { Column } = Table;
 
@@ -222,16 +223,19 @@ export default function PracticePage() {
                 <Column title='编号' width={100} render={(value, record, index) => (
                   index + 1
                 )} />
-                <Column title='练习名称' width={250} dataIndex="title" />
-                <Column title='练习描述' width={200} dataIndex="description" />
+                <Column title='练习名称' width={200} dataIndex="title" />
+                <Column title='练习描述' dataIndex="description" />
                 <Column title='创建时间' width={180} dataIndex="created_at" render={(value, record, index) => (
                   formatTime(value)
                 )} />
                 <Column align='center' title='题目设置及出题结果' width={160} dataIndex="settings" render={(value, record, index) => (
                   <Button theme='borderless' type='secondary' size='small' onClick={() => handleReview(record)}>查看</Button>
                 )} />
-                <Column align='center' title='操作' width={120} render={(value, record, index) => (
-                  <Link href={`/teachplace/practice/preview?pid=${record.pid}`}><Button theme='light' size='small' >预览</Button> </Link>
+                <Column align='center' title='操作' width={200} render={(value, record, index) => (
+                  <div className='flex justify-center items-center gap-2'>
+                    <Link href={`/teachplace/practice/preview?pid=${record.pid}`}><Button theme='light' size='small' >预览</Button> </Link>
+                    <AssignHomework pid={record.pid}/>
+                  </div>
                 )} />
               </Table>
             </Card>

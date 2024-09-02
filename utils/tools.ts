@@ -20,3 +20,9 @@ export function isClassInviteCodeExpired(createdAt: string) {
   const created = new Date(createdAt).getTime();
   return now - created > 48 * 60 * 60 * 1000;
 }
+
+export const formatUTCTimeToBeijinTime = (time: any) => {
+  const date = new Date(time);
+  date.setHours(date.getHours() + 8);
+  return date.toLocaleString();
+}
