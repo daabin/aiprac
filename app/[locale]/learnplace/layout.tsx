@@ -43,7 +43,7 @@ export default function LearnplaceLayout({
       const classInfo = data?.data[0];
 
       // 邀请码已过期
-      if (isClassInviteCodeExpired(classInfo?.created_at)) {
+      if (isClassInviteCodeExpired(classInfo?.updated_at)) {
         localStorage.removeItem('__aiprac_invite_code');
         return
       }

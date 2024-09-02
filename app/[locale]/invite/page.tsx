@@ -40,7 +40,7 @@ export default function InvitePage() {
       const classInfo = data.data[0];
       setClassInfo(classInfo);
 
-      if (isClassInviteCodeExpired(classInfo.created_at)) {
+      if (isClassInviteCodeExpired(classInfo.updated_at)) {
         setExpired(true);
       }
     }
@@ -77,6 +77,7 @@ export default function InvitePage() {
           Toast.error('加入班级失败，请稍后重试');
         } else {
           Toast.success('加入班级成功');
+          router.push('/learnplace/homework');
         }
       }
     } else {
