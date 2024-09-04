@@ -1,0 +1,34 @@
+import { Button, Radio, RadioGroup, Toast } from '@douyinfe/semi-ui';
+import { useState } from 'react';
+import Image from 'next/image';
+import RenderPinyin from "./RenderPinyin";
+
+export default function PictureWordRecognition({ content, showAnswer }: { content: any, showAnswer: boolean }) {
+  const [selectedValue, setSelectedValue] = useState<string>('')
+
+  const handleChange = (e: any) => {
+    setSelectedValue(e.target.value)
+  }
+
+  const handleCheck = () => {
+    if (selectedValue === content?.correct_answer?.text) {
+      Toast.success('回答正确')
+    } else {
+      Toast.error(`回答错误，正确答案是：${content?.correct_answer?.text}`)
+    }
+  }
+
+  return <div className="w-full">
+    <Image src={content?.img_url} alt="" width={200} height={200} className="my-4 max-w-80 rounded" />
+    <RadioGroup className='w-[200px]' direction="vertical" type='card' onChange={handleChange}>
+      {
+        content?.options.map((option: any, index: number) => {
+          return <Radio style={{ alignItems: 'center' }} addonStyle={{ alignItems: 'flex-end' }} key={option.text} value={option.text}><span>{String.fromCharCode(65 + index)}.&nbsp;</span><RenderPinyin text={option.text} pinyin={option.pinyin}></RenderPinyin></Radio>
+        })
+      }
+    </RadioGroup>
+    {showAnswer && <div className='w-1/2 p-4 mt-4 border-4 border-orange-400 border-double'>
+      ✅ 正确答案是：{content?.correct_answer?.text}
+    </div>}
+  </div>
+};

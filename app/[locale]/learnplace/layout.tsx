@@ -100,6 +100,7 @@ export default function LearnplaceLayout({
           style={{
             padding: '24px',
             backgroundColor: 'var(--semi-color-bg-0)',
+            overflow: 'auto',
           }}
         >
           {children}

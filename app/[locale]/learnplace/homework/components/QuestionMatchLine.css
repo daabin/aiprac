@@ -1,0 +1,41 @@
+.match-line {
+  width: 450px;
+  height: auto;
+  margin: 20px 0;
+}
+
+.match-line .contents {
+  border: 1px dashed #ccc;
+  position: relative;
+  box-sizing: border-box;
+  padding: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: centers;
+}
+.match-line .contents .option {
+  width: 100px;
+  height: 40px;
+  background-color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 4px;
+  cursor: pointer;
+  user-select: none;
+  color: #555;
+  position: relative;
+  z-index: 1;
+}
+.match-line .contents .option.active {
+  background: #ff7900;
+  color: #fff;
+}
+.match-line .contents .option:not(:last-child) {
+  margin-bottom: 16px;
+}
+.match-line .contents canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
