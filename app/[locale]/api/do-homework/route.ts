@@ -34,3 +34,20 @@ export async function POST(request: NextRequest) {
 
   return NextResponse.json({ data, error });
 }
+
+// 提交作业
+export async function PUT(request: NextRequest) {
+  const req = await request.json();
+
+  const { data, error } = await supabase
+    .from('homework')
+    .update({ 
+      student_answer: req.student_answer,
+    })
+    .eq('id', req.hid)
+    .select()
+
+  console.log('get homework questions res------->', data, error);
+
+  return NextResponse.json({ data, error });
+}

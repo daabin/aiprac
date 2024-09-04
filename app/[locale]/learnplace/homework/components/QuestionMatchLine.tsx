@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useRef } from 'react';
 import './QuestionMatchLine.css';
 import MatchLine from './match-line';
-import { Button, ButtonGroup } from '@douyinfe/semi-ui';
-import { IconRefresh, IconUndo } from '@douyinfe/semi-icons';
+import { Button, ButtonGroup, Tooltip } from '@douyinfe/semi-ui';
+import { IconRefresh } from '@douyinfe/semi-icons';
 import _ from 'lodash';
 
 const QuestionMatchLine = ({ qid, dataSource, standardAnswers, showAnswer, studentAnswer, handleUpdateStudentAnswer }: { qid: any, dataSource: any, standardAnswers: any, showAnswer: boolean, studentAnswer: any, handleUpdateStudentAnswer: any }) => {
@@ -69,10 +69,12 @@ const QuestionMatchLine = ({ qid, dataSource, standardAnswers, showAnswer, stude
       <div className='mt-2  flex justify-between items-center p-1 bg-slate-50'>
         <div className='flex items-center'><p>提示：点击左边文字，按住鼠标拖动连接至右边文字</p></div>
         <ButtonGroup size='small' >
-          <Button type="tertiary" icon={<IconRefresh/>} onClick={() => {
-            handleUpdateStudentAnswer(qid, null)
-            matchLineRef?.current?.reset()
-          }}></Button>
+          <Tooltip content="撤销重做">
+            <Button type="tertiary" icon={<IconRefresh />} onClick={() => {
+              handleUpdateStudentAnswer(qid, null)
+              matchLineRef?.current?.reset()
+            }}></Button>
+          </Tooltip>
         </ButtonGroup>
       </div>
       <div className="contents" ref={containerRef}>

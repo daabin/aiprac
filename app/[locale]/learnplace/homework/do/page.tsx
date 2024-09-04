@@ -4,7 +4,7 @@ import { Breadcrumb, Button, Card, Progress, Typography, Toast, Spin } from '@do
 import { IconBadge } from '@douyinfe/semi-icons-lab';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { IconLoading, IconCalendar, IconUserCircle } from '@douyinfe/semi-icons';
 import { formatUTCTimeToBeijinTime, isEmpty } from '@/utils/tools'
 import { AbilityOrder } from '@/utils/constants';
@@ -20,12 +20,15 @@ import OralPronunciation from '../components/OralPronunciation';
 const { Title } = Typography
 
 export default function DoHomeworkPage() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const hid = searchParams.get('hid');
+  const [qids, setQids] = useState<string[]>([]);
   const [questions, setQuestions] = useState<any[]>([]);
   const [practiceInfo, setPracticeInfo] = useState<any>({});
   const [loading, setLoading] = useState(true);
   const [studentAnswer, setStudentAnswer] = useState<any>({});
+  const [submitLoading, setSubmitLoading] = useState(false);
 
   useEffect(() => {
     // 获取题目列表
@@ -84,6 +87,7 @@ export default function DoHomeworkPage() {
       student_answer = data?.data[0]?.student_answer || {}
     }
 
+    setQids(qids);
     return { qids, student_answer }
   }
 
@@ -155,6 +159,43 @@ export default function DoHomeworkPage() {
 
   const handleSubmit = async () => {
     console.log('studentAnswer------->', studentAnswer);
+
+    const validate = qids.every((qid) => {
+      const answer = studentAnswer[qid];
+      if (isEmpty(answer)) {
+        Toast.error('请完成所有题目后再提交');
+        return false;
+      }
+      return true;
+    })
+
+    if (!validate) {
+      return;
+    }
+
+    setSubmitLoading(true);
+    const res = await fetch('/api/do-homework', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        hid,
+        student_answer: studentAnswer,
+      })
+    });
+
+    setSubmitLoading(false);
+    const data = await res.json();
+
+    console.log('handleSubmit------->', data);
+
+    if (data?.error) {
+      Toast.error('提交失败，请重试');
+    } else {
+      Toast.success('提交成功');
+      router.push('/learnplace/homework');
+    }
   }
 
   return (
@@ -270,7 +311,7 @@ export default function DoHomeworkPage() {
             }
           </div>
           <div className='mt-10'>
-            <Button theme='solid' size='large' type='primary' block onClick={handleSubmit}>提交作业</Button>
+            <Button theme='solid' size='large' loading={submitLoading} type='primary' block onClick={handleSubmit}>提交作业</Button>
           </div>
         </Card>
       </div>}
