@@ -1,26 +1,23 @@
-import { Button, Radio, RadioGroup, Toast } from '@douyinfe/semi-ui';
-import { useState } from 'react';
+import { Radio, RadioGroup } from '@douyinfe/semi-ui';
+import { useMemo } from 'react';
 import Image from 'next/image';
 import RenderPinyin from "./RenderPinyin";
 
-export default function PictureWordRecognition({ content, showAnswer }: { content: any, showAnswer: boolean }) {
-  const [selectedValue, setSelectedValue] = useState<string>('')
+export default function PictureWordRecognition({ qid, content, showAnswer, studentAnswer, handleUpdateStudentAnswer }: { qid: any, content: any, showAnswer: boolean, studentAnswer: any, handleUpdateStudentAnswer: any }) {
+  const initialVal = useMemo(() => {
+    if (studentAnswer) {
+      return studentAnswer[qid]
+    }
+    return ''
+  }, [studentAnswer])
 
   const handleChange = (e: any) => {
-    setSelectedValue(e.target.value)
-  }
-
-  const handleCheck = () => {
-    if (selectedValue === content?.correct_answer?.text) {
-      Toast.success('回答正确')
-    } else {
-      Toast.error(`回答错误，正确答案是：${content?.correct_answer?.text}`)
-    }
+    handleUpdateStudentAnswer(qid, e.target.value)
   }
 
   return <div className="w-full">
     <Image src={content?.img_url} alt="" width={200} height={200} className="my-4 max-w-80 rounded" />
-    <RadioGroup className='w-[200px]' direction="vertical" type='card' onChange={handleChange}>
+    <RadioGroup className='w-[200px]' direction="vertical" type='card' value={initialVal} onChange={handleChange}>
       {
         content?.options.map((option: any, index: number) => {
           return <Radio style={{ alignItems: 'center' }} addonStyle={{ alignItems: 'flex-end' }} key={option.text} value={option.text}><span>{String.fromCharCode(65 + index)}.&nbsp;</span><RenderPinyin text={option.text} pinyin={option.pinyin}></RenderPinyin></Radio>

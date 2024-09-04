@@ -1,16 +1,22 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import './QuestionMatchLine.css';
 import MatchLine from './match-line';
-import { Button, ButtonGroup, Toast } from '@douyinfe/semi-ui';
-import { IconRefresh, IconUndo, IconCommand } from '@douyinfe/semi-icons';
+import { Button, ButtonGroup } from '@douyinfe/semi-ui';
+import { IconRefresh, IconUndo } from '@douyinfe/semi-icons';
 import _ from 'lodash';
 
-const QuestionMatchLine = ({ qid, dataSource, standardAnswers, showAnswer }: { qid: any, dataSource: any, standardAnswers: any, showAnswer: boolean }) => {
-  const [matchLine, setMatchLine] = useState<MatchLine | null>(null);
-
+const QuestionMatchLine = ({ qid, dataSource, standardAnswers, showAnswer, studentAnswer, handleUpdateStudentAnswer }: { qid: any, dataSource: any, standardAnswers: any, showAnswer: boolean, studentAnswer: any, handleUpdateStudentAnswer: any }) => {
+  const matchLineRef = useRef<MatchLine | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const backCanvasRef = useRef<HTMLCanvasElement | null>(null);
+
+  const initialVal = useMemo(() => {
+    if (studentAnswer) {
+      return studentAnswer[qid]
+    }
+    return ''
+  }, [studentAnswer, qid])
 
   useEffect(() => {
     console.log('standardAnswers', standardAnswers);
@@ -18,8 +24,8 @@ const QuestionMatchLine = ({ qid, dataSource, standardAnswers, showAnswer }: { q
     if (canvasRef.current && backCanvasRef.current && containerRef.current) {
       const items = containerRef.current.querySelectorAll('.option');
       console.log('初始化连线库', items);
-      if (items.length > 0) {
-        const matching = new MatchLine({
+      if (items.length > 0 && !matchLineRef.current) {
+        matchLineRef.current = new MatchLine({
           container: containerRef.current,
           items: items as NodeListOf<HTMLElement>,
           canvas: canvasRef.current,
@@ -28,42 +34,22 @@ const QuestionMatchLine = ({ qid, dataSource, standardAnswers, showAnswer }: { q
           itemActiveCls: 'active',
           standardAnswers,
           debug: true,
-          onChange: (anwsers: any) => {
-            console.log(anwsers);
+          onChange: (answers: any) => {
+            const formatAnswer = {}
+            Object.keys(answers).map(key => {
+              formatAnswer[key.replace(/\(.*\)/, '')] = answers[key]
+            })
+            handleUpdateStudentAnswer(qid, formatAnswer)
           },
         });
-        setMatchLine(matching);
       }
     }
 
     return () => {
       console.log('清除连线库');
-      matchLine?.reset()
+      matchLineRef?.current?.reset()
     }
   }, [dataSource, standardAnswers, qid]);
-
-
-  const handleCheck = () => {
-    const answers = matchLine?.getAnswers() || {}
-
-    // 去除 answers key 中 (xxx) 的内容
-    const formatAnswer = {}
-    Object.keys(answers).map(key => {
-      formatAnswer[key.replace(/\(.*\)/, '')] = answers[key]
-    })
-
-    // _.mapValues(answers, (value, key) => key.replace(/\(.*\)/, ''))
-
-    // 将对象数组转化为对象
-    console.log(formatAnswer, standardAnswers)
-
-    // 判断两个对象是否相等
-    if (_.isEqual(formatAnswer, standardAnswers)) {
-      Toast.success('回答正确')
-    } else {
-      Toast.error(`回答错误, 正确答案是：${JSON.stringify(standardAnswers)}`)
-    }
-  }
 
   const renderItems = (ownership: 'L' | 'R') => {
     const k = ownership === 'L' ? 'leftOption' : 'rightOption';
@@ -83,8 +69,10 @@ const QuestionMatchLine = ({ qid, dataSource, standardAnswers, showAnswer }: { q
       <div className='mt-2  flex justify-between items-center p-1 bg-slate-50'>
         <div className='flex items-center'><p>提示：点击左边文字，按住鼠标拖动连接至右边文字</p></div>
         <ButtonGroup size='small' >
-          <Button type="tertiary" icon={<IconRefresh/>} onClick={() => matchLine?.reset()}></Button>
-          <Button type="tertiary" icon={<IconUndo/>} onClick={() => matchLine?.undo()}></Button>
+          <Button type="tertiary" icon={<IconRefresh/>} onClick={() => {
+            handleUpdateStudentAnswer(qid, null)
+            matchLineRef?.current?.reset()
+          }}></Button>
         </ButtonGroup>
       </div>
       <div className="contents" ref={containerRef}>

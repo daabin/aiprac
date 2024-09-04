@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 export function generateUniqueID() {
   const timestamp = new Date().getTime(); 
   const randomNum = Math.floor(Math.random() * 1000); 
@@ -25,4 +27,11 @@ export const formatUTCTimeToBeijinTime = (time: any) => {
   const date = new Date(time);
   date.setHours(date.getHours() + 8);
   return date.toLocaleString();
+}
+
+export const isEmpty = (ele: any) => {
+  if (_.isObject(ele)) {
+    return _.isEmpty(ele);
+  } 
+  return !ele;
 }

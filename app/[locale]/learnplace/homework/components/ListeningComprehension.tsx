@@ -1,10 +1,16 @@
 import { Button, Radio, RadioGroup, Toast } from '@douyinfe/semi-ui';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import RenderPinyin from "./RenderPinyin";
 
-export default function ListeningComprehension({ content, showAnswer }: { content: any, showAnswer: boolean }) {
-  const [selectedValue, setSelectedValue] = useState<string>('')
+export default function ListeningComprehension({ qid, content, showAnswer, studentAnswer, handleUpdateStudentAnswer }: { qid: any, content: any, showAnswer: boolean, studentAnswer: any, handleUpdateStudentAnswer: any }) {
   const [audioUrl, setAudioUrl] = useState<string>('')
+
+  const initialVal = useMemo(() => {
+    if (studentAnswer) {
+      return studentAnswer[qid]
+    }
+    return ''
+  }, [studentAnswer])
 
   useEffect(() => {
     getAudioUrl()
@@ -24,20 +30,12 @@ export default function ListeningComprehension({ content, showAnswer }: { conten
   }
 
   const handleChange = (e: any) => {
-    setSelectedValue(e.target.value)
-  }
-
-  const handleCheck = () => {
-    if (selectedValue === content?.correct_answer?.text) {
-      Toast.success('回答正确')
-    } else {
-      Toast.error(`回答错误，正确答案是：${content?.correct_answer?.text}`)
-    }
+    handleUpdateStudentAnswer(qid, e.target.value)
   }
 
   return <div className="w-full">
     <audio className='my-6' controls src={audioUrl}></audio>
-    <RadioGroup type='card' className='w-[200px]' direction="vertical" onChange={handleChange}>
+    <RadioGroup type='card' className='w-[200px]' direction="vertical" value={initialVal} onChange={handleChange}>
       {
         content?.options?.map((option: any, index: number) => {
           return <Radio style={{ alignItems: 'center' }} addonStyle={{ alignItems: 'flex-end' }} key={option.text} value={option.text}><span>{String.fromCharCode(65 + index)}.&nbsp;</span><RenderPinyin text={option.text} pinyin={option.pinyin}></RenderPinyin></Radio>

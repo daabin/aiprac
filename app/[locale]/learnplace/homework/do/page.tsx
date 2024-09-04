@@ -6,8 +6,10 @@ import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { IconLoading, IconCalendar, IconUserCircle } from '@douyinfe/semi-icons';
-import { formatUTCTimeToBeijinTime } from '@/utils/tools'
+import { formatUTCTimeToBeijinTime, isEmpty } from '@/utils/tools'
 import { AbilityOrder } from '@/utils/constants';
+import { cn } from '@/utils/tailwind';
+
 import PictureWordRecognition from '../components/PictureWordRecognition';
 import VocabularyMatching from '../components/VocabularyMatching';
 import FillInTheBlanks from '../components/FillInTheBlanks';
@@ -23,6 +25,7 @@ export default function DoHomeworkPage() {
   const [questions, setQuestions] = useState<any[]>([]);
   const [practiceInfo, setPracticeInfo] = useState<any>({});
   const [loading, setLoading] = useState(true);
+  const [studentAnswer, setStudentAnswer] = useState<any>({});
 
   useEffect(() => {
     // 获取题目列表
@@ -31,8 +34,10 @@ export default function DoHomeworkPage() {
   }, [hid]);
 
   const fetchQuestions = async () => {
-    const qids = await fetchQids()
+    const { qids, student_answer } = await fetchHomework()
     console.log('qids------->', qids);
+    console.log('student_answer------->', student_answer);
+    setStudentAnswer(student_answer);
 
     if (qids?.length > 0) {
 
@@ -62,7 +67,7 @@ export default function DoHomeworkPage() {
     }
   }
 
-  const fetchQids = async () => {
+  const fetchHomework = async () => {
     const res = await fetch(`/api/do-homework?hid=${hid}`, {
       method: 'GET',
       cache: 'no-store',
@@ -71,13 +76,15 @@ export default function DoHomeworkPage() {
 
     console.log('fetchQids------->', data);
     let qids = []
+    let student_answer = {}
     if (data?.error) {
       Toast.error('查询失败，请刷新重试');
     } else {
       qids = data?.data[0]?.qid_list || []
+      student_answer = data?.data[0]?.student_answer || {}
     }
 
-    return qids
+    return { qids, student_answer }
   }
 
   const fetchPracticeInfo = async () => {
@@ -136,6 +143,20 @@ export default function DoHomeworkPage() {
   }, [questionsGroupByAbility]);
 
 
+  const handleUpdateStudentAnswer = (qid: string, answer: any) => {
+    console.log('handleUpdateStudentAnswer------->', qid, answer);
+    setStudentAnswer((prev: any) => {
+      return {
+        ...prev,
+        [qid]: answer
+      }
+    });
+  }
+
+  const handleSubmit = async () => {
+    console.log('studentAnswer------->', studentAnswer);
+  }
+
   return (
     <div className="max-w-[1168px] min-w-[1000px] mx-auto">
       <Breadcrumb compact={false} className="mb-4">
@@ -189,19 +210,19 @@ export default function DoHomeworkPage() {
                           return <div key={question.qid} className='mt-2' id={question.qid}>
                             <Title heading={6}>{idx + 1}. <RenderPinyin text={question?.content?.question_text?.text} pinyin={question?.content?.question_text?.pinyin || question?.content?.question_text?.pingyin}></RenderPinyin>。</Title>
                             {
-                              question?.question_type === '看图认字' && <PictureWordRecognition content={question?.content} showAnswer={false} />
+                              question?.question_type === '看图认字' && <PictureWordRecognition qid={question.qid} content={question?.content} showAnswer={false} studentAnswer={studentAnswer} handleUpdateStudentAnswer={handleUpdateStudentAnswer}/>
                             }
                             {
-                              question?.question_type.includes('词汇匹配') && <VocabularyMatching content={question?.content} showAnswer={false} />
+                              question?.question_type.includes('词汇匹配') && <VocabularyMatching qid={question.qid} content={question?.content} showAnswer={false} studentAnswer={studentAnswer} handleUpdateStudentAnswer={handleUpdateStudentAnswer}/>
                             }
                             {
-                              question?.question_type === '字词填空' && <FillInTheBlanks content={question?.content} showAnswer={false} />
+                              question?.question_type === '字词填空' && <FillInTheBlanks qid={question.qid}  content={question?.content} showAnswer={false} studentAnswer={studentAnswer} handleUpdateStudentAnswer={handleUpdateStudentAnswer}/>
                             }
                             {
-                              question?.question_type === '听力选择' && <ListeningComprehension content={question?.content} showAnswer={false} />
+                              question?.question_type === '听力选择' && <ListeningComprehension qid={question.qid} content={question?.content} showAnswer={false} studentAnswer={studentAnswer} handleUpdateStudentAnswer={handleUpdateStudentAnswer}/>
                             }
                             {
-                              question?.question_type === '口语发音' && <OralPronunciation content={question?.content} showAnswer={false} />
+                              question?.question_type === '口语发音' && <OralPronunciation qid={question.qid} content={question?.content} showAnswer={false} studentAnswer={studentAnswer} handleUpdateStudentAnswer={handleUpdateStudentAnswer}/>
                             }
                           </div>
                         })
@@ -214,12 +235,7 @@ export default function DoHomeworkPage() {
           }
         </div>
         <Card className='w-[300px]'>
-          <div className='flex items-center gap-4'>
-            <Title heading={6}>进度</Title>
-            <Progress percent={80} style={{ height: '8px', width: '120px' }} />
-            <p>{1}/{questions?.length}</p>
-          </div>
-          <div className='mt-5 py-5 border-t border-dotted'>
+          <div className='mb-5 pb-5 border-b border-dotted'>
             <Title heading={4}>答题卡</Title>
             <div className='flex gap-4 mt-2'>
               <div className='flex items-center gap-2'><div className='w-4 h-4 border'></div>未做</div>
@@ -238,7 +254,7 @@ export default function DoHomeworkPage() {
                           {
                             typeGroup.questions.map((question: any, idx: number) => {
                               return <a href={`#${question.qid}`} key={question.qid} className='mt-2'>
-                                <div className='w-6 h-6 border text-center'>
+                                <div className={cn('w-6 h-6 border text-center', !isEmpty(studentAnswer[question.qid]) && 'bg-[#ff7900] font-bold text-white')}>
                                   {idx + 1}
                                 </div>
                               </a>
@@ -254,7 +270,7 @@ export default function DoHomeworkPage() {
             }
           </div>
           <div className='mt-10'>
-            <Button theme='solid' size='large' type='primary' block>提交作业</Button>
+            <Button theme='solid' size='large' type='primary' block onClick={handleSubmit}>提交作业</Button>
           </div>
         </Card>
       </div>}

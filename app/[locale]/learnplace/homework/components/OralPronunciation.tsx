@@ -1,13 +1,20 @@
 import { Button, Toast } from "@douyinfe/semi-ui";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import AudioReactRecorder, { RecordState } from 'audio-react-recorder'
 import { IconStop, IconDisc, IconPause, IconVolume1 } from '@douyinfe/semi-icons'
 import RenderPinyin from "./RenderPinyin";
 
-export default function OralPronunciation({ content, showAnswer }: { content: any, showAnswer: boolean }) {
+export default function OralPronunciation({ qid, content, showAnswer, studentAnswer, handleUpdateStudentAnswer }: { qid: any, content: any, showAnswer: boolean, studentAnswer: any, handleUpdateStudentAnswer: any }) {
   const [recordState, setRecordState] = useState<any>(RecordState.STOP)
   const [audioData, setAudioData] = useState<any>(null)
 
+  const initialVal = useMemo(() => {
+    if (studentAnswer) {
+      return studentAnswer[qid]
+    }
+    return ''
+  }, [studentAnswer])
+  
   const handleStart = () => {
     setRecordState(RecordState.START)
   }
@@ -42,7 +49,7 @@ export default function OralPronunciation({ content, showAnswer }: { content: an
       <audio
         id='audio'
         controls
-        src={audioData?.url || ''}
+        src={initialVal || audioData?.url || ''}
       ></audio>
     </div>
   </div>
