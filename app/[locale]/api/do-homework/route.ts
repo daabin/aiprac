@@ -43,6 +43,7 @@ export async function PUT(request: NextRequest) {
     .from('homework')
     .update({ 
       student_answer: req.student_answer,
+      status: req.status,
     })
     .eq('id', req.hid)
     .select()

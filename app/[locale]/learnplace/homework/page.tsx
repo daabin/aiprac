@@ -91,11 +91,15 @@ export default function HomeworkPage() {
           </div>
         )} />
         <Column title='得分' width={100} dataIndex="point" render={(_, record, idx) => (
-          <Tag color='blue'>{record?.status === 'GRADED' ? record?.total_score || '/' : '待批改'}</Tag>
+          <>
+            {record?.status === 'GRADED' && <Tag color='orange'>{record?.total_score || '-'}</Tag>}
+            {record?.status === 'ASSIGNED' && <Tag color='blue'>待提交</Tag>}
+            {record?.status === 'SUBMITTED' && <Tag color='green'>待批改</Tag>}
+          </>
         )} />
         <Column align='center' title='操作' width={80} dataIndex="option" render={(value, record, index) => (
           <div className="flex items-center gap-1">
-            {record?.status === 'ASSIGNED' &&  <Link href={`/learnplace/homework/do?hid=${record?.id}`}><Button theme='light' size='small'>去完成</Button></Link>}
+            {record?.status === 'ASSIGNED' && <Link href={`/learnplace/homework/do?hid=${record?.id}`}><Button theme='light' size='small'>去完成</Button></Link>}
             {record?.status === 'GRADED' && <Button theme='light' size='small' onClick={() => console.log(record)}>查看详情</Button>}
           </div>
         )} />

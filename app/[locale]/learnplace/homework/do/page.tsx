@@ -182,6 +182,7 @@ export default function DoHomeworkPage() {
       body: JSON.stringify({
         hid,
         student_answer: studentAnswer,
+        status: 'SUBMITTED'
       })
     });
 
