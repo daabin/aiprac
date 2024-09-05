@@ -107,7 +107,7 @@ export default function HomeworkPage() {
         <Column align='center' title='操作' width={80} dataIndex="option" render={(value, record, index) => (
           <div className="flex items-center gap-1">
             {record?.status === 'ASSIGNED' && <Link href={`/learnplace/homework/do?hid=${record?.id}`}><Button theme='light' size='small'>去完成</Button></Link>}
-            {record?.status === 'GRADED' && <Button theme='light' size='small' onClick={() => console.log(record)}>查看详情</Button>}
+            {record?.status === 'GRADED' && <Link href={`/learnplace/homework/do?hid=${record?.id}`}><Button theme='light' size='small'>查看详情</Button></Link>}
           </div>
         )} />
       </Table>
