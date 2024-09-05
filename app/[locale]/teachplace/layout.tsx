@@ -4,10 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { SignedIn, UserButton } from '@clerk/nextjs';
-import {
-  IconBolt,
-  IconUserGroup,
-} from '@douyinfe/semi-icons';
+import { Sparkles, UsersRound, BookOpenCheck } from 'lucide-react';
 import Logo from '@/public/logo.svg';
 import Image from 'next/image';
 import { Layout, Nav } from '@douyinfe/semi-ui';
@@ -42,6 +39,7 @@ export default function TeachplaceLayout({
               const routerMap: RouterMap = {
                 practice: `/teachplace/practice`,
                 sutdents: `/teachplace/sutdents`,
+                homework: `/teachplace/homework`,
               };
               return (
                 <Link
@@ -57,13 +55,18 @@ export default function TeachplaceLayout({
             items={[
               {
                 itemKey: 'practice',
-                text: '练习',
-                icon: <IconBolt size="large" />,
+                text: '创建练习',
+                icon: <Sparkles size={20} />,
+              },
+              {
+                itemKey: 'homework',
+                text: '作业批改',
+                icon: <BookOpenCheck size={20} />,
               },
               {
                 itemKey: 'sutdents',
-                text: '班级&学生',
-                icon: <IconUserGroup size="large" />,
+                text: '班级与学生',
+                icon: <UsersRound size={20} />,
               },
             ]}
             header={{

@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect, useMemo } from "react";
-import { Typography, RadioGroup, Radio, Table, Spin, Button, Tag } from "@douyinfe/semi-ui"
-import { IconLoading, IconCalendar, IconUserCircle } from '@douyinfe/semi-icons';
+import { Typography, RadioGroup, Radio, Table, Spin, Button, Tag, Toast } from "@douyinfe/semi-ui"
+import { IconLoading, IconCalendar, IconUserCircle, IconMail } from '@douyinfe/semi-icons';
 import { formatUTCTimeToBeijinTime } from '@/utils/tools'
 import Link from 'next/link';
 
@@ -25,8 +25,10 @@ export default function HomeworkPage() {
           return true
         } else if (filterType === 'ASSIGNED') {
           return homework.status === 'ASSIGNED'
-        } else if (filterType === 'SUBMMITED') {
-          return homework.status !== 'ASSIGNED'
+        } else if (filterType === 'SUBMITTED') {
+          return homework.status === 'SUBMITTED'
+        } else if (filterType === 'GRADED') {
+          return homework.status === 'GRADED'
         }
       })
     } else {
@@ -43,7 +45,8 @@ export default function HomeworkPage() {
     const data = await res.json()
 
     if (data?.error) {
-      console.log('获取作业列表失败，请刷新重试')
+      Toast.error('获取作业列表失败，请刷新重试')
+      setHomeworkList([])
     } else {
       console.log('data------->', data.data)
       setHomeworkList(data.data)
@@ -61,33 +64,37 @@ export default function HomeworkPage() {
       style={{
         marginTop: 20,
         display: 'flex',
-        width: 300,
+        width: 400,
         justifyContent: 'space-between',
       }}
     >
       <Radio value={'ASSIGNED'}>待完成</Radio>
-      <Radio value={'SUBMMITED'}>已完成</Radio>
+      <Radio value={'SUBMITTED'}>已提交</Radio>
+      <Radio value={'GRADED'}>已批改</Radio>
       <Radio value={'ALL'}>全部</Radio>
     </RadioGroup>
 
     <Spin indicator={<IconLoading />} wrapperClassName='aiprac-spin' size="large" spinning={loading}>
       <Table className="mt-4" dataSource={filterHomeworkList} rowKey='id'>
-        <Column title='练习名称与备注' dataIndex="title" render={(_, record, idx) => (
-          <div>
-            <Title heading={4}>{record?.practice?.title}</Title>
-            <p>{record?.practice?.description}</p>
+        <Column title='标题' dataIndex="title" render={(_, record, idx) => (
+          <Title heading={4}>{record?.practice?.title}</Title>
+        )} />
+        <Column title='教师信息' width={240} dataIndex="teacher" render={(_, record, idx) => (
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center gap-1">
+              <IconUserCircle />
+              <span>{record?.practice?.users?.scientific_name}</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <IconMail />
+              <span>{record?.practice?.users?.email}</span>
+            </div>
           </div>
         )} />
-        <Column title='教师信息' width={300} dataIndex="teacher" render={(_, record, idx) => (
-          <div className="flex items-center gap-1">
-            <IconUserCircle />
-            <span>{record?.practice?.users?.scientific_name}({record?.practice?.users?.email})</span>
-          </div>
-        )} />
-        <Column title='布置时间' width={150} dataIndex="ctime" render={(_, record, idx) => (
+        <Column title='布置时间' width={200} dataIndex="ctime" render={(_, record, idx) => (
           <div className="flex items-center gap-1">
             <IconCalendar />
-            <span>{formatUTCTimeToBeijinTime(record?.created_at)?.split(' ')[0]}</span>
+            <span>{formatUTCTimeToBeijinTime(record?.created_at)}</span>
           </div>
         )} />
         <Column title='得分' width={100} dataIndex="point" render={(_, record, idx) => (

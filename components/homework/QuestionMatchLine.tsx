@@ -1,55 +1,52 @@
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import './QuestionMatchLine.css';
 import MatchLine from './match-line';
 import { Button, ButtonGroup, Tooltip } from '@douyinfe/semi-ui';
 import { IconRefresh } from '@douyinfe/semi-icons';
 import _ from 'lodash';
+import { SHOW_STUDENT_ANSWER_STATUS } from '@/utils/constants'
 
-const QuestionMatchLine = ({ qid, dataSource, standardAnswers, showAnswer, studentAnswer, handleUpdateStudentAnswer }: { qid: any, dataSource: any, standardAnswers: any, showAnswer: boolean, studentAnswer: any, handleUpdateStudentAnswer: any }) => {
-  const matchLineRef = useRef<MatchLine | null>(null);
+const QuestionMatchLine = ({ qid, dataSource, standardAnswers, showAnswer, studentAnswer, handleUpdateStudentAnswer, homeworkStatus }: { qid: any, dataSource: any, standardAnswers: any, showAnswer: boolean, studentAnswer: any, handleUpdateStudentAnswer: any, homeworkStatus: any }) => {
+  const [matchLine, setMatchLine] = useState<MatchLine | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const backCanvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  const initialVal = useMemo(() => {
-    if (studentAnswer) {
-      return studentAnswer[qid]
-    }
-    return ''
-  }, [studentAnswer, qid])
-
   useEffect(() => {
-    console.log('standardAnswers', standardAnswers);
     // -- 初始化连线库
     if (canvasRef.current && backCanvasRef.current && containerRef.current) {
       const items = containerRef.current.querySelectorAll('.option');
-      console.log('初始化连线库', items);
-      if (items.length > 0 && !matchLineRef.current) {
-        matchLineRef.current = new MatchLine({
+      console.log(studentAnswer[qid], 'studentAnswer[qid] ----')
+      if (items.length > 0) {
+        const params: any = {
           container: containerRef.current,
           items: items as NodeListOf<HTMLElement>,
           canvas: canvasRef.current,
           backCanvas: backCanvasRef.current,
           strokeStyle: '#ff7900',
           itemActiveCls: 'active',
-          standardAnswers,
-          debug: true,
+          debug: false,
           onChange: (answers: any) => {
-            const formatAnswer = {}
-            Object.keys(answers).map(key => {
-              formatAnswer[key.replace(/\(.*\)/, '')] = answers[key]
-            })
-            handleUpdateStudentAnswer(qid, formatAnswer)
+            console.log('answers', qid, answers)
+            handleUpdateStudentAnswer(qid, answers)
           },
-        });
+        }
+
+        if (SHOW_STUDENT_ANSWER_STATUS.includes(homeworkStatus)) {
+          params.answers = studentAnswer[qid]
+          params.standardAnswers = standardAnswers
+        }
+
+        const matching = new MatchLine(params);
+
+        setMatchLine(matching);
       }
     }
 
     return () => {
-      console.log('清除连线库');
-      matchLineRef?.current?.reset()
+      matchLine?.reset()
     }
-  }, [dataSource, standardAnswers, qid]);
+  }, []);
 
   const renderItems = (ownership: 'L' | 'R') => {
     const k = ownership === 'L' ? 'leftOption' : 'rightOption';
@@ -72,7 +69,7 @@ const QuestionMatchLine = ({ qid, dataSource, standardAnswers, showAnswer, stude
           <Tooltip content="撤销重做">
             <Button type="tertiary" icon={<IconRefresh />} onClick={() => {
               handleUpdateStudentAnswer(qid, null)
-              matchLineRef?.current?.reset()
+              matchLine?.reset()
             }}></Button>
           </Tooltip>
         </ButtonGroup>

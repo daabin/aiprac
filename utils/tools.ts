@@ -24,6 +24,7 @@ export function isClassInviteCodeExpired(createdAt: string) {
 }
 
 export const formatUTCTimeToBeijinTime = (time: any) => {
+  if (!time) return '';
   const date = new Date(time);
   date.setHours(date.getHours() + 8);
   return date.toLocaleString();

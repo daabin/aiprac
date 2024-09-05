@@ -4,7 +4,7 @@ import AudioReactRecorder, { RecordState } from 'audio-react-recorder'
 import { IconStop, IconDisc, IconPause, IconVolume1 } from '@douyinfe/semi-icons'
 import RenderPinyin from "./RenderPinyin";
 
-export default function OralPronunciation({ qid, content, showAnswer, studentAnswer, handleUpdateStudentAnswer }: { qid: any, content: any, showAnswer: boolean, studentAnswer: any, handleUpdateStudentAnswer: any }) {
+export default function OralPronunciation({ qid, content, showAnswer, studentAnswer, handleUpdateStudentAnswer, homeworkStatus }: { qid: any, content: any, showAnswer: boolean, studentAnswer: any, handleUpdateStudentAnswer: any, homeworkStatus: any }) {
   const [recordState, setRecordState] = useState<any>(RecordState.STOP)
   const [audioData, setAudioData] = useState<any>(null)
 
@@ -36,7 +36,7 @@ export default function OralPronunciation({ qid, content, showAnswer, studentAns
   return <div className="flex flex-col items-center pt-4">
     <div className="self-start my-2 p-2 text-xl font-bold text-[#ff9100]"><IconVolume1 />
       {
-        typeof content?.question === 'string' ? <span>{content?.question}</span> : <RenderPinyin text={content?.question?.question_text?.text} pinyin={content?.question?.question_text?.pinyin}></RenderPinyin>
+        typeof content?.question === 'string' ? <span>{content?.question}</span> : <RenderPinyin text={content?.question?.text} pinyin={content?.question?.pinyin}></RenderPinyin>
       }
     </div>
     <AudioReactRecorder state={recordState} canvasWidth={500} backgroundColor="#f1f3f5" foregroundColor="#ff7900" canvasHeight={150} onStop={onStop} />

@@ -2,7 +2,7 @@ import { useMemo } from "react"
 import QuestionMatchLine from "./QuestionMatchLine"
 import { shuffleArray } from "@/utils/tools"
 
-export default function VocabularyMatching({ qid, content, showAnswer, studentAnswer, handleUpdateStudentAnswer }: { qid: any, content: any, showAnswer: boolean, studentAnswer: any, handleUpdateStudentAnswer: any }) {
+export default function VocabularyMatching({ qid, content, showAnswer, studentAnswer, handleUpdateStudentAnswer, homeworkStatus }: { qid: any, content: any, showAnswer: boolean, studentAnswer: any, handleUpdateStudentAnswer: any, homeworkStatus: any }) {
   const dataSource = useMemo(() => {
     const res: any[] = []
     const rights = shuffleArray([...content?.right_items])
@@ -24,5 +24,5 @@ export default function VocabularyMatching({ qid, content, showAnswer, studentAn
     return res
   }, [content, qid])
 
-  return <QuestionMatchLine showAnswer={showAnswer} qid={qid} dataSource={dataSource} standardAnswers={standardAnswers} studentAnswer={studentAnswer} handleUpdateStudentAnswer={handleUpdateStudentAnswer} />
+  return <QuestionMatchLine showAnswer={showAnswer} qid={qid} dataSource={dataSource} standardAnswers={standardAnswers} studentAnswer={studentAnswer} handleUpdateStudentAnswer={handleUpdateStudentAnswer} homeworkStatus={homeworkStatus}/>
 }

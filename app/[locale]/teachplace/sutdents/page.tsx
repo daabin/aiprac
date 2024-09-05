@@ -4,7 +4,7 @@ import { Skeleton, Typography, Button, Breadcrumb, Popconfirm, Table, Dropdown, 
 import { IllustrationNoContent } from '@douyinfe/semi-illustrations';
 import { IconPlus } from '@douyinfe/semi-icons';
 import { useState, useEffect, useRef } from 'react';
-import { BookOpenText, Ellipsis, BookUser, UserPlus, Settings } from 'lucide-react';
+import { GraduationCap, Ellipsis, BookUser, UserPlus, Settings } from 'lucide-react';
 import { MAX_CLASS_ACCOUNT } from '@/utils/constants';
 import { nanoid } from 'nanoid'
 import { CopyToClipboard } from 'react-copy-to-clipboard';
@@ -261,7 +261,7 @@ export default function SutdentsPage() {
             <div key={item.id} className='flex justify-between items-center p-4 bg-white rounded-lg mb-4 shadow-sm hover:cursor-pointer hover:shadow-md'>
               <div className='flex items-center'>
                 <div className='bg-orange-300 h-16 w-16 flex justify-center items-center rounded-md mr-4'>
-                  <BookOpenText size={40} fill='#ff7900'></BookOpenText>
+                  <GraduationCap size={40} color="#eee" fill='#ff7900'></GraduationCap>
                 </div>
                 <div>
                   <Title heading={5}>{item.class_name}</Title>

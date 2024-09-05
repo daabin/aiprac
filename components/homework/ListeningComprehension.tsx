@@ -1,8 +1,9 @@
 import { Button, Radio, RadioGroup, Toast } from '@douyinfe/semi-ui';
 import { useEffect, useMemo, useState } from 'react';
 import RenderPinyin from "./RenderPinyin";
+import { SHOW_STUDENT_ANSWER_STATUS } from '@/utils/constants'
 
-export default function ListeningComprehension({ qid, content, showAnswer, studentAnswer, handleUpdateStudentAnswer }: { qid: any, content: any, showAnswer: boolean, studentAnswer: any, handleUpdateStudentAnswer: any }) {
+export default function ListeningComprehension({ qid, content, showAnswer, studentAnswer, handleUpdateStudentAnswer, homeworkStatus }: { qid: any, content: any, showAnswer: boolean, studentAnswer: any, handleUpdateStudentAnswer: any, homeworkStatus: any }) {
   const [audioUrl, setAudioUrl] = useState<string>('')
 
   const initialVal = useMemo(() => {
@@ -35,7 +36,7 @@ export default function ListeningComprehension({ qid, content, showAnswer, stude
 
   return <div className="w-full">
     <audio className='my-6' controls src={audioUrl}></audio>
-    <RadioGroup type='card' className='w-[200px]' direction="vertical" value={initialVal} onChange={handleChange}>
+    <RadioGroup type='card' className='w-[200px]' direction="vertical" value={SHOW_STUDENT_ANSWER_STATUS.includes(homeworkStatus) ? initialVal : ''} onChange={handleChange}>
       {
         content?.options?.map((option: any, index: number) => {
           return <Radio style={{ alignItems: 'center' }} addonStyle={{ alignItems: 'flex-end' }} key={option.text} value={option.text}><span>{String.fromCharCode(65 + index)}.&nbsp;</span><RenderPinyin text={option.text} pinyin={option.pinyin}></RenderPinyin></Radio>

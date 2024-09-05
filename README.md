@@ -10,5 +10,5 @@
 |状态值|描述|
 |------|------|
 |ASSIGNED|已布置|
-|SUBMMITED|已提交|
+|SUBMITTED|已提交|
 |GRADED|已批改|

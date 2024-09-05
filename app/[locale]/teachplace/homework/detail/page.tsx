@@ -2,5 +2,5 @@
 import UnitOne from "@/components/homework/UnitOne"
 
 export default function DetailPage() {
-  return <UnitOne role="STUDENT"/>
+  return <UnitOne role="TEACHER"/>
 }
