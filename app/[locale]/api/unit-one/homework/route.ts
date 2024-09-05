@@ -32,7 +32,7 @@ export async function PUT(request: NextRequest) {
   const { data, error } = await supabase
     .from('homework')
     .update({
-      params
+      ...params
     })
     .eq('id', hid)
     .select()

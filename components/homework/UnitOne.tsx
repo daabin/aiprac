@@ -9,6 +9,7 @@ import { IconLoading, IconCalendar, IconUserCircle, IconTick, IconClose } from '
 import { formatUTCTimeToBeijinTime, isEmpty } from '@/utils/tools'
 import { AbilityOrder } from '@/utils/constants';
 import { cn } from '@/utils/tailwind';
+import _ from 'lodash';
 
 import PictureWordRecognition from './PictureWordRecognition';
 import VocabularyMatching from './VocabularyMatching';
@@ -16,7 +17,7 @@ import FillInTheBlanks from './FillInTheBlanks';
 import RenderPinyin from "./RenderPinyin";
 import ListeningComprehension from './ListeningComprehension';
 import OralPronunciation from './OralPronunciation';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, BookOpenCheck } from 'lucide-react';
 
 const { Title, Text } = Typography
 
@@ -157,7 +158,7 @@ export default function UnitOne({ role = "STUDENT" }: { role: string }) {
     }
 
     setSubmitLoading(true);
-    const res = await fetch('/api/do-homework', {
+    const res = await fetch('/api/unit-one/homework', {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
@@ -185,12 +186,107 @@ export default function UnitOne({ role = "STUDENT" }: { role: string }) {
 
   const handleAiGrade = async () => {
     const aiGrade = {}
+    const singleScore = Math.floor(100 / questions.length);
     questions.forEach((question) => {
-      
+      console.log('question------->', question);
+      const correct_answer = question?.content?.correct_answer;
+      const student_answer = studentAnswer[question.qid];
+      if (question?.question_type === '看图认字') {
+        const correct = correct_answer?.text === student_answer;
+        aiGrade[question.qid] = {
+          grade: correct ? 'Y' : 'N',
+          score: correct ? singleScore : 0
+        }
+      } else if (question?.question_type?.includes('词汇匹配')) {
+        const formatAnswer = {}
+        Object.keys(student_answer).map(key => {
+          formatAnswer[key.replace(/\(.*\)/, '')] = student_answer[key]
+        })
+
+        const standardAnswers = {}
+        question?.content?.correct_pairs?.map((pair: any) => {
+          standardAnswers[pair.left] = pair.right
+        })
+
+        const correct = _.isEqual(formatAnswer, standardAnswers);
+        aiGrade[question.qid] = {
+          grade: correct ? 'Y' : 'N',
+          score: correct ? singleScore : 0
+        }
+      } else if (question?.question_type === '字词填空') {
+        const correct = correct_answer?.text === student_answer;
+        aiGrade[question.qid] = {
+          grade: correct ? 'Y' : 'N',
+          score: correct ? singleScore : 0
+        }
+      } else if (question?.question_type === '听力选择') {
+        const correct = correct_answer?.text === student_answer;
+        aiGrade[question.qid] = {
+          grade: correct ? 'Y' : 'N',
+          score: correct ? singleScore : 0
+        }
+      } else if (question?.question_type === '口语发音') {
+        aiGrade[question.qid] = {
+          grade: 'S'
+        }
+      }
     })
+
+    console.log('--------------')
+    console.log('aiGrade------->', aiGrade);
+    Toast.success('AI批改完成');
+    setTeacherGrade(aiGrade);
   }
 
   const handleGrade = async () => {
+    console.log('teacherGrade------->', teacherGrade);
+    const qids = homeworkInfo?.qid_list
+
+    const validate = qids.every((qid: string) => {
+      const grade = teacherGrade[qid]?.grade;
+      const score = teacherGrade[qid]?.score;
+      if (!grade || !score) {
+        Toast.error('请完成所有题目批改后再提交');
+        return false;
+      }
+      return true;
+    })
+
+    if (!validate) {
+      return;
+    }
+
+    // 算总分
+    const totalScore = qids.reduce((acc: number, qid: string) => {
+      return acc + teacherGrade[qid]?.score;
+    }, 0);
+
+    setGradeLoading(true);
+    const res = await fetch('/api/unit-one/homework', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        hid,
+        teacher_grade: teacherGrade,
+        status: 'GRADED',
+        total_score: totalScore < 100 ? totalScore : 100,
+        grade_time: new Date().toISOString()
+      })
+    });
+
+    setGradeLoading(false);
+    const data = await res.json();
+
+    console.log('handleGrade------->', data);
+
+    if (data?.error) {
+      Toast.error('提交失败，请重试');
+    } else {
+      Toast.success('提交成功');
+      router.push('/teachplace/homework');
+    }
   }
 
   const StudentAnswerCard = () => {
@@ -265,12 +361,12 @@ export default function UnitOne({ role = "STUDENT" }: { role: string }) {
                               {teacherGrade[question.qid]?.grade === 'S' && <div className='w-6 h-6 border text-center bg-[#38bdf8]'> {idx + 1}</div>}
                               {!teacherGrade[question.qid] && <div className='w-6 h-6 border text-center'> {idx + 1}</div>}
                             </a>
-                            <Select placeholder="批改" style={{ width: 120 }} onChange={val => console.log(val)}>
+                            <Select placeholder="批改" value={teacherGrade[question.qid]?.grade} style={{ width: 120 }} onChange={val => console.log(val)}>
                               <Select.Option value="Y">正确</Select.Option>
                               <Select.Option value="N">错误</Select.Option>
                               <Select.Option value="S">主观题</Select.Option>
                             </Select>
-                            <InputNumber placeholder='打分' innerButtons formatter={value => `${value}`.replace(/\D/g, '')}
+                            <InputNumber placeholder='打分' value={teacherGrade[question.qid]?.score} innerButtons formatter={value => `${value}`.replace(/\D/g, '')}
                               onNumberChange={number => console.log(number)}
                               min={0}
                               max={100} style={{ width: 100 }} />
@@ -287,16 +383,61 @@ export default function UnitOne({ role = "STUDENT" }: { role: string }) {
         }
       </div>
       <div className='flex gap-4 mt-10'>
-        <Button theme='solid' size='large' type='secondary' icon={<Sparkles />} loading={submitLoading} block onClick={handleAiGrade}>AI批改</Button>
-        <Button theme='solid' size='large' loading={submitLoading} type='primary' block onClick={handleGrade}>提交</Button>
+        <Button theme='solid' size='large' type='secondary' icon={<Sparkles />} block onClick={handleAiGrade}>AI批改</Button>
+        <Button theme='solid' size='large' loading={gradeLoading} type='primary' block onClick={handleGrade}>提交</Button>
       </div>
     </Card>
   }
 
   const ScoreCard = () => {
     return <Card className='w-[300px]'>
-      <div className='mb-5 pb-5 border-b border-dotted'>
+      <div className='mb-5'>
+        <p className='underline decoration-double text-8xl font-extrabold text-red-500 text-center mb-10'>{homeworkInfo?.total_score}</p>
         <Title heading={4}>成绩单</Title>
+        <div className='flex mt-2'>
+          <div className='flex items-center gap-2 w-1/2'><div className='w-4 h-4 bg-[#22c55e]'></div>正确</div>
+          <div className='flex items-center gap-2 w-1/2'><div className='w-4 h-4 bg-[#ef4444]'></div>错误</div>
+          <div className='flex items-center gap-2 w-1/2'><div className='w-4 h-4 bg-[#38bdf8]'></div>主观题</div>
+        </div>
+      </div>
+      <div>
+        {
+          abilityWithOrder?.map((ability) => {
+            return <div key={ability}>
+              {
+                questionsGroupByAbility[ability].map((typeGroup: any) => {
+                  return <div key={typeGroup.type} className="mt-4">
+                    <Title heading={6} >{typeGroup.type}</Title>
+                    <div className='flex flex-col gap-4 my-2'>
+                      {
+                        typeGroup.questions.map((question: any, idx: number) => {
+                          return <div className='flex items-center gap-2 mt-2' key={question.qid} >
+                            <a href={`#${question.qid}`}>
+                              {teacherGrade[question.qid]?.grade === 'Y' && <div className='w-6 h-6 border text-center bg-[#22c55e]'> {idx + 1}</div>}
+                              {teacherGrade[question.qid]?.grade === 'N' && <div className='w-6 h-6 border text-center bg-[#ef4444]'> {idx + 1}</div>}
+                              {teacherGrade[question.qid]?.grade === 'S' && <div className='w-6 h-6 border text-center bg-[#38bdf8]'> {idx + 1}</div>}
+                              {!teacherGrade[question.qid] && <div className='w-6 h-6 border text-center'> {idx + 1}</div>}
+                            </a>
+                            <Select disabled placeholder="批改" value={teacherGrade[question.qid]?.grade} style={{ width: 120 }} onChange={val => console.log(val)}>
+                              <Select.Option value="Y">正确</Select.Option>
+                              <Select.Option value="N">错误</Select.Option>
+                              <Select.Option value="S">主观题</Select.Option>
+                            </Select>
+                            <InputNumber disabled placeholder='打分' value={teacherGrade[question.qid]?.score} innerButtons formatter={value => `${value}`.replace(/\D/g, '')}
+                              onNumberChange={number => console.log(number)}
+                              min={0}
+                              max={100} style={{ width: 100 }} />
+                          </div>
+                        })
+                      }
+                    </div>
+
+                  </div>
+                })
+              }
+            </div>
+          })
+        }
       </div>
     </Card>
   }
@@ -304,7 +445,7 @@ export default function UnitOne({ role = "STUDENT" }: { role: string }) {
   return (
     <div className="max-w-[1168px] min-w-[1000px] mx-auto">
       <Breadcrumb compact={false} className="mb-4">
-        <Breadcrumb.Item icon={<IconBadge />}>
+        <Breadcrumb.Item icon={<BookOpenCheck width={20} size={20}/>}>
           {role === 'STUDENT' ? <Link href="/learnplace/homework">
             我的作业
           </Link> : <Link href="/teachplace/homework">
