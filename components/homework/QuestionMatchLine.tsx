@@ -67,7 +67,7 @@ const QuestionMatchLine = ({ qid, dataSource, standardAnswers, showAnswer, stude
         <div className='flex items-center'><p>提示：点击左边文字，按住鼠标拖动连接至右边文字</p></div>
         <ButtonGroup size='small' >
           <Tooltip content="撤销重做">
-            <Button type="tertiary" icon={<IconRefresh />} onClick={() => {
+            <Button type="tertiary" disabled={homeworkStatus !== 'ASSIGNED'} icon={<IconRefresh />} onClick={() => {
               handleUpdateStudentAnswer(qid, null)
               matchLine?.reset()
             }}></Button>

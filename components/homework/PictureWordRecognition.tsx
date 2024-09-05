@@ -18,7 +18,7 @@ export default function PictureWordRecognition({ qid, content, showAnswer, stude
 
   return <div className="w-full">
     <Image src={content?.img_url} alt="" width={200} height={200} className="my-4 max-w-80 rounded" />
-    <RadioGroup className='w-[200px]' direction="vertical" type='card' value={SHOW_STUDENT_ANSWER_STATUS.includes(homeworkStatus) ? initialVal : ''} onChange={handleChange}>
+    <RadioGroup disabled={homeworkStatus !== 'ASSIGNED'} className='w-[200px]' direction="vertical" type='card' value={SHOW_STUDENT_ANSWER_STATUS.includes(homeworkStatus) ? initialVal : ''} onChange={handleChange}>
       {
         content?.options.map((option: any, index: number) => {
           return <Radio style={{ alignItems: 'center' }} addonStyle={{ alignItems: 'flex-end' }} key={option.text} value={option.text}><span>{String.fromCharCode(65 + index)}.&nbsp;</span><RenderPinyin text={option.text} pinyin={option.pinyin}></RenderPinyin></Radio>

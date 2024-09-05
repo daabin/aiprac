@@ -15,7 +15,7 @@ export default function FillInTheBlanks({ qid, content, showAnswer, studentAnswe
   }
 
   return <div className="mt-6 w-1/2">
-    <Input placeholder="请输入答案" defaultValue={SHOW_STUDENT_ANSWER_STATUS.includes(homeworkStatus) ? initialVal : ''} onChange={handleInput} />
+    <Input placeholder="请输入答案" disabled={homeworkStatus !== 'ASSIGNED'} defaultValue={SHOW_STUDENT_ANSWER_STATUS.includes(homeworkStatus) ? initialVal : ''} onChange={handleInput} />
     {showAnswer && <div className='p-4 mt-4 border-4 border-orange-400 border-double'>
       ✅ 正确答案是：{content?.correct_answer?.text}
     </div>}

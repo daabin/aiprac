@@ -392,7 +392,7 @@ export default function UnitOne({ role = "STUDENT" }: { role: string }) {
   const ScoreCard = () => {
     return <Card className='w-[300px]'>
       <div className='mb-5'>
-        <p className='underline decoration-double text-8xl font-extrabold text-red-500 text-center mb-10'>{homeworkInfo?.total_score}</p>
+        <p className='underline decoration-solid text-8xl font-extrabold text-red-500 text-center mb-10'>{homeworkInfo?.total_score}</p>
         <Title heading={4}>成绩单</Title>
         <div className='flex mt-2'>
           <div className='flex items-center gap-2 w-1/2'><div className='w-4 h-4 bg-[#22c55e]'></div>正确</div>

@@ -41,9 +41,9 @@ export default function OralPronunciation({ qid, content, showAnswer, studentAns
     </div>
     <AudioReactRecorder state={recordState} canvasWidth={500} backgroundColor="#f1f3f5" foregroundColor="#ff7900" canvasHeight={150} onStop={onStop} />
     <div className="flex gap-4 justify-center my-6">
-      <Button size="small" onClick={handleStart} icon={<IconDisc></IconDisc>}>开始录制</Button>
-      <Button size="small" onClick={handlePause} icon={<IconPause></IconPause>}>暂停录制</Button>
-      <Button size="small" onClick={handleStop} icon={<IconStop></IconStop>}>结束录制</Button>
+      <Button size="small" disabled={homeworkStatus !== 'ASSIGNED'} onClick={handleStart} icon={<IconDisc></IconDisc>}>开始录制</Button>
+      <Button size="small" disabled={homeworkStatus !== 'ASSIGNED'} onClick={handlePause} icon={<IconPause></IconPause>}>暂停录制</Button>
+      <Button size="small" disabled={homeworkStatus !== 'ASSIGNED'} onClick={handleStop} icon={<IconStop></IconStop>}>结束录制</Button>
     </div>
     <div className="flex flex-col items-center">
       <audio
