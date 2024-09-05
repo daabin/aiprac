@@ -1,11 +1,11 @@
 'use client'
 
-import { Breadcrumb, Button, Card, Typography, Toast, Spin } from '@douyinfe/semi-ui';
+import { Breadcrumb, Button, Card, Typography, Toast, Spin, Select, InputNumber } from '@douyinfe/semi-ui';
 import { IconBadge } from '@douyinfe/semi-icons-lab';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { IconLoading, IconCalendar, IconUserCircle } from '@douyinfe/semi-icons';
+import { IconLoading, IconCalendar, IconUserCircle, IconTick, IconClose } from '@douyinfe/semi-icons';
 import { formatUTCTimeToBeijinTime, isEmpty } from '@/utils/tools'
 import { AbilityOrder } from '@/utils/constants';
 import { cn } from '@/utils/tailwind';
@@ -16,6 +16,7 @@ import FillInTheBlanks from './FillInTheBlanks';
 import RenderPinyin from "./RenderPinyin";
 import ListeningComprehension from './ListeningComprehension';
 import OralPronunciation from './OralPronunciation';
+import { Sparkles } from 'lucide-react';
 
 const { Title, Text } = Typography
 
@@ -28,7 +29,9 @@ export default function UnitOne({ role = "STUDENT" }: { role: string }) {
   const [questions, setQuestions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [studentAnswer, setStudentAnswer] = useState<any>({});
+  const [teacherGrade, setTeacherGrade] = useState<any>({});
   const [submitLoading, setSubmitLoading] = useState(false);
+  const [gradeLoading, setGradeLoading] = useState(false);
 
   useEffect(() => {
     fetchHomework()
@@ -56,6 +59,7 @@ export default function UnitOne({ role = "STUDENT" }: { role: string }) {
 
     setHomeworkInfo(data?.data[0] || {});
     setStudentAnswer(data?.data[0]?.student_answer || {});
+    setTeacherGrade(data?.data[0]?.teacher_grade || {});
     setHomeworkStatus(data?.data[0]?.status || {});
   }
 
@@ -179,6 +183,16 @@ export default function UnitOne({ role = "STUDENT" }: { role: string }) {
     }
   }
 
+  const handleAiGrade = async () => {
+    const aiGrade = {}
+    questions.forEach((question) => {
+      
+    })
+  }
+
+  const handleGrade = async () => {
+  }
+
   const StudentAnswerCard = () => {
     return <Card className='w-[300px]'>
       <div className='mb-5 pb-5 border-b border-dotted'>
@@ -221,16 +235,60 @@ export default function UnitOne({ role = "STUDENT" }: { role: string }) {
     </Card>
   }
 
-  const TeachGradCard = () => {
+  const TeachGradeCard = () => {
     return <Card className='w-[300px]'>
-      <div className='mb-5 pb-5 border-b border-dotted'>
+      <div className='mb-5'>
         <Title heading={4}>作业批改</Title>
-        <div className='my-2'><Text code>除【口语发音】外的题目都支持AI批改</Text></div>
-        <div className='flex gap-4 mt-4'>
-          <div className='flex items-center gap-2'><div className='w-4 h-4 border'></div>未批改</div>
-          <div className='flex items-center gap-2'><div className='w-4 h-4 bg-[#22c55e]'></div>正确</div>
-          <div className='flex items-center gap-2'><div className='w-4 h-4 bg-[#ff0000]'></div>错误</div>
+        <div className='my-2 p-2 rounded bg-slate-100'>除【口语发音】外的题目都支持AI批改，AI批改时默认按题目数量分配得分，支持手动调整</div>
+        <div className='flex mt-2 flex-wrap'>
+          <div className='flex items-center gap-2 w-1/2'><div className='w-4 h-4 border'></div>待批改</div>
+          <div className='flex items-center gap-2 w-1/2'><div className='w-4 h-4 bg-[#38bdf8]'></div>主观题</div>
+          <div className='flex items-center gap-2 w-1/2'><div className='w-4 h-4 bg-[#22c55e]'></div>回答正确</div>
+          <div className='flex items-center gap-2 w-1/2'><div className='w-4 h-4 bg-[#ef4444]'></div>回答错误</div>
         </div>
+      </div>
+      <div>
+        {
+          abilityWithOrder?.map((ability) => {
+            return <div key={ability}>
+              {
+                questionsGroupByAbility[ability].map((typeGroup: any) => {
+                  return <div key={typeGroup.type} className="mt-4">
+                    <Title heading={6} >{typeGroup.type}</Title>
+                    <div className='flex flex-col gap-4 my-2'>
+                      {
+                        typeGroup.questions.map((question: any, idx: number) => {
+                          return <div className='flex items-center gap-2 mt-2' key={question.qid} >
+                            <a href={`#${question.qid}`}>
+                              {teacherGrade[question.qid]?.grade === 'Y' && <div className='w-6 h-6 border text-center bg-[#22c55e]'> {idx + 1}</div>}
+                              {teacherGrade[question.qid]?.grade === 'N' && <div className='w-6 h-6 border text-center bg-[#ef4444]'> {idx + 1}</div>}
+                              {teacherGrade[question.qid]?.grade === 'S' && <div className='w-6 h-6 border text-center bg-[#38bdf8]'> {idx + 1}</div>}
+                              {!teacherGrade[question.qid] && <div className='w-6 h-6 border text-center'> {idx + 1}</div>}
+                            </a>
+                            <Select placeholder="批改" style={{ width: 120 }} onChange={val => console.log(val)}>
+                              <Select.Option value="Y">正确</Select.Option>
+                              <Select.Option value="N">错误</Select.Option>
+                              <Select.Option value="S">主观题</Select.Option>
+                            </Select>
+                            <InputNumber placeholder='打分' innerButtons formatter={value => `${value}`.replace(/\D/g, '')}
+                              onNumberChange={number => console.log(number)}
+                              min={0}
+                              max={100} style={{ width: 100 }} />
+                          </div>
+                        })
+                      }
+                    </div>
+
+                  </div>
+                })
+              }
+            </div>
+          })
+        }
+      </div>
+      <div className='flex gap-4 mt-10'>
+        <Button theme='solid' size='large' type='secondary' icon={<Sparkles />} loading={submitLoading} block onClick={handleAiGrade}>AI批改</Button>
+        <Button theme='solid' size='large' loading={submitLoading} type='primary' block onClick={handleGrade}>提交</Button>
       </div>
     </Card>
   }
@@ -263,7 +321,7 @@ export default function UnitOne({ role = "STUDENT" }: { role: string }) {
           <Card>
             <Title className='text-center' heading={3}>{homeworkInfo?.practice?.title}</Title>
             <p className='text-center'>{homeworkInfo?.practice?.description}</p>
-            <div className='flex justify-center gap-6'>
+            <div className='flex justify-center gap-6 mt-4'>
               <div className='flex justify-center items-center gap-1'>
                 <span className='text-gray-400'>{role === 'STUDENT' ? '教师信息：' : '学生信息'}</span>
                 <IconUserCircle />
@@ -273,16 +331,6 @@ export default function UnitOne({ role = "STUDENT" }: { role: string }) {
                 <span className='text-gray-400'>{role === 'STUDENT' ? '布置时间：' : '提交时间：'}</span>
                 <IconCalendar />
                 <span>{formatUTCTimeToBeijinTime(role === 'STUDENT' ? homeworkInfo?.created_at : homeworkInfo?.submit_time)}</span>
-              </div>
-            </div>
-            <div className='flex justify-center gap-6 mt-2'>
-              <div className='flex justify-center items-center gap-1'>
-                <span className='text-gray-400'>题目数量：</span>
-                <span>{questions?.length}</span>
-              </div>
-              <div className='flex justify-center items-center gap-1'>
-                <span className='text-gray-400'>总分：</span>
-                <span>100</span>
               </div>
             </div>
           </Card>
@@ -322,7 +370,7 @@ export default function UnitOne({ role = "STUDENT" }: { role: string }) {
           }
         </div>
         {role === 'STUDENT' && homeworkStatus === 'ASSIGNED' && <StudentAnswerCard />}
-        {role === 'TEACHER' && homeworkStatus === 'SUBMITTED' && <TeachGradCard />}
+        {role === 'TEACHER' && homeworkStatus === 'SUBMITTED' && <TeachGradeCard />}
         {homeworkStatus === 'GRADED' && <ScoreCard />}
       </div>}
     </div>
