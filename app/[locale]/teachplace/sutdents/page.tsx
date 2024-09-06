@@ -1,6 +1,6 @@
 'use client'
 
-import { Skeleton, Typography, Button, Breadcrumb, Popconfirm, Table, Dropdown, Modal, Form, Input, Empty, Toast } from '@douyinfe/semi-ui';
+import { Skeleton, Typography, Button, Breadcrumb, Popconfirm, Table, Dropdown, Modal, Form, Input, Empty, Toast, SideSheet } from '@douyinfe/semi-ui';
 import { IllustrationNoContent } from '@douyinfe/semi-illustrations';
 import { IconPlus } from '@douyinfe/semi-icons';
 import { useState, useEffect, useRef } from 'react';
@@ -273,7 +273,7 @@ export default function SutdentsPage() {
                   <Dropdown.Menu>
                     <Dropdown.Item icon={<BookUser />} onClick={() => handleViewStudentsList(item.class_id)}>学生列表</Dropdown.Item>
                     <Dropdown.Item icon={<UserPlus />} onClick={() => handleInviteStudent(item.class_id)}>邀请学生</Dropdown.Item>
-                    <Dropdown.Item icon={<Settings />} onClick={() => handleSetting(item)}>设置</Dropdown.Item>
+                    <Dropdown.Item icon={<Settings />} onClick={() => handleSetting(item)}>班级设置</Dropdown.Item>
                   </Dropdown.Menu>
                 }
               >
@@ -340,15 +340,13 @@ export default function SutdentsPage() {
           </div>
         </div>
       </Modal>
-      <Modal maskClosable={false}
+      <SideSheet
         onCancel={handleCancelViewStudents}
         title="学生列表"
-        fullScreen
         visible={showStudents}
-        footer={null}>
+        size="medium">
         <Table dataSource={studentList} loading={loadingStudent} rowKey='user_id' size="small" bordered={true}>
-          <Column title='学生ID' width={150} dataIndex="user_id" />
-          <Column title='邮箱' width={150} dataIndex="email" />
+          <Column title='邮箱' dataIndex="email" />
           <Column title='昵称(母语)' width={150} dataIndex="user_name" />
           <Column title='中文名' width={150} dataIndex="scientific_name" />
           <Column align='center' title='操作' width={80} dataIndex="option" render={(value, record, index) => (
@@ -362,7 +360,7 @@ export default function SutdentsPage() {
             </Popconfirm>
           )} />
         </Table>
-      </Modal>
+      </SideSheet>
     </section>
   );
 }
