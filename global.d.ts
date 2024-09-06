@@ -4,3 +4,4 @@ declare interface IntlMessages extends Messages {}
 
 declare module '*.avif';
 declare module 'audio-react-recorder';
+declare module 'react-copy-to-clipboard';
