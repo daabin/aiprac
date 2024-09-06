@@ -135,7 +135,7 @@ export default function SutdentsPage() {
     setVisibleInvite(true);
 
     // 判断邀请码是否过期
-    setIsInviteCodeExpired(isClassInviteCodeExpired(data.data[0].updated_at))
+    setIsInviteCodeExpired(isClassInviteCodeExpired(data.data[0].updated_at || data.data[0].created_at))
   }
 
   const handleCreate = () => {
