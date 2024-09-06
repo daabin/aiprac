@@ -238,6 +238,19 @@ export default function UnitOne({ role = "STUDENT" }: { role: string }) {
     setTeacherGrade(aiGrade);
   }
 
+  const handleUpdateScore = (qid: string, grade: string, score: number) => {
+    console.log('handleUpdateScore------->', qid, grade, score);
+    setTeacherGrade((prev: any) => {
+      return {
+        ...prev,
+        [qid]: {
+          grade,
+          score
+        }
+      }
+    });
+  }
+
   const handleGrade = async () => {
     console.log('teacherGrade------->', teacherGrade);
     const qids = homeworkInfo?.qid_list
@@ -361,13 +374,13 @@ export default function UnitOne({ role = "STUDENT" }: { role: string }) {
                               {teacherGrade[question.qid]?.grade === 'S' && <div className='w-6 h-6 border text-center bg-[#38bdf8]'> {idx + 1}</div>}
                               {!teacherGrade[question.qid] && <div className='w-6 h-6 border text-center'> {idx + 1}</div>}
                             </a>
-                            <Select placeholder="批改" value={teacherGrade[question.qid]?.grade} style={{ width: 120 }} onChange={val => console.log(val)}>
+                            <Select placeholder="批改" value={teacherGrade[question.qid]?.grade} style={{ width: 120 }} onChange={(val: any) => handleUpdateScore(question.qid, val, teacherGrade[question.qid]?.score)}>
                               <Select.Option value="Y">正确</Select.Option>
                               <Select.Option value="N">错误</Select.Option>
                               <Select.Option value="S">主观题</Select.Option>
                             </Select>
                             <InputNumber placeholder='打分' value={teacherGrade[question.qid]?.score} innerButtons formatter={value => `${value}`.replace(/\D/g, '')}
-                              onNumberChange={number => console.log(number)}
+                              onNumberChange={number => handleUpdateScore(question.qid, teacherGrade[question.qid]?.grade ,number)}
                               min={0}
                               max={100} style={{ width: 100 }} />
                           </div>
@@ -418,13 +431,12 @@ export default function UnitOne({ role = "STUDENT" }: { role: string }) {
                               {teacherGrade[question.qid]?.grade === 'S' && <div className='w-6 h-6 border text-center bg-[#38bdf8]'> {idx + 1}</div>}
                               {!teacherGrade[question.qid] && <div className='w-6 h-6 border text-center'> {idx + 1}</div>}
                             </a>
-                            <Select disabled placeholder="批改" value={teacherGrade[question.qid]?.grade} style={{ width: 120 }} onChange={val => console.log(val)}>
+                            <Select disabled placeholder="批改" value={teacherGrade[question.qid]?.grade} style={{ width: 120 }}>
                               <Select.Option value="Y">正确</Select.Option>
                               <Select.Option value="N">错误</Select.Option>
                               <Select.Option value="S">主观题</Select.Option>
                             </Select>
                             <InputNumber disabled placeholder='打分' value={teacherGrade[question.qid]?.score} innerButtons formatter={value => `${value}`.replace(/\D/g, '')}
-                              onNumberChange={number => console.log(number)}
                               min={0}
                               max={100} style={{ width: 100 }} />
                           </div>
