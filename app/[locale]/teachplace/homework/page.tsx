@@ -9,7 +9,7 @@ const { Column } = Table;
 
 export default function HomeworkPage() {
   const { Title } = Typography
-  const [filterType, setFilterType] = useState('ASSIGNED')
+  const [filterType, setFilterType] = useState('SUBMITTED')
   const [homeworkList, setHomeworkList] = useState<any[]>([])
   const [loading, setLoading] = useState<boolean>(true)
 

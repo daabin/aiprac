@@ -11,19 +11,21 @@ import './styles.css';
 const { Column } = Table;
 
 export default function PracticePage() {
-  const { Title } = Typography;
+  const { Title, Paragraph } = Typography;
   const [practices, setPractices] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadingCount, setLoadingCount] = useState(true);
   const [visible, setVisible] = useState(false);
   const [curSetting, setCurSetting] = useState<any[]>([]);
   const [questionsCount, setQuestionsCount] = useState(0);
+  const [gradeCount, setGradeCount] = useState(0);
   const [loadingQuestions, setLoadingQuestions] = useState(false);
   const [loadingReGen, setLoadingReGen] = useState(false);
 
   useEffect(() => {
     getPractice();
     getQuestionsCount()
+    getHomeworkList()
   }, []);
 
   const getPractice = async () => {
@@ -54,6 +56,24 @@ export default function PracticePage() {
     } else {
       setQuestionsCount(data.data);
       console.log('getQuestionsCount------->', data.data);
+    }
+  }
+
+  const getHomeworkList = async () => {
+    const res = await fetch('/api/teacher-homework', {
+      method: 'GET',
+      cache: 'no-store'
+    })
+    const data = await res.json()
+
+    if (data?.error) {
+      console.log('getHomeworkList------->', data.error)
+    } else {
+      console.log('data------->', data.data)
+      const homeworkList = data.data
+      // 取已提交状态的数量
+      const submittedCount = homeworkList.filter((item: any) => item.status === 'SUBMITTED').length
+      setGradeCount(submittedCount)
     }
   }
 
@@ -200,7 +220,9 @@ export default function PracticePage() {
           </Col>
           <Col span={6}>
             <Card title='待批改作业' bordered={false} >
-              <Title heading={1}>-</Title>
+              <Skeleton loading={loading} placeholder={<Skeleton.Title style={{ height: '44px' }} />}>
+                <Link href={'/teachplace/homework'}><Title heading={1} className={gradeCount ? 'text-blue-600' : ''}>{gradeCount}</Title></Link>
+              </Skeleton>
             </Card>
           </Col>
           <Col span={6}>
@@ -223,8 +245,12 @@ export default function PracticePage() {
                 <Column title='编号' width={100} render={(value, record, index) => (
                   index + 1
                 )} />
-                <Column title='练习名称' width={200} dataIndex="title" />
-                <Column title='练习描述' dataIndex="description" />
+                <Column title='名称及描述' dataIndex="title" render={(value, record, index) => (
+                  <div>
+                    <Title heading={5}>{record.title}</Title>
+                    <Paragraph ellipsis={{ rows: 2, expandable: false }}>{record.description}</Paragraph>
+                  </div>
+                )} />
                 <Column title='创建时间' width={180} dataIndex="created_at" render={(value, record, index) => (
                   formatTime(value)
                 )} />
@@ -234,7 +260,7 @@ export default function PracticePage() {
                 <Column align='center' title='操作' width={200} render={(value, record, index) => (
                   <div className='flex justify-center items-center gap-2'>
                     <Link href={`/teachplace/practice/preview?pid=${record.pid}`}><Button theme='light' size='small' >预览</Button> </Link>
-                    <AssignHomework pid={record.pid}/>
+                    <AssignHomework pid={record.pid} />
                   </div>
                 )} />
               </Table>
