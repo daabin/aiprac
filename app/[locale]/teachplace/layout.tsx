@@ -55,7 +55,7 @@ export default function TeachplaceLayout({
             items={[
               {
                 itemKey: 'practice',
-                text: '创建练习',
+                text: 'AI 出题',
                 icon: <Sparkles size={20} />,
               },
               {

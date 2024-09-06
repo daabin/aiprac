@@ -30,6 +30,12 @@ export const formatUTCTimeToBeijinTime = (time: any) => {
   return date.toLocaleString();
 }
 
+export const formatToBeijinTime = (time: any) => {
+  if (!time) return '';
+  const date = new Date(time);
+  return date.toLocaleString('zh-CN', { hour12: false });
+}
+
 export const isEmpty = (ele: any) => {
   if (_.isObject(ele)) {
     return _.isEmpty(ele);

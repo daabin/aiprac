@@ -186,7 +186,7 @@ export default function UnitOne({ role = "STUDENT" }: { role: string }) {
 
   const handleAiGrade = async () => {
     const aiGrade = {}
-    const singleScore = Math.floor(100 / questions.length);
+    const singleScore = Math.ceil(100 / questions.length);
     questions.forEach((question) => {
       console.log('question------->', question);
       const correct_answer = question?.content?.correct_answer;

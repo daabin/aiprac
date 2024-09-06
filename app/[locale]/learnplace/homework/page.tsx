@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { Typography, RadioGroup, Radio, Table, Spin, Button, Tag, Toast } from "@douyinfe/semi-ui"
 import { IconLoading, IconCalendar, IconUserCircle, IconMail } from '@douyinfe/semi-icons';
-import { formatUTCTimeToBeijinTime } from '@/utils/tools'
+import { formatToBeijinTime } from '@/utils/tools'
 import Link from 'next/link';
 
 const { Column } = Table;
@@ -91,15 +91,29 @@ export default function HomeworkPage() {
             </div>
           </div>
         )} />
-        <Column title='布置时间' width={200} dataIndex="ctime" render={(_, record, idx) => (
-          <div className="flex items-center gap-1">
-            <IconCalendar />
-            <span>{formatUTCTimeToBeijinTime(record?.created_at)}</span>
+        <Column title='时间' width={260} dataIndex="ctime" render={(_, record, idx) => (
+          <div className="flex flex-col ">
+            <div className="flex items-center gap-1">
+              <IconCalendar />
+              <span>布置时间：{formatToBeijinTime(record?.created_at)}</span>
+            </div>
+            {
+              record?.submit_time && <div className="flex items-center gap-1">
+                <IconCalendar />
+                <span>提交时间：{formatToBeijinTime(record?.submit_time)}</span>
+              </div>
+            }
+            {
+              record?.grade_time && <div className="flex items-center gap-1">
+                <IconCalendar />
+                <span>批改时间：{formatToBeijinTime(record?.grade_time)}</span>
+              </div>
+            }
           </div>
         )} />
         <Column title='得分' width={100} dataIndex="point" render={(_, record, idx) => (
           <>
-            {record?.status === 'GRADED' && <Tag color='orange'>{record?.total_score || '-'}</Tag>}
+            {record?.status === 'GRADED' && <Tag color='red' size="large" style={{ fontSize: '24px' }}>{record?.total_score || '-'}</Tag>}
             {record?.status === 'ASSIGNED' && <Tag color='blue'>待提交</Tag>}
             {record?.status === 'SUBMITTED' && <Tag color='green'>待批改</Tag>}
           </>
