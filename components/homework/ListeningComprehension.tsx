@@ -36,7 +36,7 @@ export default function ListeningComprehension({ qid, content, showAnswer, stude
 
   return <div className="w-full">
     <audio className='my-6' controls src={audioUrl}></audio>
-    <RadioGroup disabled={homeworkStatus !== 'ASSIGNED'} type='card' className='w-[200px]' direction="vertical" value={SHOW_STUDENT_ANSWER_STATUS.includes(homeworkStatus) ? initialVal : ''} onChange={handleChange}>
+    <RadioGroup disabled={homeworkStatus !== 'ASSIGNED'} type='card' className='w-[200px]' direction="vertical" defaultValue={SHOW_STUDENT_ANSWER_STATUS.includes(homeworkStatus) ? initialVal : ''} onChange={handleChange}>
       {
         content?.options?.map((option: any, index: number) => {
           return <Radio style={{ alignItems: 'center' }} addonStyle={{ alignItems: 'flex-end' }} key={option.text} value={option.text}><span>{String.fromCharCode(65 + index)}.&nbsp;</span><RenderPinyin text={option.text} pinyin={option.pinyin}></RenderPinyin></Radio>
