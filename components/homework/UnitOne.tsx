@@ -258,7 +258,7 @@ export default function UnitOne({ role = "STUDENT" }: { role: string }) {
     const validate = qids.every((qid: string) => {
       const grade = teacherGrade[qid]?.grade;
       const score = teacherGrade[qid]?.score;
-      if (!grade || !score) {
+      if (_.isNull(grade) || _.isNull(score)) {
         Toast.error('请完成所有题目批改后再提交');
         return false;
       }
