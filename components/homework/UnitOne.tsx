@@ -227,7 +227,8 @@ export default function UnitOne({ role = "STUDENT" }: { role: string }) {
         }
       } else if (question?.question_type === '口语发音') {
         aiGrade[question.qid] = {
-          grade: 'S'
+          grade: 'S',
+          score: null
         }
       }
     })
@@ -245,7 +246,7 @@ export default function UnitOne({ role = "STUDENT" }: { role: string }) {
         ...prev,
         [qid]: {
           grade,
-          score
+          score: grade === 'N' ? 0 : score
         }
       }
     });
