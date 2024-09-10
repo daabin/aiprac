@@ -8,6 +8,7 @@ import { useSearchParams } from "next/navigation";
 import { cn } from '@/utils/tailwind';
 import PreviewBlock from './components/PreviewBlock';
 import { AbilityOrder } from '@/utils/constants';
+import AssignHomework from '@/components/AssignHomework';
 
 export default function PracticePreviewPage() {
   const searchParams = useSearchParams();
@@ -106,28 +107,31 @@ export default function PracticePreviewPage() {
         <Spin spinning={loading} indicator={<IconLoading />} size='large' />
       </div>}
       {!loading && <Card className='flex-1 flex' bodyStyle={{ height: '100%', width: '100%', display: 'flex' }}>
-        <div className='w-[300px] h-full border p-4'>
-          {
-            abilityWithOrder?.map((ability) => {
-              return (
-                <div key={ability} className='px-2'>
-                  <div className='text-lg font-bold mb-4'>{ability}</div>
-                  {
-                    questionsGroupByAbility[ability].map((typeGroup: any) => {
-                      return (
-                        <div key={typeGroup.type}
-                          className={cn('flex items-center pl-4 mb-4 hover:cursor-pointer', curType === typeGroup.type ? 'text-[#ff7900] font-bold' : '')}
-                          onClick={() => handleClickQuestion(typeGroup.questions, typeGroup.type)}>
-                          <div>{typeGroup.type}</div>
-                          <RenderQuestionCount questions={typeGroup.questions}></RenderQuestionCount>
-                        </div>
-                      )
-                    })
-                  }
-                </div>
-              )
-            })
-          }
+        <div className='w-[300px] h-full border p-4 flex flex-col justify-between'>
+          <div>
+            {
+              abilityWithOrder?.map((ability) => {
+                return (
+                  <div key={ability} className='px-2'>
+                    <div className='text-lg font-bold mb-4'>{ability}</div>
+                    {
+                      questionsGroupByAbility[ability].map((typeGroup: any) => {
+                        return (
+                          <div key={typeGroup.type}
+                            className={cn('flex items-center pl-4 mb-4 hover:cursor-pointer', curType === typeGroup.type ? 'text-[#ff7900] font-bold' : '')}
+                            onClick={() => handleClickQuestion(typeGroup.questions, typeGroup.type)}>
+                            <div>{typeGroup.type}</div>
+                            <RenderQuestionCount questions={typeGroup.questions}></RenderQuestionCount>
+                          </div>
+                        )
+                      })
+                    }
+                  </div>
+                )
+              })
+            }
+          </div>
+          <AssignHomework pid={pid}></AssignHomework>
         </div>
         <div className='flex-1 h-full p-4 border border-l-0 bg-slate-50 flex justify-center items-center'>
           {curQuestionQuestion.length === 0 ? <div>请点击左侧题目类型查看</div> : <PreviewBlock questions={curQuestionQuestion} />}

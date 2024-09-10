@@ -151,7 +151,7 @@ export default function AssignHomework({ pid }: { pid: string }) {
       Toast.error('获取题目失败，请刷新重试');
     } else if (data?.data && data?.data?.length === 0) {
       result = null;
-      Toast.warning('当前联系下没有出题成功的题目，请先出题');
+      Toast.warning('当前练习下没有出题成功的题目，请先出题');
     } else {
       result = data?.data?.length > 0 ? data?.data : null;
     }

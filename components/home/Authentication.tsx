@@ -32,9 +32,9 @@ export default function Authentication({ uid, email }: { uid: string, email?: st
       Toast.error('请求失败，请稍后再试');
     } else {
       if (role === RoleCode.STUDENT) {
-        router.push('/learnplace');
+        router.push('/learnplace/homework');
       } else if (role === RoleCode.TEACHER) {
-        router.push('/teachplace');
+        router.push('/teachplace/practice');
       }
     }
   };
