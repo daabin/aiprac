@@ -92,7 +92,7 @@ export default function InvitePage() {
       <div className="min-w-[600px] min-h-[400px] p-20 shadow-md rounded-md bg-white flex justify-center">
         <Spin spinning={loading} size="large">
           {!loading && !expired && <Empty
-            title={<p>你有一个来自<span className='text-[#ff9700] font-black'> Aiprac </span>平台老师的邀请待确认</p>}
+            title={<p>你有一个来自<span className='text-[#ff9700] font-black'> Aiprac </span>平台<span className='text-[#ff9700] font-black'> {classInfo?.classes?.users?.scientific_name}({classInfo?.classes?.users?.user_name}) </span>老师的邀请待确认</p>}
             image={<IllustrationSuccess style={{ width: 150, height: 150 }} />}
             description={`邀请您加入【 ${classInfo?.classes?.class_name}班级 】`}
           >

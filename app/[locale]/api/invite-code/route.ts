@@ -15,7 +15,9 @@ export async function GET(request: NextRequest) {
   let query = supabase.from('class_invitecode')
     .select(`*,
     classes(
-      class_name
+      *, users(
+        *
+      )
     )`)
 
   if (class_id && class_id.length === 36) { 
