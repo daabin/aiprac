@@ -68,7 +68,7 @@ export default function OralPronunciation({ qid, content, showAnswer, studentAns
 
 
   return <div className="flex flex-col items-center pt-4">
-    <div className="self-start my-2 p-2 text-xl font-bold text-[#ff9100]"><IconVolume1 />
+    <div className="self-start my-2 p-2 text-xl font-bold text-[#ff9100]">
       {
         typeof content?.question === 'string' ? <span>{content?.question}</span> : <RenderPinyin text={content?.question?.question_text?.text} pinyin={content?.question?.question_text?.pinyin}></RenderPinyin>
       }

@@ -91,6 +91,13 @@ export default function HomeworkPage() {
             </div>
           </div>
         )} />
+        <Column title='状态' width={100} dataIndex="status" render={(_, record, idx) => (
+            <>
+              {record?.status === 'ASSIGNED' && <Tag color='blue'>待完成</Tag>}
+              {record?.status === 'SUBMITTED' && <Tag color='green'>待批改</Tag>}
+              {record?.status === 'GRADED' && <Tag color='red'>已批改</Tag>}
+            </>
+          )} />
         <Column title='时间' width={260} dataIndex="ctime" render={(_, record, idx) => (
           <div className="flex flex-col ">
             <div className="flex items-center gap-1">
@@ -114,8 +121,6 @@ export default function HomeworkPage() {
         <Column title='得分' width={100} dataIndex="point" render={(_, record, idx) => (
           <>
             {record?.status === 'GRADED' && <Tag color='red' size="large" style={{ fontSize: '24px' }}>{record?.total_score || '-'}</Tag>}
-            {record?.status === 'ASSIGNED' && <Tag color='blue'>待提交</Tag>}
-            {record?.status === 'SUBMITTED' && <Tag color='green'>待批改</Tag>}
           </>
         )} />
         <Column align='center' title='操作' width={80} dataIndex="option" render={(value, record, index) => (
